@@ -6,11 +6,11 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@SequenceGenerator(name = "employee_nip", initialValue = 16516000)
+@TableGenerator(name = "employee_nip", initialValue = 16516000)
 public class Employee {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "employee_nip")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "employee_nip")
     @Getter @Setter
     private Long NIP;
 
