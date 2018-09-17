@@ -3,22 +3,26 @@ package com.future.OfficeInventorySystem.model;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+
+
 
 
 @Entity
+@Table(name ="ItemTransaction")
 public class ItemTransaction {
 
-    @Id
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name ="transactionId", nullable = false)
     @Setter @Getter
-    private Long transactionId;
+    private Transaction transaction;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name ="itemId", nullable = false)
+    @Setter @Getter
+    private Item item;
 
     @Id
     @Setter @Getter
-    private Long itemId;
-
-    @Id
-    @Setter @Getter
-    private Long boughtQty;
+    private Integer boughtQty;
 }

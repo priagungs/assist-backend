@@ -7,6 +7,7 @@ import javax.persistence.*;
 
 
 @Entity
+@Table(name = "Items")
 @TableGenerator(name = "item_id", initialValue = 13216000)
 public class Item {
 
@@ -32,19 +33,5 @@ public class Item {
 
     @Getter @Setter
     private String description;
-
-    public Item (String itemID, String name,
-                 String picture, Integer price,
-                 Integer totalQty, Integer avaibleQty,
-                 String description) {
-        this.itemID = itemID;
-        this.name = name;
-        this.picture = picture;
-        this.price = price;
-        this.totalQty = totalQty;
-        this.avaibleQty = avaibleQty;
-        this.description = description;
-    }
-
 
 }

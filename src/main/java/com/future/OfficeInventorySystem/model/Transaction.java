@@ -9,6 +9,7 @@ import java.util.Date;
 
 
 @Entity
+@Table(name="Transaction")
 @TableGenerator(name = "transaction_id" , initialValue = 18216000)
 public class Transaction {
 
