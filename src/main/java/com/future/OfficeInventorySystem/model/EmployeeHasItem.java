@@ -24,10 +24,4 @@ public class EmployeeHasItem {
     @Setter @Getter
     private Integer hasQty;
 
-    public EmployeeHasItem(Employee employee,
-                           Item item, int hasQty) {
-        this.employee = employee;
-        this.item = item;
-        this.hasQty = hasQty;
-    }
 }

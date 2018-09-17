@@ -6,12 +6,12 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
+@TableGenerator(name = "employee_request_item")
 public class EmployeeRequestItem {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO);
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "employee_request_item")
     @Setter @Getter
-    private long reqID;
+    private Long reqID;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "NIP", nullable = false)
@@ -30,14 +30,6 @@ public class EmployeeRequestItem {
     @Setter @Getter
     private Status status;
 
-
-    public EmployeeHasItem(Employee employee,
-                           Item item, int reqQty) {
-        this.employee = employee;
-        this.item = item;
-        this.reqQty = reqQty;
-        this.status = Status.REQUESTED;
-    }
 
 
 }
