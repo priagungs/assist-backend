@@ -13,12 +13,12 @@ import javax.persistence.*;
 public class ItemTransaction {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name ="transactionId", nullable = false)
+    @JoinColumn(name ="transactionID", nullable = false)
     @Setter @Getter
     private Transaction transaction;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name ="itemId", nullable = false)
+    @JoinColumn(name ="itemID", nullable = false)
     @Setter @Getter
     private Item item;
 

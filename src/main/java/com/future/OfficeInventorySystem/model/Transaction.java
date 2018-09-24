@@ -16,7 +16,7 @@ public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "transaction_id")
     @Setter @Getter
-    private Long transactionId;
+    private Long transactionID;
 
     @Setter @Getter
     private Date date;
@@ -24,7 +24,9 @@ public class Transaction {
     @Setter @Getter
     private String supplier;
 
+    @Id
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "NIP", nullable = false)
     @Setter @Getter
-    private Long idAdministrator;
-
+    private Administrator administrator;
 }

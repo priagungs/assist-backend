@@ -17,7 +17,7 @@ public class Item {
     private String itemID;
 
     @Getter @Setter
-    private String name;
+    private String itemName;
 
     @Getter @Setter
     private String picture;
@@ -29,7 +29,7 @@ public class Item {
     private Integer totalQty;
 
     @Getter @Setter
-    private Integer avaibleQty;
+    private Integer availableQty;
 
     @Getter @Setter
     private String description;
