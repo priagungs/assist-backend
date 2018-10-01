@@ -6,25 +6,21 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-
-
-
 @Entity
 @Data
-@Table(name ="ItemTransaction")
-public class ItemTransaction {
+@IdClass(UserHasItemID.class)
+public class UserHasItem {
 
     @Id
-
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name ="idTransaction", nullable = false)
-    private Transaction transaction;
+    @JoinColumn(name = "idUser", nullable = false)
+    private User user;
 
+    @Id
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name ="idItem", nullable = false)
+    @JoinColumn(name = "idItem", nullable = false)
     private Item item;
 
-    private Integer boughtQty;
+    private Integer hasQty;
 
-    private Integer availableQty;
 }

@@ -1,5 +1,6 @@
 package com.future.OfficeInventorySystem.model;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,32 +8,27 @@ import javax.persistence.*;
 
 @Entity
 @TableGenerator(name = "employee_nip", initialValue = 16516000)
-public class Employee {
+@Data
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "employee_nip")
-    @Getter @Setter
-    private Long NIP;
+    private Long idUser;
 
-    @Getter @Setter
     private String name;
 
-    @Getter @Setter
     private String username;
 
-    @Getter @Setter
     private String picture; //path to an image in filesystem
 
-    @Getter @Setter
     private String password;
 
-    @Getter @Setter
     private String division;
 
-    @Getter @Setter
     private String role;
 
-    @Getter @Setter
-    private Long superiorNIP;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "idUser", nullable = false)
+    private User Superior;
 
 }

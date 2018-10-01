@@ -16,7 +16,7 @@ public class EmployeeRequestItem {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "NIP", nullable = false)
     @Setter @Getter
-    private Employee employee;
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "itemID", nullable = false)
