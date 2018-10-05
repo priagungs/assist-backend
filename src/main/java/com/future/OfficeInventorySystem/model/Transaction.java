@@ -12,12 +12,11 @@ import java.util.Date;
 @Entity
 @Data
 @Table(name="Transaction")
-@TableGenerator(name = "transaction_id" , initialValue = 18216000)
+@TableGenerator(name = "transaction_generator" , initialValue = 18216000)
 public class Transaction {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "transaction_id")
-    @Setter @Getter
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "transaction_generator")
     private Long idTransaction;
 
     private Date transactionDate;
@@ -25,5 +24,7 @@ public class Transaction {
     private String supplier;
 
     private Long idAdmin;
+
+    private ItemTransaction itemTransaction;
 
 }

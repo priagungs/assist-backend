@@ -29,4 +29,10 @@ public class Item {
 
     private String description;
 
+    private Request request;
+
+    private UserHasItem owner;
+
+    private ItemTransaction itemTransaction;
+
 }
