@@ -8,10 +8,11 @@ import javax.persistence.*;
 
 @Entity
 @Data
-@IdClass(UserHasItemID.class)
 public class UserHasItem {
 
     @Id
+    private long idUserHasItem;
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "idUser", nullable = false)
     private User user;
