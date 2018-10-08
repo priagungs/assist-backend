@@ -1,4 +1,4 @@
 package com.future.OfficeInventorySystem.repository;
 
-public class ItemTransactionRepository {
+public interface ItemTransactionRepository {
 }
