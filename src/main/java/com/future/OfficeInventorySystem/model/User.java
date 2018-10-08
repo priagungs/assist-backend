@@ -33,9 +33,17 @@ public class User {
 
     private Boolean isAdmin;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "idRequest", nullable = false)
     private Request request;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "idUserHasItem", nullable = false)
     private UserHasItem hasItem;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "idTransaction", nullable = false)
+    private Transaction transaction;
 
 
 }

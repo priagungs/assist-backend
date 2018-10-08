@@ -26,8 +26,12 @@ public class Request {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "idUser", nullable = false)
     private User superior;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "idUser", nullable = false)
     private User administrator;
 
 

@@ -23,8 +23,12 @@ public class Transaction {
 
     private String supplier;
 
-    private Long idAdmin;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "idUser", nullable = false)
+    private User admin;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "idItemTransaction", nullable = false)
     private ItemTransaction itemTransaction;
 
 }

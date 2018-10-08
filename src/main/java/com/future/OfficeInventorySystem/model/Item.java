@@ -29,10 +29,16 @@ public class Item {
 
     private String description;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "idRequest", nullable = false)
     private Request request;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "idUserHasItem", nullable = false)
     private UserHasItem owner;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "idItemTransaction", nullable = false)
     private ItemTransaction itemTransaction;
 
 }
