@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @TableGenerator(name = "employee_generator", initialValue = 16516000)
@@ -33,17 +34,17 @@ public class User {
 
     private Boolean isAdmin;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "idRequest", nullable = false)
     private Request request;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "idUserHasItem", nullable = false)
-    private UserHasItem hasItem;
+    private List<UserHasItem> hasItem;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "idTransaction", nullable = false)
-    private Transaction transaction;
+    private List<Transaction> transaction;
 
 
 }

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 
 @Entity
@@ -29,16 +30,16 @@ public class Item {
 
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "idRequest", nullable = false)
-    private Request request;
+    private List<Request> request;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "idUserHasItem", nullable = false)
-    private UserHasItem owner;
+    private List<UserHasItem> owner;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "idItemTransaction", nullable = false)
-    private ItemTransaction itemTransaction;
+    private List<ItemTransaction> itemTransaction;
 
 }

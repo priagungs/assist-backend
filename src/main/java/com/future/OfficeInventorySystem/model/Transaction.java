@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 
 @Entity
@@ -27,8 +28,8 @@ public class Transaction {
     @JoinColumn(name = "idUser", nullable = false)
     private User admin;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "idItemTransaction", nullable = false)
-    private ItemTransaction itemTransaction;
+    private List<ItemTransaction> itemTransaction;
 
 }
