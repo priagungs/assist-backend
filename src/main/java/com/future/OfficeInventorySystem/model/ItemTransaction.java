@@ -15,6 +15,7 @@ import javax.persistence.*;
 public class ItemTransaction {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idItemTransaction;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

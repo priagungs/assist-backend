@@ -7,7 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 
 @Entity
@@ -28,8 +28,7 @@ public class Transaction {
     @JoinColumn(name = "idUser", nullable = false)
     private User admin;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "idItemTransaction", nullable = false)
-    private List<ItemTransaction> itemTransaction;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "transaction")
+    private Set<ItemTransaction> itemTransaction;
 
 }
