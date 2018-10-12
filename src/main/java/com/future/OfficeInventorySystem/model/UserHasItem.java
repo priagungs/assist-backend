@@ -11,7 +11,7 @@ import javax.persistence.*;
 public class UserHasItem {
 
     @Id
-    private long idUserHasItem;
+    private Long idUserHasItem;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idUser", nullable = false)

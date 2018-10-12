@@ -17,7 +17,7 @@ public class Item {
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE , generator ="item_id")
-    private String idItem;
+    private Long idItem;
 
     private String itemName;
 
@@ -39,5 +39,6 @@ public class Item {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "item")
     private Set<ItemTransaction> itemTransaction;
+
 
 }
