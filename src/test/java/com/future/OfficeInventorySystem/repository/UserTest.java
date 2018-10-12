@@ -29,6 +29,7 @@ public class UserTest {
     private User user1;
     private User user2;
     private User user3;
+    private User user4;
 
     @Before
     public void setUp() throws Exception {
@@ -39,7 +40,7 @@ public class UserTest {
         user1.setPicture("ini link foto");
         user1.setRole("UX Researcher");
         user1.setDivision("Technology");
-        user1.setSuperior(user3);
+        user1.setSuperior(null);
         user1.setIsAdmin(true);
 
         user2 = new User();
@@ -49,7 +50,7 @@ public class UserTest {
         user2.setPicture("ini link foto");
         user2.setRole("System Analyst");
         user2.setDivision("Technology");
-        user1.setSuperior(user3);
+        user2.setSuperior(null);
         user2.setIsAdmin(true);
 
         user3 = new User();
@@ -62,10 +63,21 @@ public class UserTest {
         user3.setSuperior(user1);
         user3.setIsAdmin(false);
 
+        user4 = new User();
+        user4.setUsername("priagungs");
+        user4.setPassword("hashedpassword");
+        user4.setName("Priagung Satyagama");
+        user4.setPicture("ini link foto");
+        user4.setRole("Data Scientist");
+        user4.setDivision("Technology");
+        user4.setSuperior(user1);
+        user4.setIsAdmin(false);
+
+
         entityManager.persist(user1);
         entityManager.persist(user2);
         entityManager.persist(user3);
-
+        entityManager.persist(user4);
     }
 
     @Test
@@ -78,26 +90,57 @@ public class UserTest {
 
     @Test
     public void findByUsername() {
+        assertNull(userRepository.findByUsername("abcdef"));
+        assertNotNull(userRepository.findByUsername("rickykennedy25"));
+        assertEquals(user2,userRepository.findByUsername("rickykennedy25"));
+
     }
 
     @Test
     public void findAllByName() {
+        List<User> userList = new ArrayList<>();
+        userList.add(user3);
+        userList.add(user4);
+
+        assertEquals(0,userRepository.findAllByName("abcdef").size());
+        assertNotNull(userRepository.findAllByName("Priagung Satyagama"));
+        assertEquals(userList,userRepository.findAllByName("Priagung Satyagama"));
+
     }
 
     @Test
     public void findAllByRole() {
+        List<User> userList = new ArrayList<>();
+        userList.add(user3);
+        userList.add(user4);
+
+        assertEquals(0, userRepository.findAllByRole("asd").size());
+        assertNotNull(userRepository.findAllByRole("Data Scientist"));
+        assertEquals(userList, userRepository.findAllByRole("Data Scientist"));
     }
 
     @Test
     public void findAllByDivision() {
+        List<User> userList = new ArrayList<>();
+        userList.add(user1);
+        userList.add(user2);
+        userList.add(user3);
+        userList.add(user4);
+
+        assertEquals(0, userRepository.findAllByDivision("abcdef").size());
+        assertNotNull(userRepository.findAllByDivision("Technology"));
+        assertEquals(userList, userRepository.findAllByDivision("Technology"));
     }
 
     @Test
     public void findAllBySuperior() {
         List<User> employeeList = new ArrayList<>();
-        employeeList.add(user1);
-        employeeList.add(user2);
-//        assertEquals(employeeList, userRepository.findAllBySuperior(user3));
+        employeeList.add(user3);
+        employeeList.add(user4);
+
+        assertNotNull(userRepository.findAllBySuperior(user3));
+        assertEquals(employeeList, userRepository.findAllBySuperior(user1));
+
     }
 
     @Test
