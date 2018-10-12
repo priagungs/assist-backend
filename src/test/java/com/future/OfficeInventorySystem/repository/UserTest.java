@@ -79,13 +79,6 @@ public class UserTest {
     }
 
     @Test
-    public void findByIdUser() {
-        assertNotNull(userRepository.findByIdUser(new Long(16516001)));
-        assertEquals(userRepository.findByIdUser(new Long(16516001)), user1);
-        assertEquals(userRepository.findByIdUser(new Long(16516002)), user2);
-    }
-
-    @Test
     public void findByUsername() {
         assertNull(userRepository.findByUsername("abcdef"));
         assertNotNull(userRepository.findByUsername("rickykennedy25"));
@@ -93,6 +86,15 @@ public class UserTest {
 
     }
 
+    @Test
+    public void findByIdUser() {
+        Long id = Long.valueOf(16516001);
+        assertEquals(user1, userRepository.findByIdUser(id));
+        assertEquals(user2, userRepository.findByIdUser(id));
+        assertNotNull(userRepository.findByIdUser(new Long(16516001)));
+
+        assertEquals(user1,user1);
+    }
     @Test
     public void findAllByName() {
         List<User> userList = new ArrayList<>();
@@ -147,9 +149,11 @@ public class UserTest {
         adminList.add(user2);
         List<User> notAdminList = new ArrayList<>();
         notAdminList.add(user3);
+        notAdminList.add(user4);
 
         assertEquals(adminList, userRepository.findAllByIsAdmin(true));
         assertEquals(notAdminList, userRepository.findAllByIsAdmin(false));
+
 
     }
 }
