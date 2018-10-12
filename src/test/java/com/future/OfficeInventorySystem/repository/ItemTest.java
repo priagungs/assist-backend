@@ -1,4 +1,4 @@
-package com.future.OfficeInventorySystem.model;
+package com.future.OfficeInventorySystem.repository;
 
 import com.future.OfficeInventorySystem.model.Item;
 import com.future.OfficeInventorySystem.repository.ItemRepository;
