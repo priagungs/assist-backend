@@ -13,8 +13,6 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
     Item findByIdItem(Long idItem);
     List<Item> findAllByItemName(String itemName);
-
     List<Item> findAllByAvailableQtyGreaterThan(Integer min);
-
 
 }

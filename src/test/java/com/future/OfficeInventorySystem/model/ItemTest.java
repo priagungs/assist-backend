@@ -43,8 +43,68 @@ public class ItemTest {
 
     @Test
     public void testFindByIdItem() {
+
+        entityManager.persist(item);
+
+        Item i = itemRepository.findByIdItem(new Long(13216001));
+        assertNotNull(i);
+        assertEquals(item, i);
+
+    }
+
+    @Test
+    public void testFindAllByItemName() {
+
+        entityManager.persist(item);
+        Item i = new Item();
+        i.setItemName("indomie");
+        entityManager.persist(i);
+
+        List<Item> items = itemRepository.findAllByItemName("indomie");
+        assertNotNull(items);
+        assertEquals(2, items.size());
+        assertEquals("indomie", items.get(0).getItemName());
+        assertEquals("indomie", items.get(1).getItemName());
+
+    }
+
+    @Test
+    public void testFindAllByAvailableQtyGreaterThan() {
+
+        entityManager.persist(item);
+
+        assertEquals(itemRepository.findAllByAvailableQtyGreaterThan(2).size(), 0);
+        assertNotNull(itemRepository.findAllByAvailableQtyGreaterThan(0));
+
+        List<Item> items = itemRepository.findAllByAvailableQtyGreaterThan(0);
+        assertEquals(1, items.size());
+        assertTrue(items.get(0).getAvailableQty() > 0);
+
+    }
+
+    @Test
+    public void testSaveItem() {
+
+        itemRepository.save(item);
+
+        List<Item> items = itemRepository.findAll();
+
+        assertNotNull(items);
+        assertEquals(1, items.size());
+        assertEquals(item, items.get(0));
+
+    }
+
+    @Test
+    public void testDeleteItem() {
+
         entityManager.persist(item);
         assertNotNull(itemRepository.findAll());
+        assertEquals(1, itemRepository.findAll().size());
+
+        itemRepository.delete(item);
+        assertEquals(0, itemRepository.findAll().size());
+
     }
 
 }
