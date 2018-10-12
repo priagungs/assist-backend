@@ -1,8 +1,6 @@
 package com.future.OfficeInventorySystem.repository;
 
 import com.future.OfficeInventorySystem.model.User;
-import com.sun.tools.corba.se.idl.InterfaceGen;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -82,7 +80,6 @@ public class UserTest {
 
     @Test
     public void findByIdUser() {
-        entityManager.persist(user1);
         assertNotNull(userRepository.findByIdUser(new Long(16516001)));
         assertEquals(userRepository.findByIdUser(new Long(16516001)), user1);
         assertEquals(userRepository.findByIdUser(new Long(16516002)), user2);
