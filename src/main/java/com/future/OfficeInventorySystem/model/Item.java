@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 import java.util.Set;
 
@@ -32,13 +33,13 @@ public class Item {
     private String description;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "item")
-    private Set<Request> request;
+    private List<Request> request;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "item")
-    private Set<UserHasItem> owner;
+    private List<UserHasItem> owner;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "item")
-    private Set<ItemTransaction> itemTransaction;
+    private List<ItemTransaction> itemTransaction;
 
 
 }

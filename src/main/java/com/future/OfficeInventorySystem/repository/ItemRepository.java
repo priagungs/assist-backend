@@ -5,15 +5,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Set;
 
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Long> {
 
     Item findByIdItem(Long idItem);
-    Set<Item> findAllByItemName(String itemName);
+    List<Item> findAllByItemName(String itemName);
 
-    Set<Item> findAllByAvailableQtyGreaterThan(Integer min);
+    List<Item> findAllByAvailableQtyGreaterThan(Integer min);
 
 
 }

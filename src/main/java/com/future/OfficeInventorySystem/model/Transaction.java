@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 
@@ -29,6 +30,6 @@ public class Transaction {
     private User admin;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "transaction")
-    private Set<ItemTransaction> itemTransaction;
+    private List<ItemTransaction> itemTransaction;
 
 }

@@ -43,8 +43,8 @@ public class ItemTest {
 
     @Test
     public void testFindByIdItem() {
-        itemRepository.save(item);
-        assertNotNull(itemRepository.findAllByItemName("indomie"));
+        entityManager.persist(item);
+        assertNotNull(itemRepository.findAll());
     }
 
 }

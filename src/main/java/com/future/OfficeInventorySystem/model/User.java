@@ -3,6 +3,7 @@ package com.future.OfficeInventorySystem.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 import java.util.Set;
 
@@ -33,18 +34,18 @@ public class User {
     private User superior;
 
     @OneToMany(mappedBy="superior")
-    private Set<User> subordinates;
+    private List<User> subordinates;
 
     private Boolean isAdmin;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private Set<Request> request;
+    private List<Request> request;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private Set<UserHasItem> hasItem;
+    private List<UserHasItem> hasItem;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "admin")
-    private Set<Transaction> transaction;
+    private List<Transaction> transaction;
 
 
 }

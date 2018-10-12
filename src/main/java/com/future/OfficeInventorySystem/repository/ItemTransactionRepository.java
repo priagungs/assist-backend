@@ -7,13 +7,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Set;
 
 @Repository
 public interface ItemTransactionRepository extends JpaRepository<ItemTransaction, Long> {
 
     ItemTransaction findByIdItemTransaction(Long idItemTransaction);
-    Set<ItemTransaction> findAllByTransaction(Transaction transaction);
-    Set<ItemTransaction> findAllByItem(Item item);
+    List<ItemTransaction> findAllByTransaction(Transaction transaction);
+    List<ItemTransaction> findAllByItem(Item item);
 
 }

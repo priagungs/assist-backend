@@ -6,14 +6,15 @@ import com.future.OfficeInventorySystem.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Set;
 
 @Repository
 public interface RequestRepository extends JpaRepository<Request,Long> {
 
     Request findRequestByIdRequest(Long idRequest);
-    Set<Request> findAllRequestByUser(User user);
-    Set<Request> findAllRequestByStatus(Status status);
-    Set<Request> findAllRequestByStatusAndSuperior(Status status, User superior);
+    List<Request> findAllRequestByUser(User user);
+    List<Request> findAllRequestByStatus(Status status);
+    List<Request> findAllRequestByStatusAndSuperior(Status status, User superior);
 
 }
