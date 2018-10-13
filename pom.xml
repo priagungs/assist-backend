@@ -56,6 +56,16 @@
 			<scope>test</scope>
 			<version>RELEASE</version>
 		</dependency>
+		<dependency>
+			<groupId>com.future.OfficeInventorySystem</groupId>
+			<artifactId>future-office-inventory-system</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.future.OfficeInventorySystem</groupId>
+			<artifactId>future-office-inventory-system</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<build>
