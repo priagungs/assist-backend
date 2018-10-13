@@ -88,10 +88,11 @@ public class UserTest {
 
     @Test
     public void findByIdUser() {
-        Long id = Long.valueOf(16516001);
-        assertEquals(user1, userRepository.findByIdUser(id));
-        assertEquals(user2, userRepository.findByIdUser(id));
-        assertNotNull(userRepository.findByIdUser(new Long(16516001)));
+        Long id1 = Long.valueOf(16516025);
+        Long id2 = Long.valueOf(16516026);
+        assertEquals(user1, userRepository.findByIdUser(id1));
+        assertEquals(user2, userRepository.findByIdUser(id2));
+        assertNotNull(userRepository.findByIdUser(new Long(16516025)));
 
         assertEquals(user1,user1);
     }
