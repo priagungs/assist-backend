@@ -57,7 +57,7 @@ public class ItemTest {
 
         entityManager.persist(item);
 
-        Item i = itemRepository.findByIdItem(new Long(13216001));
+        Item i = itemRepository.findByIdItem(item.getIdItem());
         assertNotNull(i);
         assertEquals(item, i);
 

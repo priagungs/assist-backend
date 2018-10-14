@@ -132,8 +132,8 @@ public class UserHasItemTest {
 
     @Test
     public void testSaveUserHasItem(){
-//        userHasItemRepository.save(userHasItemSatu);
-//        userHasItemRepository.save(userHasItemDua);
+        userHasItemRepository.save(userHasItemSatu);
+        userHasItemRepository.save(userHasItemDua);
 
         List<UserHasItem> userHasItems = userHasItemRepository.findAll();
 
@@ -146,6 +146,8 @@ public class UserHasItemTest {
 
     @Test
     public void testDeleteUserHasItem(){
+
+        assertNotNull(userHasItemRepository.findAll());
 
         userHasItemRepository.delete(userHasItemSatu);
         assertEquals(1,userHasItemRepository.findAll().size());
