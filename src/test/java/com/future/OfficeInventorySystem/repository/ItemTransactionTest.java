@@ -20,7 +20,7 @@ import static org.junit.Assert.*;
 
 @DataJpaTest
 @RunWith(SpringRunner.class)
-public class ItemTransactionRepositoryTest {
+public class ItemTransactionTest {
 
     @Autowired
     private TestEntityManager entityManager;
@@ -29,6 +29,7 @@ public class ItemTransactionRepositoryTest {
     private ItemTransactionRepository itemTransactionRepository;
 
     private Item item;
+    private User user;
     private ItemTransaction itemTransaction1;
     private ItemTransaction itemTransaction2;
 
@@ -38,7 +39,12 @@ public class ItemTransactionRepositoryTest {
     @Before
     public void setUp() throws Exception {
 
+        user = new User();
+        entityManager.persist(user);
+
         transaction = new Transaction();
+        transaction.setAdmin(user);
+        entityManager.persist(transaction);
 
         item = new Item();
         entityManager.persist(item);
@@ -55,31 +61,43 @@ public class ItemTransactionRepositoryTest {
         itemTransaction2.setBoughtQty(10);
         itemTransaction2.setPrice(new Long(1000));
 
-        List list = new ArrayList();
+        List<ItemTransaction> list = new ArrayList<>();
         list.add(itemTransaction1);
         list.add(itemTransaction2);
         transaction.setItemTransaction(list);
 
-        entityManager.persist(transaction);
+
         entityManager.persist(itemTransaction1);
         entityManager.persist(itemTransaction2);
     }
 
     @Test
     public void findByIdItemTransaction() {
+        assertEquals(itemTransaction1,
+                itemTransactionRepository.findByIdItemTransaction(
+                        itemTransaction1.getIdItemTransaction()
+                ));
+        assertEquals(itemTransaction2,
+                itemTransactionRepository.findByIdItemTransaction(
+                        itemTransaction2.getIdItemTransaction()
+                ));
 
     }
 
     @Test
     public void findAllByTransaction() {
-        List list = new ArrayList();
-        list.add(itemTransaction1);
-        list.add(itemTransaction2);
-        assertEquals(list, itemTransactionRepository.findAllByTransaction(transaction));
+        List<ItemTransaction> listitem = new ArrayList<>();
+        listitem.add(itemTransaction1);
+        listitem.add(itemTransaction2);
+        assertEquals(listitem, itemTransactionRepository.findAllByTransaction(transaction));
 
     }
 
     @Test
     public void findAllByItem() {
+        List<ItemTransaction> listitem = new ArrayList<>();
+        listitem.add(itemTransaction1);
+        listitem.add(itemTransaction2);
+        assertEquals(listitem, itemTransactionRepository.findAllByItem(item));
     }
 }
