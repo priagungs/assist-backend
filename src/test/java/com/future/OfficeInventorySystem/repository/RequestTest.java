@@ -11,6 +11,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
@@ -96,7 +98,6 @@ public class RequestTest {
     @Test
     public void findRequestByIdRequest() {
         Long idReq = new Long(request.getIdRequest());
-
         assertNull(
                 requestRepository.findRequestByIdRequest(
                         Long.valueOf(111111)));
@@ -110,49 +111,76 @@ public class RequestTest {
 
     @Test
     public void findAllRequestByUser() {
-        List<Request> listRequest = new ArrayList<>();
-        listRequest = requestRepository.findAllRequestByUser(user3);
 
-        assertEquals(new ArrayList<Request>(),
-                requestRepository.findAllRequestByUser(user2));
-        assertNotNull(requestRepository.findAllRequestByUser(user3));
+        List<Request> listRequest = requestRepository
+                .findAllRequestByUser(user3,
+                        new PageRequest(0, 1))
+                .getContent();
+
+        assertEquals(0, requestRepository
+                .findAllRequestByUser(user2, new PageRequest(0, 1))
+                .getContent()
+                .size());
+        assertEquals(1, requestRepository
+                .findAllRequestByUser(user3, new PageRequest(0, 1))
+                .getContent()
+                .size());
         assertEquals(request,listRequest.get(0));
 
     }
 
     @Test
     public void findAllRequestByStatus() {
-        List<Request> listRequest = new ArrayList<>();
-        listRequest = requestRepository.findAllRequestByStatus(Status.SENT);
+        List<Request> listRequest = requestRepository
+                .findAllRequestByStatus(Status.SENT, new PageRequest(0, 1))
+                .getContent();
 
         assertEquals(new ArrayList<Request>(),
-                requestRepository.findAllRequestByStatus(Status.REQUESTED));
+                requestRepository
+                        .findAllRequestByStatus(Status.REQUESTED, new PageRequest(0, 1))
+                        .getContent());
         assertEquals(new ArrayList<Request>(),
-                requestRepository.findAllRequestByStatus(Status.APPROVED));
-        assertEquals(new ArrayList<Request>(),
-                requestRepository.findAllRequestByStatus(Status.REJECTED));
-        assertNotNull(requestRepository.findAllRequestByStatus(Status.SENT));
+                requestRepository
+                        .findAllRequestByStatus(Status.APPROVED, new PageRequest(0, 1))
+                        .getContent());
+        assertEquals(0,
+                requestRepository
+                        .findAllRequestByStatus(Status.REJECTED, new PageRequest(0, 1))
+                        .getContent()
+                        .size());
+        assertTrue(requestRepository
+                .findAllRequestByStatus(Status.SENT, new PageRequest(0, 1))
+                .getContent()
+                .size() > 0);
         assertEquals(request,listRequest.get(0));
     }
 
     @Test
     public void findAllRequestByStatusAndSuperior() {
-        List<Request> listRequest = new ArrayList<>();
-        listRequest = requestRepository.
-                findAllRequestByStatusAndSuperior(Status.SENT, user1);
+        Pageable pageRequest = new PageRequest(0, 1);
+        List<Request> listRequest = requestRepository
+                .findAllRequestByStatusAndSuperior(Status.SENT, user1, pageRequest)
+                .getContent();
 
+        assertEquals(0,
+                requestRepository
+                        .findAllRequestByStatusAndSuperior(Status.REQUESTED, user1, pageRequest)
+                        .getContent()
+                        .size());
         assertEquals(new ArrayList<Request>(),
-                requestRepository.findAllRequestByStatusAndSuperior(
-                        Status.REQUESTED,user1));
-        assertEquals(new ArrayList<Request>(),
-                requestRepository.findAllRequestByStatusAndSuperior(
-                        Status.APPROVED, user1));
-        assertEquals(new ArrayList<Request>(),
-                requestRepository.findAllRequestByStatusAndSuperior(
-                        Status.REJECTED, user1));
-        assertNotNull(
-                requestRepository.findAllRequestByStatusAndSuperior(
-                        Status.SENT, user1));
+                requestRepository
+                        .findAllRequestByStatusAndSuperior(Status.APPROVED, user1, pageRequest)
+                        .getContent());
+        assertEquals(0,
+                requestRepository
+                        .findAllRequestByStatusAndSuperior(Status.REJECTED, user1, pageRequest)
+                        .getContent()
+                        .size());
+        assertTrue(
+                requestRepository
+                        .findAllRequestByStatusAndSuperior(Status.SENT, user1, pageRequest)
+                        .getContent()
+                        .size() > 0);
         assertEquals(request,listRequest.get(0));
     }
 

@@ -8,9 +8,12 @@ import javax.persistence.*;
 
 @Entity
 @Data
+@TableGenerator(name = "user_has_item_generator", initialValue = 00000000)
+@Table(name="UserHasItem")
 public class UserHasItem {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "user_has_item_generator")
     private Long idUserHasItem;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

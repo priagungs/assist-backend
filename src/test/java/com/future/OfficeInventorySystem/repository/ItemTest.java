@@ -10,6 +10,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
@@ -27,6 +30,7 @@ public class ItemTest {
     private ItemRepository itemRepository;
 
     private Item item;
+    private Item item2;
 
     @Before
     public void setUp() {
@@ -39,6 +43,13 @@ public class ItemTest {
         item.setAvailableQty(1);
         item.setDescription("micin");
 
+        item2 = new Item();
+        item2.setItemName("indomie");
+        item2.setPicture("image.jpg");
+        item2.setPrice(1000);
+        item2.setTotalQty(10);
+        item2.setAvailableQty(3);
+        item2.setDescription("micin++");
     }
 
     @Test
@@ -46,7 +57,7 @@ public class ItemTest {
 
         entityManager.persist(item);
 
-        Item i = itemRepository.findByIdItem(new Long(13216001));
+        Item i = itemRepository.findByIdItem(item.getIdItem());
         assertNotNull(i);
         assertEquals(item, i);
 
@@ -56,12 +67,20 @@ public class ItemTest {
     public void testFindAllByItemName() {
 
         entityManager.persist(item);
-        Item i = new Item();
-        i.setItemName("indomie");
-        entityManager.persist(i);
+        entityManager.persist(item2);
+        Pageable page = new PageRequest(1, 1);
 
-        List<Item> items = itemRepository.findAllByItemName("indomie");
+        List<Item> items = itemRepository
+                .findAllByItemName("indomie", page)
+                .getContent();
         assertNotNull(items);
+        assertEquals(1, items.size());
+        assertEquals("indomie", items.get(0).getItemName());
+
+        page = new PageRequest(0, 2);
+        items = itemRepository
+                .findAllByItemName("indomie", page)
+                .getContent();
         assertEquals(2, items.size());
         assertEquals("indomie", items.get(0).getItemName());
         assertEquals("indomie", items.get(1).getItemName());
@@ -72,13 +91,35 @@ public class ItemTest {
     public void testFindAllByAvailableQtyGreaterThan() {
 
         entityManager.persist(item);
+        entityManager.persist(item2);
 
-        assertEquals(itemRepository.findAllByAvailableQtyGreaterThan(2).size(), 0);
-        assertNotNull(itemRepository.findAllByAvailableQtyGreaterThan(0));
+        List<Item> items = itemRepository
+                .findAllByAvailableQtyGreaterThan(0, new PageRequest(0, 2))
+                .getContent();
 
-        List<Item> items = itemRepository.findAllByAvailableQtyGreaterThan(0);
-        assertEquals(1, items.size());
+        assertEquals(2, items.size());
         assertTrue(items.get(0).getAvailableQty() > 0);
+        assertTrue(items.get(1).getAvailableQty() > 0);
+
+        items = itemRepository
+                .findAllByAvailableQtyGreaterThan(0, new PageRequest(1, 2))
+                .getContent();
+
+        assertEquals(0, items.size());
+
+        items = itemRepository
+                .findAllByAvailableQtyGreaterThan(2, new PageRequest(0, 2))
+                .getContent();
+
+        assertEquals(1, items.size());
+
+        items = itemRepository
+                .findAllByAvailableQtyGreaterThan(2, new PageRequest(1, 2))
+                .getContent();
+
+        assertEquals(0, items.size());
+
+
 
     }
 

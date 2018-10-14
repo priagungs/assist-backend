@@ -10,6 +10,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
@@ -66,19 +68,51 @@ public class TransactionTest {
 
     @Test
     public void findByIdTransaction() {
-        Long id = Long.valueOf(18216004);
+        Long id = Long.valueOf(transaction1.getIdTransaction());
         assertEquals(transaction1, transactionRepository.findByIdTransaction(id));
-
     }
 
     @Test
     public void findAllByAdmin() {
-        List<Transaction> list = new ArrayList<>();
-        list.add(transaction1);
-        list.add(transaction2);
-        list.add(transaction3);
+        Pageable page =  new PageRequest(0,3);
 
-        assertEquals(list, transactionRepository.findAllByAdmin(admin));
+        List<Transaction> transactions = transactionRepository
+                .findAllByAdmin(admin,page)
+                .getContent();
+
+        assertNotNull(transactions);
+        assertEquals(3, transactions.size());
+        assertEquals(transaction1,transactions.get(0));
+
+    }
+
+    @Test
+    public void testSaveTransaction(){
+        transactionRepository.save(transaction1);
+        transactionRepository.save(transaction2);
+        transactionRepository.save(transaction3);
+
+        assertNotNull(transactionRepository.findAll());
+        assertEquals(3,transactionRepository.findAll().size());
+        assertEquals(transaction1,transactionRepository.findAll().get(0));
+        assertEquals(transaction2,transactionRepository.findAll().get(1));
+        assertEquals(transaction3,transactionRepository.findAll().get(2));
+
+    }
+
+    @Test
+    public void testDeleteTransaction(){
+
+        assertNotNull(transactionRepository.findAll());
+
+        transactionRepository.delete(transaction1);
+        assertEquals(2,transactionRepository.findAll().size());
+
+        transactionRepository.delete(transaction2);
+        assertEquals(1,transactionRepository.findAll().size());
+
+        transactionRepository.delete(transaction3);
+        assertEquals(0,transactionRepository.findAll().size());
 
     }
 }

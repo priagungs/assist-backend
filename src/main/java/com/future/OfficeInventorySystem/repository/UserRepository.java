@@ -1,6 +1,8 @@
 package com.future.OfficeInventorySystem.repository;
 
 import com.future.OfficeInventorySystem.model.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -13,9 +15,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     User findByIdUser(Long idUser);
     User findByUsername(String username);
-    List<User> findAllByName(String name);
-    List<User> findAllByRole(String role);
-    List<User> findAllByDivision(String division);
-    List<User> findAllBySuperior(User superior);
-    List<User> findAllByIsAdmin(Boolean isAdmin);
+    Page<User> findAllByName(String name, Pageable page);
+    Page<User> findAllBySuperior(User superior, Pageable page);
+    Page<User> findAllByIsAdmin(Boolean isAdmin, Pageable page);
+
 }
