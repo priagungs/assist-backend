@@ -9,8 +9,10 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.awt.print.Pageable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,62 +84,56 @@ public class UserTest {
 
     @Test
     public void findByUsername() {
+
         assertNull(userRepository.findByUsername("abcdef"));
         assertNotNull(userRepository.findByUsername("rickykennedy25"));
         assertEquals(user2,userRepository.findByUsername("rickykennedy25"));
+
     }
 
     @Test
     public void findByIdUser() {
+
         assertNull(userRepository.findByIdUser(new Long(1111111)));
         assertEquals(user1, userRepository.findByIdUser(user1.getIdUser()));
         assertEquals(user2, userRepository.findByIdUser(user2.getIdUser()));
         assertNotNull(userRepository.findByIdUser(user1.getIdUser()));
+
     }
     @Test
     public void findAllByName() {
+
         List<User> userList = new ArrayList<>();
         userList.add(user3);
         userList.add(user4);
 
-        assertEquals(0,userRepository.findAllByName("abcdef").size());
-        assertNotNull(userRepository.findAllByName("Priagung Satyagama"));
-        assertEquals(userList,userRepository.findAllByName("Priagung Satyagama"));
+        assertEquals(0,userRepository
+                .findAllByName("abcdef", new PageRequest(0, 2))
+                .getContent()
+                .size());
+        assertNotNull(userRepository
+                .findAllByName("Priagung Satyagama", new PageRequest(0, 2))
+                .getContent());
+        assertEquals(userList,userRepository
+                .findAllByName("Priagung Satyagama", new PageRequest(0, 2))
+                .getContent());
 
     }
 
-    @Test
-    public void findAllByRole() {
-        List<User> userList = new ArrayList<>();
-        userList.add(user3);
-        userList.add(user4);
-
-        assertEquals(0, userRepository.findAllByRole("asd").size());
-        assertNotNull(userRepository.findAllByRole("Data Scientist"));
-        assertEquals(userList, userRepository.findAllByRole("Data Scientist"));
-    }
-
-    @Test
-    public void findAllByDivision() {
-        List<User> userList = new ArrayList<>();
-        userList.add(user1);
-        userList.add(user2);
-        userList.add(user3);
-        userList.add(user4);
-
-        assertEquals(0, userRepository.findAllByDivision("abcdef").size());
-        assertNotNull(userRepository.findAllByDivision("Technology"));
-        assertEquals(userList, userRepository.findAllByDivision("Technology"));
-    }
 
     @Test
     public void findAllBySuperior() {
+
         List<User> employeeList = new ArrayList<>();
         employeeList.add(user3);
         employeeList.add(user4);
 
-        assertNotNull(userRepository.findAllBySuperior(user3));
-        assertEquals(employeeList, userRepository.findAllBySuperior(user1));
+        assertNotNull(userRepository
+                .findAllBySuperior(user1, new PageRequest(0, 2))
+                .getContent());
+        assertEquals(employeeList, userRepository
+                .findAllBySuperior(user1, new PageRequest(0, 2))
+                .getContent());
 
     }
 
@@ -150,8 +146,12 @@ public class UserTest {
         notAdminList.add(user3);
         notAdminList.add(user4);
 
-        assertEquals(adminList, userRepository.findAllByIsAdmin(true));
-        assertEquals(notAdminList, userRepository.findAllByIsAdmin(false));
+        assertEquals(adminList, userRepository
+                .findAllByIsAdmin(true, new PageRequest(0, 2))
+                .getContent());
+        assertEquals(notAdminList, userRepository
+                .findAllByIsAdmin(false, new PageRequest(0, 2))
+                .getContent());
 
     }
 
