@@ -9,7 +9,11 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -23,95 +27,131 @@ public class UserHasItemTest {
     @Autowired
     private UserHasItemRepository userHasItemRepository;
 
-    private User user1;
-    private Item item1;
-    private Item item2;
-    private UserHasItem userHasItem1;
-    private UserHasItem userHasItem2;
+    private User user;
+    private Item itemSatu;
+    private Item itemDua;
+    private UserHasItem userHasItemSatu;
+    private UserHasItem userHasItemDua;
 
     @Before
-    public void setUp() {
-        user1 = new User();
-        user1.setUsername("shintaayuck");
-        user1.setPassword("hashedpassword");
-        user1.setName("Shinta Ayu C K");
-        user1.setPicture("ini link foto");
-        user1.setRole("UX Researcher");
-        user1.setDivision("Technology");
-        user1.setSuperior(null);
-        user1.setIsAdmin(false);
+    public void setUp() throws Exception {
+        user = new User();
+//        user.setIdUser(Long.valueOf(16516001));
+//        user.setUsername("shintaayuck");
+//        user.setPassword("hashedpassword");
+//        user.setName("Shinta Ayu C K");
+//        user.setPicture("ini link foto");
+//        user.setRole("UX Researcher");
+//        user.setDivision("Technology");
+//        user.setSuperior(null);
+//        user.setIsAdmin(false);
+        entityManager.persist(user);
 
-        item1 = new Item();
-        item1.setItemName("indomie");
-        item1.setPicture("image.jpg");
-        item1.setPrice(1000);
-        item1.setTotalQty(10);
-        item1.setAvailableQty(2);
-        item1.setDescription("micin");
+        itemSatu = new Item();
+//        itemSatu.setIdItem(Long.valueOf(000001));
+//        itemSatu.setItemName("indomie");
+//        itemSatu.setPicture("image.jpg");
+//        itemSatu.setPrice(1000);
+//        itemSatu.setTotalQty(10);
+//        itemSatu.setAvailableQty(2);
+//        itemSatu.setDescription("micin");
+        entityManager.persist(itemSatu);
 
-        item2 = new Item();
-        item2.setItemName("popmie");
-        item2.setPicture("image.jpg");
-        item2.setPrice(1000);
-        item2.setTotalQty(5);
-        item2.setAvailableQty(3);
-        item2.setDescription("micin instan");
+        itemDua = new Item();
+//        itemDua.setIdItem(Long.valueOf(000002));
+//        itemDua.setItemName("popmie");
+//        itemDua.setPicture("image.jpg");
+//        itemDua.setPrice(1000);
+//        itemDua.setTotalQty(5);
+//        itemDua.setAvailableQty(3);
+//        itemDua.setDescription("micin instan");
+        entityManager.persist(itemDua);
 
-        userHasItem1 = new UserHasItem();
-        userHasItem1.setUser(user1);
-        userHasItem1.setItem(item1);
-        userHasItem1.setHasQty(2);
 
-        userHasItem2 = new UserHasItem();
-        userHasItem2.setUser(user1);
-        userHasItem2.setItem(item2);
-        userHasItem2.setHasQty(2);
+        userHasItemSatu = new UserHasItem();
+        userHasItemSatu.setUser(user);
+        userHasItemSatu.setItem(itemSatu);
+        userHasItemSatu.setHasQty(2);
 
-        entityManager.persist(user1);
-        entityManager.persist(item1);
-        entityManager.persist(item2);
-        entityManager.persist(userHasItem1);
-        entityManager.persist(userHasItem2);
+        entityManager.persist(userHasItemSatu);
+
+        userHasItemDua = new UserHasItem();
+        userHasItemDua.setUser(user);
+        userHasItemDua.setItem(itemDua);
+        userHasItemDua.setHasQty(2);
+
+        entityManager.persist(userHasItemDua);
 
     }
 
 
     @Test
     public void findByIdUserHasItem() {
-
         assertNotNull(userHasItemRepository.findByIdUserHasItem(
-                userHasItem1.getIdUserHasItem()
+                userHasItemSatu.getIdUserHasItem()
                 )
         );
         assertNotNull(userHasItemRepository.findByIdUserHasItem(
-                userHasItem2.getIdUserHasItem()
+                userHasItemDua.getIdUserHasItem()
                 )
         );
         assertNull(userHasItemRepository.findByIdUserHasItem(Long.valueOf(111111)));
-        assertEquals(userHasItem1,userHasItemRepository.findByIdUserHasItem(userHasItem1.getIdUserHasItem()));
+        assertEquals(userHasItemSatu,userHasItemRepository.findByIdUserHasItem(userHasItemSatu.getIdUserHasItem()));
 
     }
 
     @Test
     public void findAllByUser() {
-        assertTrue(true);
+
+        Pageable page = new PageRequest(0,2);
+
+        List<UserHasItem> userHasItems = userHasItemRepository
+                .findAllByUser(user,page)
+                .getContent();
+
+        assertNotNull(userHasItems);
+        assertEquals(2,userHasItems.size());
+        assertEquals(userHasItemSatu,userHasItems.get(0));
+
     }
 
     @Test
     public void findAllByItem() {
-        assertTrue(true);
+
+        Pageable page = new PageRequest(0,2);
+
+        List<UserHasItem> userHasItems = userHasItemRepository
+                .findAllByItem(itemSatu,page)
+                .getContent();
+
+        assertNotNull(userHasItems);
+        assertEquals(1,userHasItems.size());
+        assertEquals(userHasItemSatu,userHasItems.get(0));
 
     }
 
     @Test
     public void testSaveUserHasItem(){
-        assertTrue(true);
+//        userHasItemRepository.save(userHasItemSatu);
+//        userHasItemRepository.save(userHasItemDua);
+
+        List<UserHasItem> userHasItems = userHasItemRepository.findAll();
+
+        assertNotNull(userHasItems);
+        assertEquals(2,userHasItems.size());
+        assertEquals(userHasItemSatu,userHasItems.get(0));
+        assertEquals(userHasItemDua,userHasItems.get(1));
 
     }
 
     @Test
     public void testDeleteUserHasItem(){
-        assertTrue(true);
+
+        userHasItemRepository.delete(userHasItemSatu);
+        assertEquals(1,userHasItemRepository.findAll().size());
+
+        userHasItemRepository.delete(userHasItemDua);
+        assertEquals(0,userHasItemRepository.findAll().size());
 
     }
 }
