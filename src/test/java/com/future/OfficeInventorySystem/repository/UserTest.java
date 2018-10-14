@@ -1,7 +1,9 @@
 package com.future.OfficeInventorySystem.repository;
 
 import com.future.OfficeInventorySystem.model.User;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,17 +85,15 @@ public class UserTest {
         assertNull(userRepository.findByUsername("abcdef"));
         assertNotNull(userRepository.findByUsername("rickykennedy25"));
         assertEquals(user2,userRepository.findByUsername("rickykennedy25"));
-
     }
 
     @Test
     public void findByIdUser() {
-        Long id = Long.valueOf(16516001);
-        assertEquals(user1, userRepository.findByIdUser(id));
-        assertEquals(user2, userRepository.findByIdUser(id));
-        assertNotNull(userRepository.findByIdUser(new Long(16516001)));
 
-        assertEquals(user1,user1);
+        assertNull(userRepository.findByIdUser(new Long(1111111)));
+        assertEquals(user1, userRepository.findByIdUser(user1.getIdUser()));
+        assertEquals(user2, userRepository.findByIdUser(user2.getIdUser()));
+        assertNotNull(userRepository.findByIdUser(user1.getIdUser()));
     }
     @Test
     public void findAllByName() {
@@ -154,6 +154,7 @@ public class UserTest {
         assertEquals(adminList, userRepository.findAllByIsAdmin(true));
         assertEquals(notAdminList, userRepository.findAllByIsAdmin(false));
 
-
     }
+
+
 }
