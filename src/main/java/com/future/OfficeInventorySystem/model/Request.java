@@ -10,6 +10,7 @@ import java.util.Set;
 
 @Entity
 @Data
+@Table(name = "Request")
 @TableGenerator(name = "request_generator")
 public class Request {
     @Id
