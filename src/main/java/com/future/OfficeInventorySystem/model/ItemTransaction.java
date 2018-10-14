@@ -11,11 +11,12 @@ import javax.persistence.*;
 
 @Entity
 @Data
+@TableGenerator(name = "item_transaction_generator")
 @Table(name ="ItemTransaction")
 public class ItemTransaction {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.TABLE,generator = "item_transaction_generator")
     private Long idItemTransaction;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
