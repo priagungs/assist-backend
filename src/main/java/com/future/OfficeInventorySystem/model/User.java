@@ -29,8 +29,8 @@ public class User {
 
     private String division;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "idSuperior")
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    @JoinColumn(name = "idSuperior", updatable = false, insertable = false)
     private User superior;
 
     @OneToMany(mappedBy="superior")

@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.sound.midi.SysexMessage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +31,7 @@ public class UserTest {
     private User user2;
     private User user3;
     private User user4;
+    private User user;
 
     @Before
     public void setUp() throws Exception {
@@ -154,6 +156,33 @@ public class UserTest {
         assertEquals(notAdminList, userRepository.findAllByIsAdmin(false));
 
     }
+
+    @Test
+    public void saveUser() {
+        userRepository.save(user1);
+
+        List<User> users = userRepository.findAll();
+        assertNotNull(users);
+        assertEquals(4,users.size());
+        assertEquals(user1, users.get(0));
+    }
+
+    @Test
+    public void deleteUser() {
+        assertNotNull(userRepository.findAll());
+        assertEquals(4, userRepository.findAll().size());
+
+        userRepository.delete(user1);
+
+        assertEquals(3, userRepository.findAll().size());
+//        assertNull(user3.getSuperior());
+//        assertNull(user1);
+//        assertEquals(3, userRepository.findAll().size());
+        assertEquals(user1, userRepository.findAll().get(0));
+//
+
+    }
+
 
 
 }
