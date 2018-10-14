@@ -1,6 +1,7 @@
 package com.future.OfficeInventorySystem.repository;
 
 import com.future.OfficeInventorySystem.model.User;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -18,4 +19,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findAllByDivision(String division);
     List<User> findAllBySuperior(User superior);
     List<User> findAllByIsAdmin(Boolean isAdmin);
+
 }
