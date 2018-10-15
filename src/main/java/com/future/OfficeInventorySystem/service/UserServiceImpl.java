@@ -76,6 +76,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Boolean deleteUser(Long id) {
-        return null;
+        User user = userRepository.findByIdUser(id);
+        if(user == null) {
+            return false;
+        }
+        else {
+            if(user.getSuperior() != null) {
+                User superior = userRepository.findByIdUser(user.getSuperior().getIdUser());
+                superior.getSubordinates().remove(user);
+                userRepository.save(superior);
+            }
+            if(user.getSubordinates() != null) {
+                for (User u: user.getSubordinates()) {
+                    u.setSuperior(null);
+                    userRepository.save(u);
+                }
+            }
+            userRepository.delete(user);
+            return true;
+        }
     }
 }
