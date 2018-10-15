@@ -1,5 +1,6 @@
 package com.future.OfficeInventorySystem.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -19,6 +20,7 @@ public class User {
 
     private String username;
 
+    @JsonIgnore
     private String password;
 
     private String name;
@@ -29,8 +31,8 @@ public class User {
 
     private String division;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    @JoinColumn(name = "idSuperior", updatable = false, insertable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idSuperior", updatable = false, insertable = false)
     private User superior;
 
     @OneToMany(mappedBy="superior")
