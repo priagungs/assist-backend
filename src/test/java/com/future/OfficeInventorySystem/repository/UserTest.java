@@ -176,8 +176,12 @@ public class UserTest {
         assertNotNull(userRepository.findAll());
         assertEquals(4, userRepository.findAll().size());
 
-        userRepository.delete(user2);
+        user3.setSuperior(null);
+        user4.setSuperior(null);
 
+        userRepository.save(user3);
+        userRepository.save(user4);
+        userRepository.delete(user1);
         assertEquals(3, userRepository.findAll().size());
 
     }

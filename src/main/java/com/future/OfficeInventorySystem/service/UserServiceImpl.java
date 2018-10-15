@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public List<User> readAllUser() {
-        return userRepository.findAll();
+        return userRepository.findAll(pageRequest).getContent();
     }
 
     public User readUserByIdUser(Long id) {
