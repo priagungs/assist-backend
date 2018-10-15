@@ -36,6 +36,7 @@ public class User {
     private User superior;
 
     @OneToMany(mappedBy="superior")
+    @JsonIgnore
     private List<User> subordinates;
 
     private Boolean isAdmin;
