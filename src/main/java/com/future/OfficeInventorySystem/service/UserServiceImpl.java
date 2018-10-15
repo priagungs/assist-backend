@@ -18,7 +18,12 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
-    @Override
+    public UserServiceImpl(PageRequest pageRequest) {
+        this.pageRequest = pageRequest;
+    }
+
+    public UserServiceImpl() {}
+
     public Boolean createUser(User user) {
         if(userRepository.findByIdUser(user.getIdUser()) != null ||
                 userRepository.findByUsername(user.getUsername()) != null) {
@@ -37,7 +42,6 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    @Override
     public Boolean updateUser(User user) {
         User superior = userRepository.findByIdUser(user.getSuperior().getIdUser());
 
@@ -57,24 +61,20 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    @Override
     public List<User> readAllUser() {
         return userRepository.findAll();
     }
 
-    @Override
     public User readUserByIdUser(Long id) {
         return userRepository.findByIdUser(id);
     }
 
-    @Override
     public List<User> readUserByIdSuperior(Long id) {
         return userRepository
                 .findAllBySuperior(userRepository.findByIdUser(id), pageRequest)
                 .getContent();
     }
 
-    @Override
     public Boolean deleteUser(Long id) {
         User user = userRepository.findByIdUser(id);
         if(user == null) {
