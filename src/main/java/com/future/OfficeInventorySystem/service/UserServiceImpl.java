@@ -39,24 +39,39 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Boolean updateUser(User user) {
+        User superior = userRepository.findByIdUser(user.getSuperior().getIdUser());
+
         if(userRepository.findByIdUser(user.getIdUser()) == null) {
             return false;
+        }
+        else if(superior == null) {
+            return false;
+        }
+        else {
+            if (!superior.getSubordinates().contains(user)) {
+                superior.getSubordinates().add(user);
+                userRepository.save(superior);
+            }
+            userRepository.save(user);
+            return true;
         }
     }
 
     @Override
     public List<User> readAllUser() {
-        return null;
+        return userRepository.findAll();
     }
 
     @Override
-    public List<User> readUserByIdUser(Long id) {
-        return null;
+    public User readUserByIdUser(Long id) {
+        return userRepository.findByIdUser(id);
     }
 
     @Override
     public List<User> readUserByIdSuperior(Long id) {
-        return null;
+        return userRepository
+                .findAllBySuperior(userRepository.findByIdUser(id), pageRequest)
+                .getContent();
     }
 
     @Override

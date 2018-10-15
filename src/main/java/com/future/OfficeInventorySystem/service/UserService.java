@@ -11,7 +11,7 @@ public interface UserService {
     Boolean createUser(User user);
     Boolean updateUser(User user);
     List<User> readAllUser();
-    List<User> readUserByIdUser(Long id);
+    User readUserByIdUser(Long id);
     List<User> readUserByIdSuperior(Long id);
     Boolean deleteUser(Long id);
 
