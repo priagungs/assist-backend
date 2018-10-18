@@ -75,6 +75,11 @@ public class UserTest {
         user4.setSuperior(user1);
         user4.setIsAdmin(false);
 
+        List<User> subordinates = new ArrayList<>();
+        subordinates.add(user3);
+        subordinates.add(user4);
+        user1.setSubordinates(subordinates);
+
 
         entityManager.persist(user1);
         entityManager.persist(user2);
@@ -167,20 +172,18 @@ public class UserTest {
 
     @Test
     public void deleteUser() {
+
         assertNotNull(userRepository.findAll());
         assertEquals(4, userRepository.findAll().size());
 
-        userRepository.delete(user1);
+        user3.setSuperior(null);
+        user4.setSuperior(null);
 
+        userRepository.save(user3);
+        userRepository.save(user4);
+        userRepository.delete(user1);
         assertEquals(3, userRepository.findAll().size());
-//        assertNull(user3.getSuperior());
-//        assertNull(user1);
-//        assertEquals(3, userRepository.findAll().size());
-        assertEquals(user1, userRepository.findAll().get(0));
-//
 
     }
-
-
 
 }
