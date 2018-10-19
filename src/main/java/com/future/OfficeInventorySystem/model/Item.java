@@ -35,15 +35,15 @@ public class Item {
 
     private String description;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "item")
+    @OneToMany(mappedBy = "item")
     @JsonIgnoreProperties("item")
     private List<Request> request;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "item")
+    @OneToMany(mappedBy = "item")
     @JsonIgnoreProperties("item")
     private List<UserHasItem> owner;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "item")
+    @OneToMany(mappedBy = "item")
     @JsonIgnoreProperties("item")
     private List<ItemTransaction> itemTransaction;
 

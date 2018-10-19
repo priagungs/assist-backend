@@ -35,13 +35,8 @@ public class Request {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "idSuperior", nullable = false)
-    private User superior;
+    private Long idSuperior; //the one who accepted this request
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "idAdministrator", nullable = false)
-    private User administrator;
 
 
 

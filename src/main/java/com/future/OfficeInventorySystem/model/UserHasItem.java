@@ -29,4 +29,6 @@ public class UserHasItem {
 
     private Integer hasQty;
 
+    private Long idAdmin; //the one who handover this item
+
 }
