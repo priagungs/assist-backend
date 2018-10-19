@@ -8,13 +8,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Set;
-
 @Repository
 public interface UserHasItemRepository extends JpaRepository<UserHasItem, Long> {
 
     Page<UserHasItem> findAllByUser(User user, Pageable pageable);
+    
     Page<UserHasItem> findAllByItem(Item item, Pageable pageable);
 
 }
