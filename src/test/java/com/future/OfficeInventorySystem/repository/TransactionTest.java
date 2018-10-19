@@ -69,7 +69,7 @@ public class TransactionTest {
     @Test
     public void findByIdTransaction() {
         Long id = Long.valueOf(transaction1.getIdTransaction());
-        assertEquals(transaction1, transactionRepository.findByIdTransaction(id));
+        assertEquals(transaction1, transactionRepository.findById(id).get());
     }
 
     @Test

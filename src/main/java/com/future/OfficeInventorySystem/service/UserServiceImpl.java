@@ -1,12 +1,16 @@
 package com.future.OfficeInventorySystem.service;
 
+import com.future.OfficeInventorySystem.exception.UserNotFoundException;
 import com.future.OfficeInventorySystem.model.User;
+import com.future.OfficeInventorySystem.model.UserHasItem;
 import com.future.OfficeInventorySystem.repository.UserHasItemRepository;
 import com.future.OfficeInventorySystem.repository.UserRepository;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,101 +19,93 @@ import java.util.List;
 @Data
 public class UserServiceImpl implements UserService {
 
-    private Pageable pageRequest;
-
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
     private UserHasItemRepository userHasItemRepository;
 
-    public UserServiceImpl(PageRequest pageRequest) {
-        this.pageRequest = pageRequest;
-    }
+    @Autowired
+    private UserHasItemService userHasItemService;
+
 
     public UserServiceImpl() {}
 
-    public Boolean createUser(User user) {
-        if(userRepository.findByIdUser(user.getIdUser()) != null) {
-            return false;
+
+    public ResponseEntity createUser(User user) {
+        user.setSuperior(userRepository
+                .findById(user.getSuperior().getIdUser())
+                .orElseThrow(() -> new UserNotFoundException("superior not found")));
+
+        if (userRepository.findById(user.getIdUser()).isPresent()) {
+            throw new RuntimeException(user.getIdUser().toString() + " is present");
         }
-        else if(user.getSuperior() != null &&
-                userRepository.findByIdUser(user.getSuperior().getIdUser()) == null) {
-            return false;
-        }
-        else {
-            if(user.getSuperior() != null) {
-                User superior = userRepository.findByIdUser(user.getSuperior().getIdUser());
-                superior.getSubordinates().add(user);
-                userRepository.save(superior);
-            }
-            user.setSuperior(userRepository.findByIdUser(user.getSuperior().getIdUser()));
-            userRepository.save(user);
-            return true;
-        }
+
+        userRepository.save(user);
+        return ResponseEntity.ok().build();
     }
 
-    public Boolean updateUser(User user) {
-        if(userRepository.findByIdUser(user.getIdUser()) == null) {
-            return false;
-        }
-        else if(user.getSuperior() != null &&
-                userRepository.findByIdUser(user.getSuperior().getIdUser()) == null) {
-            return false;
-        }
-        else {
-            User userBeforeUpdate = userRepository.findByIdUser(user.getIdUser());
-            if(userBeforeUpdate.getSuperior() != null && user.getSuperior() == null) {
-                User superior = userBeforeUpdate.getSuperior();
-                superior.getSubordinates().remove(user);
-                userRepository.save(superior);
-            }
-            else if(userBeforeUpdate.getSuperior() != null && user.getSuperior() != null) {
-                User recentSuperior = userBeforeUpdate.getSuperior();
-                User newSuperior = userRepository.findByIdUser(user.getSuperior().getIdUser());
+    public ResponseEntity updateUser(User user) {
+        User userBeforeUpdate = userRepository
+                .findById(user.getIdUser())
+                .orElseThrow(() -> new UserNotFoundException("user not found"));
 
-//                recentSuperior.getSubordinates().remove()
-            }
-        }
-        return false;
+        user.setSuperior(userRepository
+                .findById(user.getSuperior().getIdUser())
+                .orElseThrow(() -> new UserNotFoundException("superior not found")));
+
+        userBeforeUpdate.setIsAdmin(user.getIsAdmin());
+        userBeforeUpdate.setName(user.getName());
+        userBeforeUpdate.setUsername(user.getUsername());
+        userBeforeUpdate.setPicture(user.getPicture());
+        userBeforeUpdate.setPassword(user.getPassword());
+        userBeforeUpdate.setDivision(user.getDivision());
+        userBeforeUpdate.setRole(user.getRole());
+
+        return ResponseEntity.ok().build();
+
     }
 
-    public List<User> readAllUser() {
-        return userRepository.findAll(pageRequest).getContent();
+    public List<User> readAllUser(Pageable pageable) {
+        return userRepository.findAll(pageable).getContent();
     }
 
     public User readUserByIdUser(Long id) {
-        return userRepository.findByIdUser(id);
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("user not found"));
     }
 
-    public List<User> readUserByIdSuperior(Long id) {
-        return userRepository
-                .findAllBySuperior(userRepository.findByIdUser(id), pageRequest)
+    public List<User> readUserByIdSuperior(Long id, Pageable pageable) {
+        return userRepository.findAllBySuperior(userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("superior not found")), pageable)
                 .getContent();
     }
 
-    public List<User> readUserByIsAdmin(Boolean isAdmin) {
-        return userRepository.findAllByIsAdmin(isAdmin, pageRequest).getContent();
+    public List<User> readUserByIsAdmin(Boolean isAdmin, Pageable pageable) {
+        return userRepository.findAllByIsAdmin(isAdmin, pageable).getContent();
     }
 
     public User readUserByUsername(String username) {
-        return userRepository.findByUsername(username);
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("user not found"));
     }
 
-    public Boolean deleteUser(Long id) {
-        User user = userRepository.findByIdUser(id);
-        if(user == null) {
-            return false;
+    public ResponseEntity deleteUser(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("user not found"));
+
+        for (User subordinate: user.getSubordinates()) {
+            subordinate.setSuperior(user.getSuperior());
+            userRepository.save(subordinate);
         }
-        else {
-            if(user.getSubordinates() != null) {
-                for (User u: user.getSubordinates()) {
-                    u.setSuperior(null);
-                    userRepository.save(u);
-                }
-            }
-            userRepository.delete(user);
-            return true;
+
+        for (UserHasItem hasItem : user.getHasItem()) {
+            userHasItemService.deleteUserHasItem(hasItem.getIdUserHasItem());
         }
+
+        user.setActive(false);
+
+        return ResponseEntity.ok().build();
+
     }
 }

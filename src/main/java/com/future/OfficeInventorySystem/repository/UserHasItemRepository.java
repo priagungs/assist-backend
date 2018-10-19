@@ -14,7 +14,6 @@ import java.util.Set;
 @Repository
 public interface UserHasItemRepository extends JpaRepository<UserHasItem, Long> {
 
-    UserHasItem findByIdUserHasItem(Long idUserHasItem);
     Page<UserHasItem> findAllByUser(User user, Pageable pageable);
     Page<UserHasItem> findAllByItem(Item item, Pageable pageable);
 

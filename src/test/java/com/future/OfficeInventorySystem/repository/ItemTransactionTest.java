@@ -81,13 +81,13 @@ public class ItemTransactionTest {
     @Test
     public void findByIdItemTransaction() {
         assertEquals(itemTransaction1,
-                itemTransactionRepository.findByIdItemTransaction(
+                itemTransactionRepository.findById(
                         itemTransaction1.getIdItemTransaction()
-                ));
+                ).get());
         assertEquals(itemTransaction2,
-                itemTransactionRepository.findByIdItemTransaction(
+                itemTransactionRepository.findById(
                         itemTransaction2.getIdItemTransaction()
-                ));
+                ).get());
 
     }
 

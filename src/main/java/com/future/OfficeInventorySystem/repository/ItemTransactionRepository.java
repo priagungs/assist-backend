@@ -16,7 +16,6 @@ import java.util.Set;
 @Repository
 public interface ItemTransactionRepository extends JpaRepository<ItemTransaction, Long> {
 
-    ItemTransaction findByIdItemTransaction(Long idItemTransaction);
     Page<ItemTransaction> findAllByTransaction(Transaction transaction, Pageable pageable);
     Page<ItemTransaction> findAllByItem(Item item, Pageable pageable);
 

@@ -99,10 +99,10 @@ public class UserTest {
     @Test
     public void findByIdUser() {
 
-        assertNull(userRepository.findByIdUser(new Long(1111111)));
-        assertEquals(user1, userRepository.findByIdUser(user1.getIdUser()));
-        assertEquals(user2, userRepository.findByIdUser(user2.getIdUser()));
-        assertNotNull(userRepository.findByIdUser(user1.getIdUser()));
+        assertNull(userRepository.findById(new Long(1111111)).get());
+        assertEquals(user1, userRepository.findById(user1.getIdUser()).get());
+        assertEquals(user2, userRepository.findById(user2.getIdUser()).get());
+        assertNotNull(userRepository.findById(user1.getIdUser()).get());
 
     }
     @Test

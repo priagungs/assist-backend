@@ -13,7 +13,6 @@ import java.util.Set;
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Long> {
 
-    Item findByIdItem(Long idItem);
     Page<Item> findAllByItemName(String itemName, Pageable pageable);
     Page<Item> findAllByAvailableQtyGreaterThan(Integer min, Pageable pageable);
 

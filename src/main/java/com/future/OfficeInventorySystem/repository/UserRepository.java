@@ -8,13 +8,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    User findByIdUser(Long idUser);
-    User findByUsername(String username);
+    Optional<User> findByUsername(String username);
     Page<User> findAllByName(String name, Pageable page);
     Page<User> findAllBySuperior(User superior, Pageable page);
     Page<User> findAllByIsAdmin(Boolean isAdmin, Pageable page);

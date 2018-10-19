@@ -14,7 +14,6 @@ import java.util.Set;
 @Repository
 public interface RequestRepository extends JpaRepository<Request,Long> {
 
-    Request findRequestByIdRequest(Long idRequest);
     Page<Request> findAllRequestByUser(User user, Pageable pageable);
     Page<Request> findAllRequestByStatus(Status status, Pageable pageable);
     Page<Request> findAllRequestByStatusAndSuperior(Status status, User superior, Pageable pageable);

@@ -85,8 +85,7 @@ public class RequestTest {
         request.setRequestDate(new Date());
         request.setReqQty(2);
         request.setStatus(Status.SENT);
-        request.setSuperior(user3.getSuperior());
-        request.setAdministrator(user2);
+
 
         entityManager.persist(user1);
         entityManager.persist(user2);
@@ -99,11 +98,11 @@ public class RequestTest {
     public void findRequestByIdRequest() {
         Long idReq = new Long(request.getIdRequest());
         assertNull(
-                requestRepository.findRequestByIdRequest(
-                        Long.valueOf(111111)));
-        assertNotNull(requestRepository.findRequestByIdRequest(idReq));
+                requestRepository.findById(
+                        Long.valueOf(111111)).get());
+        assertNotNull(requestRepository.findById(idReq).get());
         assertEquals(request,
-                requestRepository.findRequestByIdRequest(idReq)
+                requestRepository.findById(idReq).get()
         );
 
     }

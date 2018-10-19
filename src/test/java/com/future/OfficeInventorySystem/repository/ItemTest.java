@@ -57,7 +57,7 @@ public class ItemTest {
 
         entityManager.persist(item);
 
-        Item i = itemRepository.findByIdItem(item.getIdItem());
+        Item i = itemRepository.findById(item.getIdItem()).get();
         assertNotNull(i);
         assertEquals(item, i);
 

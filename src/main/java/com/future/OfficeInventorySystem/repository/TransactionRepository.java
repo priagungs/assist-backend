@@ -13,7 +13,6 @@ import java.util.Set;
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 
-    Transaction findByIdTransaction(Long idTransaction);
     Page<Transaction> findAllByAdmin(User admin, Pageable pageable);
 
 }
