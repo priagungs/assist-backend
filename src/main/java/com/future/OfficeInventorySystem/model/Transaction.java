@@ -1,6 +1,7 @@
 package com.future.OfficeInventorySystem.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,9 +28,11 @@ public class Transaction {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idUser", nullable = false)
+    @JsonIgnoreProperties("transaction")
     private User admin;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "transaction")
+    @OneToMany(mappedBy = "transaction")
+    @JsonIgnoreProperties("transaction")
     private List<ItemTransaction> itemTransaction;
 
 }

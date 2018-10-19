@@ -13,6 +13,8 @@ public interface UserService {
     List<User> readAllUser();
     User readUserByIdUser(Long id);
     List<User> readUserByIdSuperior(Long id);
+    List<User> readUserByIsAdmin(Boolean isAdmin);
+    User readUserByUsername(String username);
     Boolean deleteUser(Long id);
 
 }

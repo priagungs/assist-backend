@@ -1,5 +1,6 @@
 package com.future.OfficeInventorySystem.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,10 +22,12 @@ public class ItemTransaction {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idTransaction", nullable = false)
+    @JsonIgnoreProperties("itemTransaction")
     private Transaction transaction;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idItem", nullable = false)
+    @JsonIgnoreProperties("itemTransaction")
     private Item item;
     private Integer boughtQty;
     private Long price;

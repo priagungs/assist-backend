@@ -1,7 +1,9 @@
 package com.future.OfficeInventorySystem.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.util.List;
@@ -12,6 +14,7 @@ import java.util.Set;
 @TableGenerator(name = "employee_generator", initialValue = 16516000)
 @Data
 @Table(name = "user_employee")
+@Where(clause = "is_deleted=0")
 public class User {
 
     @Id
@@ -41,14 +44,20 @@ public class User {
 
     private Boolean isAdmin;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @OneToMany(mappedBy = "user")
+    @JsonIgnoreProperties("user")
     private List<Request> request;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @OneToMany(mappedBy = "user")
+    @JsonIgnoreProperties("user")
     private List<UserHasItem> hasItem;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "admin")
+    @OneToMany(mappedBy = "admin")
+    @JsonIgnoreProperties("admin")
     private List<Transaction> transaction;
+
+    @Column(name = "is_active")
+    private Boolean active = true;
 
 
 }

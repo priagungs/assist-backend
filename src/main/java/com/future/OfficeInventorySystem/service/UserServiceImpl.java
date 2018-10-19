@@ -1,10 +1,12 @@
 package com.future.OfficeInventorySystem.service;
 
 import com.future.OfficeInventorySystem.model.User;
+import com.future.OfficeInventorySystem.repository.UserHasItemRepository;
 import com.future.OfficeInventorySystem.repository.UserRepository;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,10 +15,13 @@ import java.util.List;
 @Data
 public class UserServiceImpl implements UserService {
 
-    private PageRequest pageRequest;
+    private Pageable pageRequest;
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserHasItemRepository userHasItemRepository;
 
     public UserServiceImpl(PageRequest pageRequest) {
         this.pageRequest = pageRequest;
@@ -25,8 +30,7 @@ public class UserServiceImpl implements UserService {
     public UserServiceImpl() {}
 
     public Boolean createUser(User user) {
-        if(userRepository.findByIdUser(user.getIdUser()) != null ||
-                userRepository.findByUsername(user.getUsername()) != null) {
+        if(userRepository.findByIdUser(user.getIdUser()) != null) {
             return false;
         }
         else if(user.getSuperior() != null &&
@@ -34,31 +38,40 @@ public class UserServiceImpl implements UserService {
             return false;
         }
         else {
-            User superior = userRepository.findByIdUser(user.getSuperior().getIdUser());
-            superior.getSubordinates().add(user);
-            userRepository.save(superior);
+            if(user.getSuperior() != null) {
+                User superior = userRepository.findByIdUser(user.getSuperior().getIdUser());
+                superior.getSubordinates().add(user);
+                userRepository.save(superior);
+            }
+            user.setSuperior(userRepository.findByIdUser(user.getSuperior().getIdUser()));
             userRepository.save(user);
             return true;
         }
     }
 
     public Boolean updateUser(User user) {
-        User superior = userRepository.findByIdUser(user.getSuperior().getIdUser());
-
         if(userRepository.findByIdUser(user.getIdUser()) == null) {
             return false;
         }
-        else if(superior == null) {
+        else if(user.getSuperior() != null &&
+                userRepository.findByIdUser(user.getSuperior().getIdUser()) == null) {
             return false;
         }
         else {
-            if (!superior.getSubordinates().contains(user)) {
-                superior.getSubordinates().add(user);
+            User userBeforeUpdate = userRepository.findByIdUser(user.getIdUser());
+            if(userBeforeUpdate.getSuperior() != null && user.getSuperior() == null) {
+                User superior = userBeforeUpdate.getSuperior();
+                superior.getSubordinates().remove(user);
                 userRepository.save(superior);
             }
-            userRepository.save(user);
-            return true;
+            else if(userBeforeUpdate.getSuperior() != null && user.getSuperior() != null) {
+                User recentSuperior = userBeforeUpdate.getSuperior();
+                User newSuperior = userRepository.findByIdUser(user.getSuperior().getIdUser());
+
+//                recentSuperior.getSubordinates().remove()
+            }
         }
+        return false;
     }
 
     public List<User> readAllUser() {
@@ -75,17 +88,20 @@ public class UserServiceImpl implements UserService {
                 .getContent();
     }
 
+    public List<User> readUserByIsAdmin(Boolean isAdmin) {
+        return userRepository.findAllByIsAdmin(isAdmin, pageRequest).getContent();
+    }
+
+    public User readUserByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
     public Boolean deleteUser(Long id) {
         User user = userRepository.findByIdUser(id);
         if(user == null) {
             return false;
         }
         else {
-            if(user.getSuperior() != null) {
-                User superior = userRepository.findByIdUser(user.getSuperior().getIdUser());
-                superior.getSubordinates().remove(user);
-                userRepository.save(superior);
-            }
             if(user.getSubordinates() != null) {
                 for (User u: user.getSubordinates()) {
                     u.setSuperior(null);

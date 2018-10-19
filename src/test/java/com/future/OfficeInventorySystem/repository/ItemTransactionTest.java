@@ -44,34 +44,37 @@ public class ItemTransactionTest {
     public void setUp() throws Exception {
 
         user = new User();
-        entityManager.persist(user);
+        entityManager.persistAndFlush(user);
 
         transaction = new Transaction();
         transaction.setAdmin(user);
-        entityManager.persist(transaction);
+        entityManager.persistAndFlush(transaction);
 
         item = new Item();
-        entityManager.persist(item);
+        entityManager.persistAndFlush(item);
 
         itemTransaction1 = new ItemTransaction();
         itemTransaction1.setTransaction(transaction);
         itemTransaction1.setItem(item);
         itemTransaction1.setBoughtQty(10);
         itemTransaction1.setPrice(new Long(1000));
-        entityManager.persist(itemTransaction1);
+        entityManager.persistAndFlush(itemTransaction1);
 
         itemTransaction2 = new ItemTransaction();
         itemTransaction2.setTransaction(transaction);
         itemTransaction2.setItem(item);
         itemTransaction2.setBoughtQty(10);
         itemTransaction2.setPrice(new Long(1000));
-        entityManager.persist(itemTransaction2);
+        entityManager.persistAndFlush(itemTransaction2);
 //
-//        List<ItemTransaction> list = new ArrayList<>();
-//        list.add(itemTransaction1);
-//        list.add(itemTransaction2);
-//        transaction.setItemTransaction(list);
-//
+        List<ItemTransaction> list = new ArrayList<>();
+        list.add(itemTransaction1);
+        list.add(itemTransaction2);
+        transaction.setItemTransaction(list);
+//        entityManager.persistAndFlush(transaction);
+
+
+        //
 
     }
 
@@ -133,7 +136,7 @@ public class ItemTransactionTest {
         assertNotNull(itemTransactionRepository.findAll());
         assertEquals(2,itemTransactionRepository.findAll().size());
 
-        itemTransactionRepository.delete(itemTransaction1);
+        itemTransactionRepository.deleteById(1L);
         assertEquals(1,itemTransactionRepository.findAll().size());
 
         itemTransactionRepository.delete(itemTransaction2);
