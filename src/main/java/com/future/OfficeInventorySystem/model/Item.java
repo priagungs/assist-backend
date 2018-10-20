@@ -1,33 +1,38 @@
 package com.future.OfficeInventorySystem.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.TableGenerator;
 import org.hibernate.annotations.Where;
+import javax.persistence.Table;
 
-import javax.persistence.*;
+
+import lombok.Data;
 import java.util.List;
-import java.util.Set;
-import java.util.Set;
-
 
 @Entity
 @Data
-@Table(name = "Items")
-@TableGenerator(name = "item_id", initialValue = 13216000)
+@Table(name = "item")
+@TableGenerator(name = "item_generator", initialValue = 13216000)
 @Where(clause = "is_active=1")
 public class Item {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE , generator ="item_id")
+    @GeneratedValue(strategy = GenerationType.TABLE , generator ="item_generator")
     private Long idItem;
 
     private String itemName;
 
-    private String picture;
+    private String pictureURL;
 
-    private Integer price;
+    private Long price;
 
     private Integer totalQty;
 
@@ -37,15 +42,15 @@ public class Item {
 
     @OneToMany(mappedBy = "item")
     @JsonIgnoreProperties("item")
-    private List<Request> request;
+    private List<Request> requests;
 
     @OneToMany(mappedBy = "item")
     @JsonIgnoreProperties("item")
-    private List<UserHasItem> owner;
+    private List<UserHasItem> owners;
 
     @OneToMany(mappedBy = "item")
     @JsonIgnoreProperties("item")
-    private List<ItemTransaction> itemTransaction;
+    private List<ItemTransaction> itemTransactions;
 
     @Column(name = "is_active")
     private Boolean active = true;
