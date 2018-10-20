@@ -39,7 +39,7 @@ public class UserTest {
         user1.setUsername("shintaayuck");
         user1.setPassword("hashedpassword");
         user1.setName("Shinta Ayu C K");
-        user1.setPicture("ini link foto");
+        user1.setPictureURL("ini link foto");
         user1.setRole("UX Researcher");
         user1.setDivision("Technology");
         user1.setSuperior(null);
@@ -49,7 +49,7 @@ public class UserTest {
         user2.setUsername("rickykennedy25");
         user2.setPassword("hashedpassword");
         user2.setName("Ricky Kennedy");
-        user2.setPicture("ini link foto");
+        user2.setPictureURL("ini link foto");
         user2.setRole("System Analyst");
         user2.setDivision("Technology");
         user2.setSuperior(null);
@@ -59,7 +59,7 @@ public class UserTest {
         user3.setUsername("priagungs");
         user3.setPassword("hashedpassword");
         user3.setName("Priagung Satyagama");
-        user3.setPicture("ini link foto");
+        user3.setPictureURL("ini link foto");
         user3.setRole("Data Scientist");
         user3.setDivision("Technology");
         user3.setSuperior(user1);
@@ -69,7 +69,7 @@ public class UserTest {
         user4.setUsername("priagungs");
         user4.setPassword("hashedpassword");
         user4.setName("Priagung Satyagama");
-        user4.setPicture("ini link foto");
+        user4.setPictureURL("ini link foto");
         user4.setRole("Data Scientist");
         user4.setDivision("Technology");
         user4.setSuperior(user1);

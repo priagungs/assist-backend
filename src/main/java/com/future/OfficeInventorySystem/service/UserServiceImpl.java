@@ -7,11 +7,10 @@ import com.future.OfficeInventorySystem.repository.UserHasItemRepository;
 import com.future.OfficeInventorySystem.repository.UserRepository;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @Data
@@ -64,8 +63,9 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    public List<User> readAllUser(Pageable pageable) {
-        return userRepository.findAll(pageable).getContent();
+    public Page<User> readAllUser(Pageable pageable) {
+
+        return userRepository.findAll(pageable);
     }
 
     public User readUserByIdUser(Long id) {
@@ -73,14 +73,13 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new UserNotFoundException("user not found"));
     }
 
-    public List<User> readUserByIdSuperior(Long id, Pageable pageable) {
+    public Page<User> readUserByIdSuperior(Long id, Pageable pageable) {
         return userRepository.findAllBySuperior(userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("superior not found")), pageable)
-                .getContent();
+                .orElseThrow(() -> new UserNotFoundException("superior not found")), pageable);
     }
 
-    public List<User> readUserByIsAdmin(Boolean isAdmin, Pageable pageable) {
-        return userRepository.findAllByIsAdmin(isAdmin, pageable).getContent();
+    public Page<User> readUserByIsAdmin(Boolean isAdmin, Pageable pageable) {
+        return userRepository.findAllByIsAdmin(isAdmin, pageable);
     }
 
     public User readUserByUsername(String username) {
@@ -102,6 +101,7 @@ public class UserServiceImpl implements UserService {
         }
 
         user.setActive(false);
+        userRepository.save(user);
 
         return ResponseEntity.ok().build();
 
