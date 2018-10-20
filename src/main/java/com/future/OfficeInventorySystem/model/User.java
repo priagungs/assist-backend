@@ -39,7 +39,7 @@ public class User {
 
     private String name;
 
-    private String pictureURL; //path to an image in filesystem
+    private String pictureURL;
 
     private String role;
 

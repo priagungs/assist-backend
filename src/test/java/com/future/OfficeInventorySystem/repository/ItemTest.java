@@ -37,16 +37,16 @@ public class ItemTest {
 
         item = new Item();
         item.setItemName("indomie");
-        item.setPicture("image.jpg");
-        item.setPrice(1000);
+        item.setPictureURL("image.jpg");
+        item.setPrice(1000L);
         item.setTotalQty(10);
         item.setAvailableQty(1);
         item.setDescription("micin");
 
         item2 = new Item();
         item2.setItemName("indomie");
-        item2.setPicture("image.jpg");
-        item2.setPrice(1000);
+        item2.setPictureURL("image.jpg");
+        item2.setPrice(1000L);
         item2.setTotalQty(10);
         item2.setAvailableQty(3);
         item2.setDescription("micin++");

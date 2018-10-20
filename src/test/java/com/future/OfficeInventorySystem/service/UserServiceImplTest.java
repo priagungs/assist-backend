@@ -44,8 +44,8 @@ public class UserServiceImplTest {
     @Test
     public void createUserSuperiorNotFoundTest() {
 
-        Mockito.when(userRepository
-                .findById(user1.getSuperior().getIdUser())).thenReturn(f)
+//        Mockito.when(userRepository
+//                .findById(user1.getSuperior().getIdUser())).thenReturn(
 
 
     }

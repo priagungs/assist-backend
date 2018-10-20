@@ -1,6 +1,7 @@
 package com.future.OfficeInventorySystem.service;
 
 import com.future.OfficeInventorySystem.model.User;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -14,13 +15,13 @@ public interface UserService {
     
     ResponseEntity updateUser(User user);
     
-    List<User> readAllUser(Pageable pageable);
+    Page<User> readAllUser(Pageable pageable);
     
     User readUserByIdUser(Long id);
     
-    List<User> readUserByIdSuperior(Long id, Pageable pageable);
+    Page<User> readUserByIdSuperior(Long id, Pageable pageable);
     
-    List<User> readUserByIsAdmin(Boolean isAdmin, Pageable pageable);
+    Page<User> readUserByIsAdmin(Boolean isAdmin, Pageable pageable);
     
     User readUserByUsername(String username);
     

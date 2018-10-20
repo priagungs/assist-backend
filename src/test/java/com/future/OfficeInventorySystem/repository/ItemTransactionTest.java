@@ -70,7 +70,7 @@ public class ItemTransactionTest {
         List<ItemTransaction> list = new ArrayList<>();
         list.add(itemTransaction1);
         list.add(itemTransaction2);
-        transaction.setItemTransaction(list);
+        transaction.setItemTransactions(list);
 //        entityManager.persistAndFlush(transaction);
 
 
