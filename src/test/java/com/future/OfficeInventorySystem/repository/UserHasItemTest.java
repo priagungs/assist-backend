@@ -87,16 +87,16 @@ public class UserHasItemTest {
 
     @Test
     public void findByIdUserHasItem() {
-        assertNotNull(userHasItemRepository.findByIdUserHasItem(
+        assertNotNull(userHasItemRepository.findById(
                 userHasItemSatu.getIdUserHasItem()
-                )
+                ).get()
         );
-        assertNotNull(userHasItemRepository.findByIdUserHasItem(
+        assertNotNull(userHasItemRepository.findById(
                 userHasItemDua.getIdUserHasItem()
-                )
+                ).get()
         );
-        assertNull(userHasItemRepository.findByIdUserHasItem(Long.valueOf(111111)));
-        assertEquals(userHasItemSatu,userHasItemRepository.findByIdUserHasItem(userHasItemSatu.getIdUserHasItem()));
+        assertNull(userHasItemRepository.findById(Long.valueOf(111111)).get());
+        assertEquals(userHasItemSatu,userHasItemRepository.findById(userHasItemSatu.getIdUserHasItem()).get());
 
     }
 

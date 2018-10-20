@@ -1,30 +1,38 @@
 package com.future.OfficeInventorySystem.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.TableGenerator;
+import org.hibernate.annotations.Where;
+import javax.persistence.Table;
+
+
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-
-import javax.persistence.*;
 import java.util.List;
-import java.util.Set;
-import java.util.Set;
-
 
 @Entity
 @Data
-@Table(name = "Items")
-@TableGenerator(name = "item_id", initialValue = 13216000)
+@Table(name = "item")
+@TableGenerator(name = "item_generator", initialValue = 13216000)
+@Where(clause = "is_active=1")
 public class Item {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE , generator ="item_id")
+    @GeneratedValue(strategy = GenerationType.TABLE , generator ="item_generator")
     private Long idItem;
 
     private String itemName;
 
-    private String picture;
+    private String pictureURL;
 
-    private Integer price;
+    private Long price;
 
     private Integer totalQty;
 
@@ -32,14 +40,20 @@ public class Item {
 
     private String description;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "item")
-    private List<Request> request;
+    @OneToMany(mappedBy = "item")
+    @JsonIgnoreProperties("item")
+    private List<Request> requests;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "item")
-    private List<UserHasItem> owner;
+    @OneToMany(mappedBy = "item")
+    @JsonIgnoreProperties("item")
+    private List<UserHasItem> owners;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "item")
-    private List<ItemTransaction> itemTransaction;
+    @OneToMany(mappedBy = "item")
+    @JsonIgnoreProperties("item")
+    private List<ItemTransaction> itemTransactions;
+
+    @Column(name = "is_active")
+    private Boolean active = true;
 
 
 }

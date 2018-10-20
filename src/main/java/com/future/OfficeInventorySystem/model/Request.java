@@ -1,12 +1,23 @@
 package com.future.OfficeInventorySystem.model;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import javax.persistence.*;
+
 import java.util.Date;
-import java.util.Set;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.ManyToOne;
+import javax.persistence.FetchType;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.JoinColumn;
+import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
+
+import lombok.Data;
 
 @Entity
 @Data
@@ -19,10 +30,12 @@ public class Request {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idUser", nullable = false)
+    @JsonIgnoreProperties("request")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idItem", nullable = false)
+    @JsonIgnoreProperties("request")
     private Item item;
 
     private Date requestDate;
@@ -32,13 +45,8 @@ public class Request {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "idSuperior", nullable = false)
-    private User superior;
+    private Long idSuperior; //the one who accepted this request
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "idAdministrator", nullable = false)
-    private User administrator;
 
 
 

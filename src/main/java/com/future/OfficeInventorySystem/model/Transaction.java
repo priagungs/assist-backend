@@ -1,15 +1,22 @@
 package com.future.OfficeInventorySystem.model;
 
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.FetchType;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.JoinColumn;
+
+import lombok.Data;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
-
 
 @Entity
 @Data
@@ -27,9 +34,11 @@ public class Transaction {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idUser", nullable = false)
+    @JsonIgnoreProperties("transaction")
     private User admin;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "transaction")
-    private List<ItemTransaction> itemTransaction;
+    @OneToMany(mappedBy = "transaction")
+    @JsonIgnoreProperties("transaction")
+    private List<ItemTransaction> itemTransactions;
 
 }
