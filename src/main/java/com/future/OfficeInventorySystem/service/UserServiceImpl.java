@@ -20,9 +20,6 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private UserHasItemRepository userHasItemRepository;
-
-    @Autowired
     private UserHasItemService userHasItemService;
 
 
