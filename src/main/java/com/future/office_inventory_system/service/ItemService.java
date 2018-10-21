@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 @Service
 public interface ItemService {
   
-  ResponseEntity createItem(Item item);
+  Item createItem(Item item);
   
-  ResponseEntity updateItem(Item item);
+  Item updateItem(Item item);
  
   Page<Item> readAllItem(Pageable pageable);
   

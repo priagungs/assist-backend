@@ -1,7 +1,7 @@
 package com.future.office_inventory_system.service;
 
 
-import com.future.office_inventory_system.exception.UserNotFoundException;
+import com.future.office_inventory_system.exception.NotFoundException;
 import com.future.office_inventory_system.model.User;
 import com.future.office_inventory_system.repository.UserRepository;
 import org.junit.Before;
@@ -51,7 +51,7 @@ public class UserServiceImplTest {
 
     }
 
-    @Test(expected = UserNotFoundException.class)
+    @Test(expected = NotFoundException.class)
     public void createUserSuperiorNotFoundTest() {
 //        Optional<User> stub = Optional.of(user1);
         Mockito.when(userRepository.findById(any()))

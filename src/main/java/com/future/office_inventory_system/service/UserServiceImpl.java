@@ -1,5 +1,6 @@
 package com.future.office_inventory_system.service;
 
+import com.future.office_inventory_system.exception.ConflictException;
 import com.future.office_inventory_system.exception.NotFoundException;
 import com.future.office_inventory_system.model.User;
 import com.future.office_inventory_system.model.UserHasItem;
@@ -25,20 +26,20 @@ public class UserServiceImpl implements UserService {
     public UserServiceImpl() {}
 
 
-    public ResponseEntity createUser(User user) {
+    public User createUser(User user) {
         user.setSuperior(userRepository
                 .findById(user.getSuperior().getIdUser())
                 .orElseThrow(() -> new NotFoundException("superior not found")));
 
         if (userRepository.findById(user.getIdUser()).isPresent()) {
-            throw new RuntimeException(user.getIdUser().toString() + " is present");
+            throw new ConflictException(user.getIdUser().toString() + " is present");
         }
 
-        userRepository.save(user);
-        return ResponseEntity.ok().build();
+        return userRepository.save(user);
+
     }
 
-    public ResponseEntity updateUser(User user) {
+    public User updateUser(User user) {
         User userBeforeUpdate = userRepository
                 .findById(user.getIdUser())
                 .orElseThrow(() -> new NotFoundException("user not found"));
@@ -55,9 +56,7 @@ public class UserServiceImpl implements UserService {
         userBeforeUpdate.setDivision(user.getDivision());
         userBeforeUpdate.setRole(user.getRole());
 
-        userRepository.save(userBeforeUpdate);
-        return ResponseEntity.ok().build();
-
+        return userRepository.save(userBeforeUpdate);
     }
 
     public Page<User> readAllUsers(Pageable pageable) {

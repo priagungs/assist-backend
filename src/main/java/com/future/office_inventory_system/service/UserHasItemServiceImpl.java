@@ -1,5 +1,8 @@
 package com.future.office_inventory_system.service;
 
+import com.future.office_inventory_system.exception.ConflictException;
+import com.future.office_inventory_system.exception.InvalidValueException;
+import com.future.office_inventory_system.exception.NotFoundException;
 import com.future.office_inventory_system.model.Item;
 import com.future.office_inventory_system.model.User;
 import com.future.office_inventory_system.model.UserHasItem;
@@ -7,6 +10,7 @@ import com.future.office_inventory_system.repository.UserHasItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +28,7 @@ public class UserHasItemServiceImpl implements UserHasItemService {
 
     public UserHasItem createUserHasItem(UserHasItem userHasItem) {
         if (repository.findById(userHasItem.getIdUserHasItem()).isPresent()) {
-            throw new RuntimeException("userhasitem already present");
+            throw new ConflictException("userhasitem already present");
         }
 
         userHasItem.setUser(userService.readUserByIdUser(userHasItem.getUser().getIdUser()));
@@ -34,16 +38,35 @@ public class UserHasItemServiceImpl implements UserHasItemService {
 
     public UserHasItem readUserHasItemById(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("userhasitem not found"));
+                .orElseThrow(() -> new NotFoundException("userhasitem not found"));
     }
 
     public ResponseEntity deleteUserHasItem(Long id) {
         UserHasItem hasItem = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("usehasitem not found"));
+                .orElseThrow(() -> new NotFoundException("usehasitem not found"));
+        Item item = hasItem.getItem();
+        item.setAvailableQty(item.getAvailableQty() + hasItem.getHasQty());
+        itemService.updateItem(item);
+
+        repository.delete(hasItem);
+        return ResponseEntity.ok().build();
+
     }
 
-    public ResponseEntity updateUserHasItem(UserHasItem userHasItem) {
-        return null;
+    public UserHasItem updateUserHasItem(UserHasItem userHasItem) {
+        if (!repository.findById(userHasItem.getIdUserHasItem()).isPresent()) {
+            throw new NotFoundException("userhasitem not found");
+        }
+        UserHasItem beforeUpdate = repository.findById(userHasItem.getIdUserHasItem()).get();
+        if (userHasItem.getHasQty() - beforeUpdate.getHasQty() >
+            itemService.readItemByIdItem(userHasItem.getItem().getIdItem())
+                    .getAvailableQty()) {
+            throw new InvalidValueException("item available quantity is not sufficient");
+        }
+
+        userHasItem.setUser(userService.readUserByIdUser(userHasItem.getUser().getIdUser()));
+        userHasItem.setItem(itemService.readItemByIdItem(userHasItem.getItem().getIdItem()));
+        return repository.save(userHasItem);
     }
 
     public Page<UserHasItem> readAllUserHasItems(Pageable pageable) {
