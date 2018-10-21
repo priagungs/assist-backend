@@ -89,7 +89,6 @@ public class UserServiceImpl implements UserService {
 
         for (User subordinate: user.getSubordinates()) {
             subordinate.setSuperior(user.getSuperior());
-            userRepository.save(subordinate);
         }
 
         for (UserHasItem hasItem : user.getHasItems()) {
