@@ -10,7 +10,7 @@ import java.util.List;
 
 @Entity
 @Data
-@Table(name="Transaction")
+@Table(name=TableName.TRANSACTION)
 @TableGenerator(name = "transaction_generator" , initialValue = 18216000)
 public class Transaction {
 

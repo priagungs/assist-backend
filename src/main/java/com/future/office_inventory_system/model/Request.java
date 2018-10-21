@@ -17,7 +17,7 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "Request")
+@Table(name = TableName.REQUEST)
 @TableGenerator(name = "request_generator")
 public class Request {
     @Id

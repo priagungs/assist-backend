@@ -11,7 +11,7 @@ import java.util.List;
 @Entity
 @TableGenerator(name = "employee_generator", initialValue = 16516000)
 @Data
-@Table(name = "user_employee")
+@Table(name = TableName.USER)
 @Where(clause = "is_active=1")
 public class User {
 

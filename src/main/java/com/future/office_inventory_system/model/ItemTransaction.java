@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Entity
 @Data
 @TableGenerator(name = "item_transaction_generator")
-@Table(name = "itemTransaction")
+@Table(name = TableName.ITEMTRANSACTION)
 public class ItemTransaction {
 
     @Id
