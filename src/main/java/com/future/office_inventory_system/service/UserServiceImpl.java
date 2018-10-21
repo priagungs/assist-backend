@@ -55,6 +55,7 @@ public class UserServiceImpl implements UserService {
         userBeforeUpdate.setDivision(user.getDivision());
         userBeforeUpdate.setRole(user.getRole());
 
+        userRepository.save(userBeforeUpdate);
         return ResponseEntity.ok().build();
 
     }

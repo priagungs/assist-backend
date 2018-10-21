@@ -65,7 +65,7 @@ public class ItemTest {
         entityManager.persist(item2);
 
         List<Item> items = itemRepository
-                .findAllByAvailableQtyGreaterThan(0, new PageRequest(0, 2))
+                .findAllByAvailableQtyGreaterThan(0, PageRequest.of(0, 2))
                 .getContent();
 
         assertEquals(2, items.size());
@@ -73,19 +73,19 @@ public class ItemTest {
         assertTrue(items.get(1).getAvailableQty() > 0);
 
         items = itemRepository
-                .findAllByAvailableQtyGreaterThan(0, new PageRequest(1, 2))
+                .findAllByAvailableQtyGreaterThan(0, PageRequest.of(1, 2))
                 .getContent();
 
         assertEquals(0, items.size());
 
         items = itemRepository
-                .findAllByAvailableQtyGreaterThan(2, new PageRequest(0, 2))
+                .findAllByAvailableQtyGreaterThan(2, PageRequest.of(0, 2))
                 .getContent();
 
         assertEquals(1, items.size());
 
         items = itemRepository
-                .findAllByAvailableQtyGreaterThan(2, new PageRequest(1, 2))
+                .findAllByAvailableQtyGreaterThan(2, PageRequest.of(1, 2))
                 .getContent();
 
         assertEquals(0, items.size());

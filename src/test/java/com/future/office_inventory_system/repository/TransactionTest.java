@@ -71,7 +71,7 @@ public class TransactionTest {
 
     @Test
     public void findAllByAdmin() {
-        Pageable page =  new PageRequest(0,3);
+        Pageable page =  PageRequest.of(0,3);
 
         List<Transaction> transactions = transactionRepository
                 .findAllByAdmin(admin,page)

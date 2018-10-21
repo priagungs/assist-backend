@@ -111,14 +111,14 @@ public class UserTest {
         userList.add(user4);
 
         assertEquals(0,userRepository
-                .findAllByName("abcdef", new PageRequest(0, 2))
+                .findAllByName("abcdef", PageRequest.of(0, 2))
                 .getContent()
                 .size());
         assertNotNull(userRepository
-                .findAllByName("Priagung Satyagama", new PageRequest(0, 2))
+                .findAllByName("Priagung Satyagama", PageRequest.of(0, 2))
                 .getContent());
         assertEquals(userList,userRepository
-                .findAllByName("Priagung Satyagama", new PageRequest(0, 2))
+                .findAllByName("Priagung Satyagama", PageRequest.of(0, 2))
                 .getContent());
 
     }
@@ -132,10 +132,10 @@ public class UserTest {
         employeeList.add(user4);
 
         assertNotNull(userRepository
-                .findAllBySuperior(user1, new PageRequest(0, 2))
+                .findAllBySuperior(user1, PageRequest.of(0, 2))
                 .getContent());
         assertEquals(employeeList, userRepository
-                .findAllBySuperior(user1, new PageRequest(0, 2))
+                .findAllBySuperior(user1, PageRequest.of(0, 2))
                 .getContent());
 
     }
@@ -150,10 +150,10 @@ public class UserTest {
         notAdminList.add(user4);
 
         assertEquals(adminList, userRepository
-                .findAllByIsAdmin(true, new PageRequest(0, 2))
+                .findAllByIsAdmin(true, PageRequest.of(0, 2))
                 .getContent());
         assertEquals(notAdminList, userRepository
-                .findAllByIsAdmin(false, new PageRequest(0, 2))
+                .findAllByIsAdmin(false, PageRequest.of(0, 2))
                 .getContent());
 
     }

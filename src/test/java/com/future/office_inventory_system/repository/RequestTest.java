@@ -112,15 +112,15 @@ public class RequestTest {
 
         List<Request> listRequest = requestRepository
                 .findAllRequestByUser(user3,
-                        new PageRequest(0, 1))
+                        PageRequest.of(0, 1))
                 .getContent();
 
         assertEquals(0, requestRepository
-                .findAllRequestByUser(user2, new PageRequest(0, 1))
+                .findAllRequestByUser(user2, PageRequest.of(0, 1))
                 .getContent()
                 .size());
         assertEquals(1, requestRepository
-                .findAllRequestByUser(user3, new PageRequest(0, 1))
+                .findAllRequestByUser(user3, PageRequest.of(0, 1))
                 .getContent()
                 .size());
         assertEquals(request,listRequest.get(0));
@@ -130,24 +130,24 @@ public class RequestTest {
     @Test
     public void findAllRequestByStatus() {
         List<Request> listRequest = requestRepository
-                .findAllRequestByStatus(RequestStatus.SENT, new PageRequest(0, 1))
-                .getContent();
 
+                .findAllRequestByStatus(RequestStatus.SENT, PageRequest.of(0, 1))
+                .getContent();
         assertEquals(new ArrayList<Request>(),
                 requestRepository
-                        .findAllRequestByStatus(RequestStatus.REQUESTED, new PageRequest(0, 1))
+                        .findAllRequestByStatus(RequestStatus.REQUESTED, PageRequest.of(0, 1))
                         .getContent());
         assertEquals(new ArrayList<Request>(),
                 requestRepository
-                        .findAllRequestByStatus(RequestStatus.APPROVED, new PageRequest(0, 1))
+                        .findAllRequestByStatus(RequestStatus.APPROVED, PageRequest.of(0, 1))
                         .getContent());
         assertEquals(0,
                 requestRepository
-                        .findAllRequestByStatus(RequestStatus.REJECTED, new PageRequest(0, 1))
+                        .findAllRequestByStatus(RequestStatus.REJECTED, PageRequest.of(0, 1))
                         .getContent()
                         .size());
         assertTrue(requestRepository
-                .findAllRequestByStatus(RequestStatus.SENT, new PageRequest(0, 1))
+                .findAllRequestByStatus(RequestStatus.SENT, PageRequest.of(0, 1))
                 .getContent()
                 .size() > 0);
         assertEquals(request,listRequest.get(0));
@@ -155,7 +155,7 @@ public class RequestTest {
 
     @Test
     public void findAllRequestByStatusAndSuperior() {
-        Pageable pageRequest = new PageRequest(0, 1);
+        Pageable pageRequest = PageRequest.of(0, 1);
         List<Request> listRequest = requestRepository
                 .findAllRequestByStatusAndSuperior(RequestStatus.SENT, user1, pageRequest)
                 .getContent();
