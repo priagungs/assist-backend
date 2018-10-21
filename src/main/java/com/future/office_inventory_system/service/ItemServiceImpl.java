@@ -19,7 +19,7 @@ public class ItemServiceImpl implements ItemService {
   public ResponseEntity createItem(Item item) {
     
     if (itemRepository.findByItemName(item.getItemName()).isPresent()) {
-      throw new RuntimeException()
+      throw new RuntimeException();
     }
     
     itemRepository.save(item);
@@ -55,8 +55,8 @@ public class ItemServiceImpl implements ItemService {
   }
   
   public Item readItemByIdItem(Long id) {
-    return itemRepository.findById()
-      .orElseThrow() -> NotFoundException("Item not found")
+    return itemRepository.findById(id)
+      .orElseThrow(() -> new NotFoundException("Item not found"));
   }
   
   public Page<Item> readItemByAvailableGreaterThan(Integer min, Pageable pageable) {

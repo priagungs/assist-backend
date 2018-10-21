@@ -1,5 +1,7 @@
 package com.future.office_inventory_system.service;
 
+import com.future.office_inventory_system.model.Item;
+import com.future.office_inventory_system.model.User;
 import com.future.office_inventory_system.model.UserHasItem;
 import com.future.office_inventory_system.repository.UserHasItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +24,7 @@ public class UserHasItemServiceImpl implements UserHasItemService {
 
     public UserHasItem createUserHasItem(UserHasItem userHasItem) {
         if (repository.findById(userHasItem.getIdUserHasItem()).isPresent()) {
-            throw new RuntimeException("user has item already present");
+            throw new RuntimeException("userhasitem already present");
         }
 
         userHasItem.setUser(userService.readUserByIdUser(userHasItem.getUser().getIdUser()));
@@ -31,11 +33,13 @@ public class UserHasItemServiceImpl implements UserHasItemService {
     }
 
     public UserHasItem readUserHasItemById(Long id) {
-        return null;
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("userhasitem not found"));
     }
 
     public ResponseEntity deleteUserHasItem(Long id) {
-        return null;
+        UserHasItem hasItem = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("usehasitem not found"));
     }
 
     public ResponseEntity updateUserHasItem(UserHasItem userHasItem) {
@@ -43,14 +47,16 @@ public class UserHasItemServiceImpl implements UserHasItemService {
     }
 
     public Page<UserHasItem> readAllUserHasItems(Pageable pageable) {
-        return null;
+        return repository.findAll(pageable);
     }
 
     public Page<UserHasItem> readAllUserHasItemsByIdUser(Long idUser, Pageable pageable) {
-        return null;
+        User user = userService.readUserByIdUser(idUser);
+        return repository.findAllByUser(user, pageable);
     }
 
     public Page<UserHasItem> readAllUserHasItemsByIdItem(Long idItem, Pageable pageable) {
-        return null;
+        Item item = itemService.readItemByIdItem(idItem);
+        return repository.findAllByItem(item, pageable);
     }
 }
