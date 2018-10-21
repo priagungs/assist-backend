@@ -1,5 +1,6 @@
 package com.future.office_inventory_system.service;
 
+import com.future.office_inventory_system.exception.InvalidValueException;
 import com.future.office_inventory_system.exception.NotFoundException;
 import com.future.office_inventory_system.model.Item;
 import com.future.office_inventory_system.repository.ItemRepository;
@@ -19,7 +20,7 @@ public class ItemServiceImpl implements ItemService {
   public ResponseEntity createItem(Item item) {
     
     if (itemRepository.findByItemName(item.getItemName()).isPresent()) {
-      throw new RuntimeException()
+      throw new RuntimeException(item.getItemName() + " is exist");
     }
     
     itemRepository.save(item);
@@ -34,7 +35,7 @@ public class ItemServiceImpl implements ItemService {
     
     if (item.getTotalQty() < 0 || item.getAvailableQty() > item.getTotalQty() ||
       item.getAvailableQty() < 0  || item.getPrice() < 0) {
-      //exception  invalid value
+      throw new InvalidValueException("Invalid value");
     }
     
     itemBefore.setItemName(item.getItemName());
@@ -55,15 +56,29 @@ public class ItemServiceImpl implements ItemService {
   }
   
   public Item readItemByIdItem(Long id) {
-    return itemRepository.findById()
-      .orElseThrow() -> NotFoundException("Item not found")
+    return itemRepository.findById(id)
+      .orElseThrow(() -> new NotFoundException("Item not found"));
   }
   
   public Page<Item> readItemByAvailableGreaterThan(Integer min, Pageable pageable) {
-    if (min < 0)
+    if (min < 0) {
+      throw new InvalidValueException("Invalid value");
+    }
     return itemRepository.findAllByAvailableQtyGreaterThan(min,pageable);
   }
   
-  public ResponseEntity deleteItem(Long id) {}
+  public ResponseEntity deleteItem(Long id) {
+    Item item = itemRepository.findById(id)
+      .orElseThrow(() -> new NotFoundException("Item not found"));
+    
+    if (item.getOwners().size() > 0) {
+      throw new RuntimeException("there's employee who still has " + item.getItemName());
+    }
+    
+    item.setActive(false);
+    itemRepository.save(item);
+    
+    return ResponseEntity.ok().build();
+  }
 
 }
