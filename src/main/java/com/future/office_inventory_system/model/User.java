@@ -42,7 +42,7 @@ public class User {
 
     private Boolean isAdmin;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "requestBy")
     @JsonIgnoreProperties("user")
     private List<Request> requests;
 
