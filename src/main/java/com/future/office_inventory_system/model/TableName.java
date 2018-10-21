@@ -2,15 +2,15 @@ package com.future.office_inventory_system.model;
 
 public class TableName {
 
-    public static final String ITEM="Item";
+    public static final String ITEM="item";
 
-    public static final String ITEMTRANSACTION="ItemTransaction";
+    public static final String ITEMTRANSACTION="item_transaction";
 
-    public static final String REQUEST="Request";
+    public static final String REQUEST="request";
 
-    public static final String TRANSACTION="Transaction";
+    public static final String TRANSACTION="transaction";
 
-    public static final String USER="User";
+    public static final String USER="user";
 
-    public static final String USERHASITEM="UserHasItem"
+    public static final String USERHASITEM="user_has_item";
 }
