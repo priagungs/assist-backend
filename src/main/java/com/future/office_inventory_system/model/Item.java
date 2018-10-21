@@ -9,7 +9,7 @@ import java.util.List;
 
 @Entity
 @Data
-@Table(name = "item")
+@Table(name = TableName.ITEM)
 @TableGenerator(name = "item_generator", initialValue = 13216000)
 @Where(clause = "is_active=1")
 public class Item {
