@@ -1,10 +1,19 @@
 package com.future.office_inventory_system.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Data;
-
-import javax.persistence.*;
 import java.util.Date;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.ManyToOne;
+import javax.persistence.FetchType;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.JoinColumn;
+import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
+import lombok.Data;
 
 @Entity
 @Data
@@ -18,7 +27,7 @@ public class Request {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idUser", nullable = false)
     @JsonIgnoreProperties("request")
-    private User user;
+    private Long requestBy;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idItem", nullable = false)
@@ -31,11 +40,17 @@ public class Request {
 
     @Enumerated(EnumType.STRING)
     private RequestStatus requestStatus;
+    
+    private Long approvedBy;
 
-    private Long idSuperior; //the one who accepted this request
+    private Date approvedDate;
 
+    private Long rejectedBy;
 
+    private Date rejectedDate;
 
+    private Long handedOverBy;
 
+    private Date handedOverDate;
 
 }
