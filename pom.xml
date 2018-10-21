@@ -55,26 +55,5 @@
 			<scope>test</scope>
 			<version>RELEASE</version>
 		</dependency>
-		<dependency>
-			<groupId>com.future.OfficeInventorySystem</groupId>
-			<artifactId>future-office-inventory-system</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>com.future.OfficeInventorySystem</groupId>
-			<artifactId>future-office-inventory-system</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
-
 
 </project>

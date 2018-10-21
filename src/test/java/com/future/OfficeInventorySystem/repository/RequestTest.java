@@ -80,11 +80,11 @@ public class RequestTest {
         user3.setIsAdmin(false);
 
         request = new Request();
-        request.setUser(user3);
+        request.setRequestBy(user3.getIdUser());
         request.setItem(item);
         request.setRequestDate(new Date());
         request.setReqQty(2);
-        request.setStatus(Status.SENT);
+        request.setRequestStatus(Status.SENT);
 
 
         entityManager.persist(user1);
