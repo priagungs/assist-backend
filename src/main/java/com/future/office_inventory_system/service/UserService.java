@@ -13,13 +13,13 @@ public interface UserService {
     
     ResponseEntity updateUser(User user);
     
-    Page<User> readAllUser(Pageable pageable);
+    Page<User> readAllUsers(Pageable pageable);
     
     User readUserByIdUser(Long id);
     
-    Page<User> readUserByIdSuperior(Long id, Pageable pageable);
+    Page<User> readAllUsersByIdSuperior(Long id, Pageable pageable);
     
-    Page<User> readUserByIsAdmin(Boolean isAdmin, Pageable pageable);
+    Page<User> readAllUsersByIsAdmin(Boolean isAdmin, Pageable pageable);
     
     User readUserByUsername(String username);
     

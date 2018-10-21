@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    public Page<User> readAllUser(Pageable pageable) {
+    public Page<User> readAllUsers(Pageable pageable) {
 
         return userRepository.findAll(pageable);
     }
@@ -70,12 +70,12 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new NotFoundException("user not found"));
     }
 
-    public Page<User> readUserByIdSuperior(Long id, Pageable pageable) {
+    public Page<User> readAllUsersByIdSuperior(Long id, Pageable pageable) {
         return userRepository.findAllBySuperior(userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("superior not found")), pageable);
     }
 
-    public Page<User> readUserByIsAdmin(Boolean isAdmin, Pageable pageable) {
+    public Page<User> readAllUsersByIsAdmin(Boolean isAdmin, Pageable pageable) {
         return userRepository.findAllByIsAdmin(isAdmin, pageable);
     }
 

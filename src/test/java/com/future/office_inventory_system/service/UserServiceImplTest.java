@@ -1,13 +1,24 @@
 package com.future.office_inventory_system.service;
 
+
+import com.future.office_inventory_system.exception.UserNotFoundException;
 import com.future.office_inventory_system.model.User;
-import com.future.office_inventory_system.repository.UserHasItemRepository;
 import com.future.office_inventory_system.repository.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.any;
+
+@SpringBootTest
+@RunWith(SpringRunner.class)
 public class UserServiceImplTest {
 
     @Autowired
@@ -16,8 +27,6 @@ public class UserServiceImplTest {
     @Mock
     UserRepository userRepository;
 
-    @Mock
-    UserHasItemRepository userHasItemRepository;
 
     private User user1;
     private User user2;
@@ -29,21 +38,28 @@ public class UserServiceImplTest {
         user1.setUsername("priagung");
         user1.setName("Priagung Satyagama");
         user1.setIsAdmin(true);
+        user1.setIdUser(1L);
+        user1.setActive(true);
 
         user2 = new User();
         user2.setUsername("bambang");
         user2.setName("Bambang Nugroho");
         user2.setIsAdmin(false);
         user2.setSuperior(user1);
+        user2.setIdUser(2L);
+        user2.setActive(true);
 
     }
 
-    @Test
+    @Test(expected = UserNotFoundException.class)
     public void createUserSuperiorNotFoundTest() {
+//        Optional<User> stub = Optional.of(user1);
+        Mockito.when(userRepository.findById(any()))
+                .thenReturn(Optional.empty());
+//        Mockito.when(stub.orElseThrow(any()))
+//                .thenThrow(UserNotFoundException.class);
 
-//        Mockito.when(userRepository
-//                .findById(user1.getSuperior().getIdUser())).thenReturn(
-
+        userService.createUser(user2);
 
     }
 
