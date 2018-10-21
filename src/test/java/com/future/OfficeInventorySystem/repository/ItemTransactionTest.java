@@ -95,7 +95,7 @@ public class ItemTransactionTest {
     public void findAllByTransaction() {
         List<ItemTransaction> list = itemTransactionRepository
                 .findAllByTransaction(transaction,
-                        new PageRequest(0,4))
+                        PageRequest.of(0,4))
                 .getContent();
         assertNotNull(list);
         assertEquals(2, list.size());
@@ -108,7 +108,7 @@ public class ItemTransactionTest {
 
         List<ItemTransaction> list = itemTransactionRepository
                 .findAllByItem(item,
-                        new PageRequest(0,4))
+                        PageRequest.of(0,4))
                 .getContent();
         assertNotNull(list);
         assertEquals(2, list.size());

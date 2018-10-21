@@ -103,7 +103,7 @@ public class UserHasItemTest {
     @Test
     public void findAllByUser() {
 
-        Pageable page = new PageRequest(0,2);
+        Pageable page = PageRequest.of(0,2);
 
         List<UserHasItem> userHasItems = userHasItemRepository
                 .findAllByUser(user,page)
@@ -118,7 +118,7 @@ public class UserHasItemTest {
     @Test
     public void findAllByItem() {
 
-        Pageable page = new PageRequest(0,2);
+        Pageable page = PageRequest.of(0,2);
 
         List<UserHasItem> userHasItems = userHasItemRepository
                 .findAllByItem(itemSatu,page)
