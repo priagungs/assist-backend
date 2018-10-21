@@ -25,7 +25,7 @@ import java.util.List;
 @TableGenerator(name = "employee_generator", initialValue = 16516000)
 @Data
 @Table(name = "user_employee")
-@Where(clause = "is_deleted=0")
+@Where(clause = "is_active=TRUE")
 public class User {
 
     @Id

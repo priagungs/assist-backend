@@ -36,35 +36,35 @@ public class UserHasItemTest {
     @Before
     public void setUp() throws Exception {
         user = new User();
-//        user.setIdUser(Long.valueOf(16516001));
-//        user.setUsername("shintaayuck");
-//        user.setPassword("hashedpassword");
-//        user.setName("Shinta Ayu C K");
-//        user.setPicture("ini link foto");
-//        user.setRole("UX Researcher");
-//        user.setDivision("Technology");
-//        user.setSuperior(null);
-//        user.setIsAdmin(false);
+        user.setIdUser(Long.valueOf(16516001));
+        user.setUsername("shintaayuck");
+        user.setPassword("hashedpassword");
+        user.setName("Shinta Ayu C K");
+        user.setPictureURL("ini link foto");
+        user.setRole("UX Researcher");
+        user.setDivision("Technology");
+        user.setSuperior(null);
+        user.setIsAdmin(false);
         entityManager.persist(user);
 
         itemSatu = new Item();
-//        itemSatu.setIdItem(Long.valueOf(000001));
-//        itemSatu.setItemName("indomie");
-//        itemSatu.setPicture("image.jpg");
-//        itemSatu.setPrice(1000);
-//        itemSatu.setTotalQty(10);
-//        itemSatu.setAvailableQty(2);
-//        itemSatu.setDescription("micin");
+        itemSatu.setIdItem(Long.valueOf(000001));
+        itemSatu.setItemName("indomie");
+        itemSatu.setPictureURL("image.jpg");
+        itemSatu.setPrice(1000L);
+        itemSatu.setTotalQty(10);
+        itemSatu.setAvailableQty(2);
+        itemSatu.setDescription("micin");
         entityManager.persist(itemSatu);
 
         itemDua = new Item();
-//        itemDua.setIdItem(Long.valueOf(000002));
-//        itemDua.setItemName("popmie");
-//        itemDua.setPicture("image.jpg");
-//        itemDua.setPrice(1000);
-//        itemDua.setTotalQty(5);
-//        itemDua.setAvailableQty(3);
-//        itemDua.setDescription("micin instan");
+        itemDua.setIdItem(Long.valueOf(000002));
+        itemDua.setItemName("popmie");
+        itemDua.setPictureURL("image.jpg");
+        itemDua.setPrice(1000L);
+        itemDua.setTotalQty(5);
+        itemDua.setAvailableQty(3);
+        itemDua.setDescription("micin instan");
         entityManager.persist(itemDua);
 
 

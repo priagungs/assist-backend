@@ -154,34 +154,6 @@ public class RequestTest {
         assertEquals(request,listRequest.get(0));
     }
 
-    @Test
-    public void findAllRequestByStatusAndSuperior() {
-        Pageable pageRequest = PageRequest.of(0, 1);
-        List<Request> listRequest = requestRepository
-                .findAllRequestByStatusAndSuperior(Status.SENT, user1, pageRequest)
-                .getContent();
-
-        assertEquals(0,
-                requestRepository
-                        .findAllRequestByStatusAndSuperior(Status.REQUESTED, user1, pageRequest)
-                        .getContent()
-                        .size());
-        assertEquals(new ArrayList<Request>(),
-                requestRepository
-                        .findAllRequestByStatusAndSuperior(Status.APPROVED, user1, pageRequest)
-                        .getContent());
-        assertEquals(0,
-                requestRepository
-                        .findAllRequestByStatusAndSuperior(Status.REJECTED, user1, pageRequest)
-                        .getContent()
-                        .size());
-        assertTrue(
-                requestRepository
-                        .findAllRequestByStatusAndSuperior(Status.SENT, user1, pageRequest)
-                        .getContent()
-                        .size() > 0);
-        assertEquals(request,listRequest.get(0));
-    }
 
     @Test
     public void testSaveRequest() {
