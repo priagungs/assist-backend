@@ -13,6 +13,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyObject;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -41,7 +43,6 @@ public class UserServiceImplTest {
 
     @Before
     public void setUp() {
-
         user1 = new User();
         user1.setUsername("priagung");
         user1.setName("Priagung Satyagama");
@@ -58,7 +59,6 @@ public class UserServiceImplTest {
         user2.setPassword("asdfasdf");
         user2.setDivision("Engineering");
         user2.setRole("Software Engineer");
-
     }
 
     @Test(expected = NotFoundException.class)
@@ -84,7 +84,6 @@ public class UserServiceImplTest {
                 .thenReturn(Optional.empty());
 
         userService.updateUser(user2);
-
     }
 
     @Test(expected = NotFoundException.class)
@@ -99,7 +98,6 @@ public class UserServiceImplTest {
 
     @Test
     public void updateUserSuccessTest() {
-
         Mockito.when(userRepository.findByIdUserAndIsActive(user2.getIdUser(), true))
                 .thenReturn(Optional.of(user2));
         Mockito.when(userRepository.findByIdUserAndIsActive(user2.getSuperior().getIdUser(), true))
@@ -109,7 +107,6 @@ public class UserServiceImplTest {
 
         User result = userService.updateUser(user2);
         Assert.assertEquals("Bambang Nugroho", result.getName());
-
     }
 
     @Test
@@ -120,15 +117,46 @@ public class UserServiceImplTest {
                 .thenReturn(contents);
 
         Assert.assertEquals(contents, userService.readAllUsers(PageRequest.of(0, Integer.MAX_VALUE)));
-
     }
 
     @Test
-    public void readUserByIdUser() {
+    public void readUserByIdUserSuccessTest() {
+        Mockito.when(userRepository.findByIdUserAndIsActive(user2.getIdUser(), true))
+                .thenReturn(Optional.of(user2));
+
+        Assert.assertEquals(user2, userService.readUserByIdUser(user2.getIdUser()));
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void readUserByIdUserNotFoundTest() {
+        Mockito.when(userRepository.findByIdUserAndIsActive(user2.getIdUser(), true))
+                .thenReturn(Optional.empty());
+
+        userService.readUserByIdUser(user2.getIdUser());
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void readAllUsersByIdSuperiorNotFoundTest() {
+        Mockito.when(userRepository.findByIdUserAndIsActive(user2.getSuperior().getIdUser(), true))
+                .thenReturn(Optional.empty());
+
+        userService.readAllUsersByIdSuperior(user2.getSuperior().getIdUser(),
+                PageRequest.of(0, Integer.MAX_VALUE));
     }
 
     @Test
-    public void readUserByIdSuperior() {
+    public void readAllUsersByIdSuperiorSuccessTest() {
+        Mockito.when(userRepository.findByIdUserAndIsActive(user2.getSuperior().getIdUser(), true))
+                .thenReturn(Optional.of(user1));
+
+        PageImpl contents = new PageImpl(new ArrayList());
+
+        Mockito.when(userRepository.findAllBySuperior(user1, PageRequest.of(0, Integer.MAX_VALUE)))
+                .thenReturn(contents);
+
+        Assert.assertEquals(contents, userService.readAllUsersByIdSuperior(user2.getSuperior().getIdUser(),
+                PageRequest.of(0, Integer.MAX_VALUE)));
+
     }
 
     @Test
