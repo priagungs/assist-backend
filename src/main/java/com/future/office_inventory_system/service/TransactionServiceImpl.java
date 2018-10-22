@@ -21,15 +21,16 @@ public class TransactionServiceImpl implements TransactionService {
 
 
     @Autowired
-    TransactionRepository repository;
+    private TransactionRepository repository;
 
     @Autowired
-    ItemTransactionService itemTransactionService;
+    private ItemTransactionService itemTransactionService;
 
     @Autowired
     UserService userService;
 
     public Transaction createTransaction(Transaction transaction) {
+
         User admin = userService.readUserByIdUser(transaction.getAdmin().getIdUser());
         if (!admin.getIsAdmin()) {
             throw new InvalidValueException("admin is not an admin");
@@ -44,6 +45,7 @@ public class TransactionServiceImpl implements TransactionService {
         }
         transaction.setItemTransactions(itemTransactions);
         return repository.save(transaction);
+
 
     }
 
