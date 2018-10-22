@@ -19,6 +19,7 @@ import java.util.List;
 @Service
 public class TransactionServiceImpl implements TransactionService {
 
+
     @Autowired
     TransactionRepository repository;
 
@@ -54,11 +55,20 @@ public class TransactionServiceImpl implements TransactionService {
         return repository.findById(id).orElseThrow(() -> new NotFoundException("transaction not found"));
     }
 
-    public Transaction updateTransaction(Transaction transaction) {
-        return null;
-    }
-
     public ResponseEntity deleteTransaction(Long id) {
-        return null;
+        Transaction transaction = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException("transaction not found"));
+        if (new Date().getTime() - transaction.getTransactionDate().getTime() >
+                TransactionService.MAX_ALLOWABLE_SECONDS_TO_UPDATE) {
+            throw new InvalidValueException("transaction has been created for more than" +
+                    TransactionService.MAX_ALLOWABLE_SECONDS_TO_UPDATE.toString() + "ms");
+        }
+
+        for (ItemTransaction el : transaction.getItemTransactions()) {
+            itemTransactionService.deleteItemTransaction(el.getIdItemTransaction());
+        }
+
+        repository.delete(transaction);
+        return ResponseEntity.ok().build();
     }
 }

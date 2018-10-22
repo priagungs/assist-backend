@@ -11,7 +11,7 @@ import java.util.List;
 @Entity
 @TableGenerator(name = "employee_generator", initialValue = 16516000)
 @Data
-@Table(name = "user_employee")
+@Table(name = TableName.USER)
 public class User {
 
     @Id
