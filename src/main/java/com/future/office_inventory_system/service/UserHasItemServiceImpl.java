@@ -27,13 +27,17 @@ public class UserHasItemServiceImpl implements UserHasItemService {
     UserService userService;
 
     public UserHasItem createUserHasItem(UserHasItem userHasItem) {
-        if (repository.findById(userHasItem.getIdUserHasItem()).isPresent()) {
-            throw new ConflictException("userhasitem already present");
-        }
+        User user = userService.readUserByIdUser(userHasItem.getUser().getIdUser());
+        Item item = itemService.readItemByIdItem(userHasItem.getItem().getIdItem());
 
-        userHasItem.setUser(userService.readUserByIdUser(userHasItem.getUser().getIdUser()));
-        userHasItem.setItem(itemService.readItemByIdItem(userHasItem.getItem().getIdItem()));
-        return repository.save(userHasItem);
+        if (repository.findAllByUserAndItem(user, item).size() > 0) {
+            return updateUserHasItem(userHasItem);
+        }
+        else {
+            userHasItem.setUser(user);
+            userHasItem.setItem(item);
+            return repository.save(userHasItem);
+        }
     }
 
     public UserHasItem readUserHasItemById(Long id) {

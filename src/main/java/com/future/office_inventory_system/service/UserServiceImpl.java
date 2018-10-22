@@ -31,10 +31,6 @@ public class UserServiceImpl implements UserService {
                 .findById(user.getSuperior().getIdUser())
                 .orElseThrow(() -> new NotFoundException("superior not found")));
 
-        if (userRepository.findById(user.getIdUser()).isPresent()) {
-            throw new ConflictException(user.getIdUser().toString() + " is present");
-        }
-
         return userRepository.save(user);
 
     }
