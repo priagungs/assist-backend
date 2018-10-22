@@ -29,6 +29,7 @@ public class ItemServiceImpl implements ItemService {
         if (itemRepository.findByItemName(item.getItemName()).isPresent()) {
             throw new RuntimeException(item.getItemName() + " is exist");
         }
+        item.setAvailableQty(item.getTotalQty());
         return itemRepository.save(item);
     }
     
@@ -37,19 +38,7 @@ public class ItemServiceImpl implements ItemService {
             .findById(item.getIdItem())
             .orElseThrow(() -> new NotFoundException("Item not found"));
 
-        List<UserHasItem> userHasItems = userHasItemService
-                .readAllUserHasItemsByIdItem(item.getIdItem(), PageRequest.of(0, Integer.MAX_VALUE)).getContent();
-
-        Integer totalUsedItem = 0;
-        for (UserHasItem el : userHasItems) {
-            totalUsedItem += el.getHasQty();
-        }
-
-        if (item.getTotalQty() < item.getAvailableQty()
-            || item.getAvailableQty() > item.getTotalQty()
-            || item.getAvailableQty() < 0
-            || item.getPrice() < 0
-            || item.getTotalQty() < totalUsedItem) {
+        if (item.getTotalQty() < itemBefore.getTotalQty() - itemBefore.getAvailableQty()) {
             throw new InvalidValueException("Invalid value");
         }
 
@@ -57,9 +46,7 @@ public class ItemServiceImpl implements ItemService {
         itemBefore.setPictureURL(item.getPictureURL());
         itemBefore.setPrice(item.getPrice());
         itemBefore.setTotalQty(item.getTotalQty());
-        itemBefore.setAvailableQty(item.getAvailableQty());
         itemBefore.setDescription(item.getDescription());
-        itemBefore.setIsActive(item.getIsActive());
         
         itemRepository.save(itemBefore);
         return itemBefore;

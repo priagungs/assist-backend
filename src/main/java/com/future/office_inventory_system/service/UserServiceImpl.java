@@ -22,10 +22,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserHasItemService userHasItemService;
 
-
-    public UserServiceImpl() {}
-
-
     public User createUser(User user) {
         user.setSuperior(userRepository
                 .findByIdUserAndIsActive(user.getSuperior().getIdUser(), true)

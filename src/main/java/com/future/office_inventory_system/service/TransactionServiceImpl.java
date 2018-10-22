@@ -59,9 +59,9 @@ public class TransactionServiceImpl implements TransactionService {
         Transaction transaction = repository.findById(id)
                 .orElseThrow(() -> new NotFoundException("transaction not found"));
         if (new Date().getTime() - transaction.getTransactionDate().getTime() >
-                TransactionService.MAX_ALLOWABLE_SECONDS_TO_UPDATE) {
+                TransactionService.MAX_ALLOWABLE_MILISECONDS_TO_UPDATE) {
             throw new InvalidValueException("transaction has been created for more than" +
-                    TransactionService.MAX_ALLOWABLE_SECONDS_TO_UPDATE.toString() + "ms");
+                    TransactionService.MAX_ALLOWABLE_MILISECONDS_TO_UPDATE.toString() + "ms");
         }
 
         for (ItemTransaction el : transaction.getItemTransactions()) {
