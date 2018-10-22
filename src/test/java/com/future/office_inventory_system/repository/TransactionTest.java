@@ -70,20 +70,6 @@ public class TransactionTest {
     }
 
     @Test
-    public void findAllByAdmin() {
-        Pageable page =  PageRequest.of(0,3);
-
-        List<Transaction> transactions = transactionRepository
-                .findAllByAdmin(admin,page)
-                .getContent();
-
-        assertNotNull(transactions);
-        assertEquals(3, transactions.size());
-        assertEquals(transaction1,transactions.get(0));
-
-    }
-
-    @Test
     public void testSaveTransaction(){
         transactionRepository.save(transaction1);
         transactionRepository.save(transaction2);
