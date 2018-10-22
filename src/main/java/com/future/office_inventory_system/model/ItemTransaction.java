@@ -16,7 +16,7 @@ public class ItemTransaction {
     private Long idItemTransaction;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "idTransaction", nullable = false)
+    @JoinColumn(name = "idTransaction")
     @JsonIgnoreProperties("itemTransaction")
     private Transaction transaction;
 

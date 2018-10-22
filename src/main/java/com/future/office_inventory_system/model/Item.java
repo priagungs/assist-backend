@@ -11,7 +11,6 @@ import java.util.List;
 @Data
 @Table(name = TableName.ITEM)
 @TableGenerator(name = "item_generator", initialValue = 13216000)
-@Where(clause = "is_active=1")
 public class Item {
 
     @Id
@@ -41,8 +40,7 @@ public class Item {
     @OneToMany(mappedBy = "item")
     @JsonIgnoreProperties("item")
     private List<ItemTransaction> itemTransactions;
-
-    @Column(name = "is_active")
+    
     private Boolean active = true;
 
 

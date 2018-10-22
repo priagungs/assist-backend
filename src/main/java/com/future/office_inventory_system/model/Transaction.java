@@ -27,7 +27,7 @@ public class Transaction {
     @JsonIgnoreProperties("transaction")
     private User admin;
 
-    @OneToMany(mappedBy = "transaction")
+    @OneToMany(mappedBy = "transaction", cascade = CascadeType.REMOVE)
     @JsonIgnoreProperties("transaction")
     private List<ItemTransaction> itemTransactions;
 
