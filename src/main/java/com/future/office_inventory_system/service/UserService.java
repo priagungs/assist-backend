@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 @Service
 public interface UserService {
 
-    ResponseEntity createUser(User user);
+    User createUser(User user);
     
-    ResponseEntity updateUser(User user);
+    User updateUser(User user);
     
     Page<User> readAllUsers(Pageable pageable);
     

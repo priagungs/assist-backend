@@ -14,7 +14,7 @@ public interface UserHasItemService {
     UserHasItem createUserHasItem(UserHasItem userHasItem);
     UserHasItem readUserHasItemById(Long id);
     ResponseEntity deleteUserHasItem(Long id);
-    ResponseEntity updateUserHasItem(UserHasItem userHasItem);
+    UserHasItem updateUserHasItem(UserHasItem userHasItem);
     Page<UserHasItem> readAllUserHasItems(Pageable pageable);
     Page<UserHasItem> readAllUserHasItemsByIdUser(Long idUser, Pageable pageable);
     Page<UserHasItem> readAllUserHasItemsByIdItem(Long idItem, Pageable pageable);

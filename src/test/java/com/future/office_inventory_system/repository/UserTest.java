@@ -103,7 +103,7 @@ public class UserTest {
         assertNotNull(userRepository.findById(user1.getIdUser()).get());
 
     }
-    
+
     @Test
     public void findAllBySuperior() {
 

@@ -13,41 +13,47 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ItemServiceImpl implements ItemService {
-    @Autowired
-    private ItemRepository itemRepository;
+  
+  @Autowired
+  private ItemRepository itemRepository;
+  
+  public Item createItem(Item item) {
     
-    public ResponseEntity createItem(Item item) {
-    
-        if (itemRepository.findByItemName(item.getItemName()).isPresent()) {
-            throw new RuntimeException(item.getItemName() + " is exist");
-        }
-    
-        itemRepository.save(item);
-        return ResponseEntity.ok().build();
-    
+    if (itemRepository.findByItemName(item.getItemName()).isPresent()) {
+
+      throw new RuntimeException(item.getItemName() + " is exist");
     }
     
-    public ResponseEntity updateItem(Item item) {
-        Item itemBefore = itemRepository
-            .findById(item.getIdItem())
-            .orElseThrow(() -> new NotFoundException("Item not found"));
+    return itemRepository.save(item);
+  }
+    public Item updateItem(Item item) {
+      Item itemBefore = itemRepository
+      .findById(item.getIdItem())
+      .orElseThrow(() -> new NotFoundException("Item not found"));
+  }
+
+public ResponseEntity updateItem(Item item) {
+    Item itemBefore = itemRepository.findById(item.getIdItem()).orElseThrow(() -> new NotFoundException("Item not found"));
     
-        if (item.getTotalQty() < 0 || item.getAvailableQty() > item.getTotalQty() ||
-            item.getAvailableQty() < 0  || item.getPrice() < 0) {
-            throw new InvalidValueException("Invalid value");
-        }
-    
-        itemBefore.setItemName(item.getItemName());
-        itemBefore.setPictureURL(item.getPictureURL());
-        itemBefore.setPrice(item.getPrice());
-        itemBefore.setTotalQty(item.getTotalQty());
-        itemBefore.setAvailableQty(item.getAvailableQty());
-        itemBefore.setDescription(item.getDescription());
-        itemBefore.setActive(item.getActive());
-    
-        itemRepository.save(itemBefore);
-        return ResponseEntity.ok().build();
+    if (item.getTotalQty() < 0 || item.getAvailableQty() > item.getTotalQty() || item.getAvailableQty() < 0 || item.getPrice() < 0) {
+        throw new InvalidValueException("Invalid value");
     }
+    
+    itemBefore.setItemName(item.getItemName());
+    itemBefore.setPictureURL(item.getPictureURL());
+    itemBefore.setPrice(item.getPrice());
+    itemBefore.setTotalQty(item.getTotalQty());
+    itemBefore.setAvailableQty(item.getAvailableQty());
+    itemBefore.setDescription(item.getDescription());
+    itemBefore.setActive(item.getActive());
+    
+    itemRepository.save(itemBefore);
+    return ResponseEntity.ok().build();
+}
+  
+  public Page<Item> readAllItem(Pageable pageable) {
+    return itemRepository.findAll(pageable);
+  }
   
     public Page<Item> readAllItem(Pageable pageable) {
         return itemRepository.findAll(pageable);

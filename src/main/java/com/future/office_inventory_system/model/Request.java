@@ -27,7 +27,7 @@ public class Request {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idUser", nullable = false)
     @JsonIgnoreProperties("request")
-    private Long requestBy;
+    private User requestBy;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idItem", nullable = false)
