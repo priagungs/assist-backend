@@ -31,7 +31,7 @@ public class RequestServiceImpl implements RequestService {
     @Autowired
     private ItemService itemService;
 
-    public Page<Request> createRequest(Pageable pageable,RequestBodyRequest requestBody){
+    public Page<Request> createRequest(Pageable pageable, RequestBodyRequest requestBody){
 
         User user= userService.readUserByIdUser(requestBody.getIdUser());
 
@@ -41,16 +41,16 @@ public class RequestServiceImpl implements RequestService {
              it = itemService.readItemByIdItem(item.getIdItem());
              Request request = new Request();
              request.setRequestBy(user);
-             request.setItem(item);
+             request.setItem(it);
              request.setRequestDate(new Date());
              request.setReqQty(item.getTotalQty());
              request.setRequestStatus(RequestStatus.REQUESTED);
 
              listNewRequest.add(request);
-//             requestRepository.save(request);
+             requestRepository.save(request);
         }
 
-        return new PageImpl<>(listNewRequest, pageable,listNewRequest.size());
+        return new PageImpl<>(listNewRequest, pageable, listNewRequest.size());
     }
 
     public Request updateRequest(Request request){
