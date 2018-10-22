@@ -11,8 +11,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RequestRepository extends JpaRepository<Request,Long> {
 
-    Page<Request> findAllRequestByIdUser(Long idUser, Pageable pageable);
+    Page<Request> findAllByRequestBy(User User, Pageable pageable);
     
-    Page<Request> findAllRequestByRequestStatus(RequestStatus requestStatus, Pageable pageable);
+    Page<Request> findAllRequestsByRequestStatus(RequestStatus requestStatus, Pageable pageable);
 
 }

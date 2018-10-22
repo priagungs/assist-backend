@@ -6,6 +6,8 @@ import com.future.office_inventory_system.model.Request;
 import com.future.office_inventory_system.model.RequestStatus;
 import com.future.office_inventory_system.model.User;
 import com.future.office_inventory_system.repository.RequestRepository;
+import com.future.office_inventory_system.repository.UserRepository;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -14,85 +16,105 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.Null;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Data
 public class RequestServiceImpl implements RequestService {
 
     @Autowired
-    RequestRepository requestRepository;
+    private RequestRepository requestRepository;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    ItemService itemService;
+    private ItemService itemService;
 
-    public ResponseEntity createRequest(Request request){
-        try {
-            User user= userService.readUserByIdUser(request.getRequestBy().getIdUser());
-//            Item item= itemService.readItemById(request.getItem().getIdItem())
-        }
-        catch (NotFoundException e)//need add Item not found exception
-        {
-//          throw e;
-//          if user not found
+    public Request createRequest(Request request){
+
+        User user= userService.readUserByIdUser(request.getRequestBy().getIdUser());
+
+        if(user == null){
             throw new NotFoundException("user not found");
-//            if item not found
-//            throw new ItemNotFoundException
+        }
+
+        Item item= itemService
+                .readItemByIdItem(request.getItem().getIdItem());
+
+        if(item == null){
+            throw new NotFoundException("item not found");
         }
 
         requestRepository.save(request);
-        return ResponseEntity.ok().build();
+        return request;
     }
 
-    public ResponseEntity updateRequest(Request request){
+    public Request updateRequest(Request request){
 
+        if(userService.readUserByIdUser(request.getRequestBy().getIdUser()) == null) {
+            throw new NotFoundException("not found user has request");
+        }
 
+        if(request.getApprovedBy() != null){
+            if(userService.readUserByIdUser(request.getApprovedBy()) != null){
+                throw new NotFoundException("not found user has approved");
+            } else {
+                if(request.getRejectedBy() != null){
+                    if( userService.readUserByIdUser(request.getRejectedBy()) == null){
+                        throw new NotFoundException("not found user has reject");
+                    }
+                }
+            }
+        }
 
+        if(request.getHandedOverBy() != null){
+            if(userService.readUserByIdUser(request.getHandedOverBy()) == null){
+                throw new NotFoundException("not found admin has hand over");
+            }
+        }
 
-        return ResponseEntity.ok().build();
+        return request;
     }
 
     public Page<Request> readAllRequest(Pageable pageable){
-        return requestRepository.findAll(pageable); }
-
-
-
-    public Page<Request> readRequestByIdUser(Pageable pageable, Long idUser){
-        return requestRepository.findAllRequestByIdUser(idUser, pageable);
+        return requestRepository.findAll(pageable);
     }
 
-    public Page<Request> readAllRequestByIdSuperior(Pageable pageable, Long id){
+    public Page<Request> readRequestByUser(Pageable pageable, User user){
+        return requestRepository.findAllByRequestBy(user, pageable);
+    }
+
+    public Page<Request> readAllRequestBySuperior(Pageable pageable, User superior){
         List<User> users = userService.readAllUsersByIdSuperior(
-                id,
-                new PageRequest(0, Integer.MAX_VALUE))
-                    .getContent();
-        List<Request> requests = new ArrayList<>();
-
-        for (User user: users) {
-            requests.addAll(requestRepository.findAllRequestByIdUser(user.getIdUser(),pageable)
-                    .getContent());
-        }
-        return new PageImpl<>(requests, pageable, requests.size());
-    }
-
-    public Page<Request> readAllRequestByRequestStatus(
-            Pageable pageable, RequestStatus requestStatus){
-        return requestRepository.findAllRequestByRequestStatus(requestStatus, pageable);
-    }
-
-    public Page<Request> readAllRequestByIdSuperiorAndRequestStatus(
-            Pageable pageable, Long id, RequestStatus requestStatus){
-        List<User> users = userService.readAllUsersByIdSuperior(
-                id,
+                superior.getIdUser(),
                 new PageRequest(0, Integer.MAX_VALUE))
                 .getContent();
         List<Request> requests = new ArrayList<>();
 
         for (User user: users) {
-            requests.addAll(requestRepository.findAllRequestByIdUser(user.getIdUser(),pageable)
+            requests.addAll(requestRepository.findAllByRequestBy(user,pageable)
+                    .getContent());
+        }
+        return new PageImpl<>(requests, pageable, requests.size());
+    }
+
+    public Page<Request> readAllRequestByRequestStatus(Pageable pageable, RequestStatus requestStatus){
+        return requestRepository.findAllRequestsByRequestStatus(requestStatus, pageable);
+    }
+
+    public Page<Request> readAllRequestBySuperiorAndRequestStatus(
+            Pageable pageable, User superior, RequestStatus requestStatus){
+        List<User> users = userService.readAllUsersByIdSuperior(
+                superior.getIdUser(),
+                new PageRequest(0, Integer.MAX_VALUE))
+                .getContent();
+        List<Request> requests = new ArrayList<>();
+
+        for (User user: users) {
+            requests.addAll(requestRepository.findAllByRequestBy(user,pageable)
                     .getContent());
         }
 
@@ -105,15 +127,12 @@ public class RequestServiceImpl implements RequestService {
         }
 
         return new PageImpl<>(reqs, pageable, reqs.size());
-
     }
-
-
 
     public ResponseEntity deleteRequest(Request request){
 
         requestRepository.delete(request);
 
-        return ResponseEntity.ok().build(); }
-
+        return ResponseEntity.ok().build();
+    }
 }

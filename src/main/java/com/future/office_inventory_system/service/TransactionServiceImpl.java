@@ -1,6 +1,7 @@
 package com.future.office_inventory_system.service;
 
 
+import com.future.office_inventory_system.exception.NotFoundException;
 import com.future.office_inventory_system.model.Transaction;
 import com.future.office_inventory_system.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +13,22 @@ import org.springframework.stereotype.Service;
 public class TransactionServiceImpl implements TransactionService {
 
     @Autowired
-    TransactionRepository repository;
+    private TransactionRepository transactionRepository;
 
     @Autowired
-    ItemTransactionService itemTransactionService;
+    private ItemTransactionService itemTransactionService;
+
+    @Autowired
+    private UserService userService;
 
     public Transaction createTransaction(Transaction transaction) {
-        return null;
+
+        if(userService.readUserByIdUser(transaction.getAdmin().getIdUser()) == null){
+            throw new NotFoundException("not found transaction admin");
+        }
+
+        transactionRepository.save(transaction);
+        return transaction;
     }
 
     public Page<Transaction> readAllTransactions(Transaction transaction) {
