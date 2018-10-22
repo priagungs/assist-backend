@@ -124,31 +124,31 @@ public class RequestTest {
 //
 //    }
 
-    @Test
-    public void findAllRequestByStatus() {
-        List<Request> listRequest = requestRepository
-
-                .findAllRequestByRequestStatus(RequestStatus.SENT, PageRequest.of(0, 1))
-                .getContent();
-        assertEquals(new ArrayList<Request>(),
-                requestRepository
-                        .findAllRequestByRequestStatus(RequestStatus.REQUESTED, PageRequest.of(0, 1))
-                        .getContent());
-        assertEquals(new ArrayList<Request>(),
-                requestRepository
-                        .findAllRequestByRequestStatus(RequestStatus.APPROVED, PageRequest.of(0, 1))
-                        .getContent());
-        assertEquals(0,
-                requestRepository
-                        .findAllRequestByRequestStatus(RequestStatus.REJECTED, PageRequest.of(0, 1))
-                        .getContent()
-                        .size());
-        assertTrue(requestRepository
-                .findAllRequestByRequestStatus(RequestStatus.SENT, PageRequest.of(0, 1))
-                .getContent()
-                .size() > 0);
-        assertEquals(request,listRequest.get(0));
-    }
+//    @Test
+//    public void findAllRequestByStatus() {
+//        List<Request> listRequest = requestRepository
+//
+//                .findAllRequestByRequestStatus(RequestStatus.SENT, PageRequest.of(0, 1))
+//                .getContent();
+//        assertEquals(new ArrayList<Request>(),
+//                requestRepository
+//                        .findAllRequestByRequestStatus(RequestStatus.REQUESTED, PageRequest.of(0, 1))
+//                        .getContent());
+//        assertEquals(new ArrayList<Request>(),
+//                requestRepository
+//                        .findAllRequestByRequestStatus(RequestStatus.APPROVED, PageRequest.of(0, 1))
+//                        .getContent());
+//        assertEquals(0,
+//                requestRepository
+//                        .findAllRequestByRequestStatus(RequestStatus.REJECTED, PageRequest.of(0, 1))
+//                        .getContent()
+//                        .size());
+//        assertTrue(requestRepository
+//                .findAllRequestByRequestStatus(RequestStatus.SENT, PageRequest.of(0, 1))
+//                .getContent()
+//                .size() > 0);
+//        assertEquals(request,listRequest.get(0));
+//    }
 
 
 //    @Test
