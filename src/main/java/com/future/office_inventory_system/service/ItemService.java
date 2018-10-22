@@ -10,17 +10,17 @@ import org.springframework.stereotype.Service;
 @Service
 public interface ItemService {
   
-  ResponseEntity createItem(Item item);
-  
-  ResponseEntity updateItem(Item item);
- 
-  Page<Item> readAllItem(Pageable pageable);
-  
-  Item readItemByIdItem(Long id);
-  
-  Page<Item> readItemByAvailableGreaterThan(Integer min, Pageable pageable);
-  
-  ResponseEntity deleteItem(Long id);
+    ResponseEntity createItem(Item item);
+    
+    ResponseEntity updateItem(Item item);
+    
+    Page<Item> readAllItem(Pageable pageable);
+    
+    Item readItemByIdItem(Long id);
+    
+    Page<Item> readItemByAvailableGreaterThan(Integer min, Pageable pageable);
+    
+    ResponseEntity deleteItem(Long id);
   
   
 }

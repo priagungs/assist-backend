@@ -100,20 +100,6 @@ public class ItemTransactionTest {
     }
 
     @Test
-    public void findAllByItem() {
-
-
-        List<ItemTransaction> list = itemTransactionRepository
-                .findAllByItem(item,
-                        PageRequest.of(0,4))
-                .getContent();
-        assertNotNull(list);
-        assertEquals(2, list.size());
-        assertEquals(itemTransaction1, list.get(0));
-
-    }
-
-    @Test
     public void saveItemTransaction() {
         itemTransactionRepository.save(itemTransaction1);
         itemTransactionRepository.save(itemTransaction2);

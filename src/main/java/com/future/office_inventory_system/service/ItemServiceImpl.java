@@ -13,72 +13,70 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ItemServiceImpl implements ItemService {
-  
-  @Autowired
-  private ItemRepository itemRepository;
-  
-  public ResponseEntity createItem(Item item) {
+    @Autowired
+    private ItemRepository itemRepository;
     
-    if (itemRepository.findByItemName(item.getItemName()).isPresent()) {
-      throw new RuntimeException(item.getItemName() + " is exist");
+    public ResponseEntity createItem(Item item) {
+    
+        if (itemRepository.findByItemName(item.getItemName()).isPresent()) {
+            throw new RuntimeException(item.getItemName() + " is exist");
+        }
+    
+        itemRepository.save(item);
+        return ResponseEntity.ok().build();
+    
     }
     
-    itemRepository.save(item);
-    return ResponseEntity.ok().build();
+    public ResponseEntity updateItem(Item item) {
+        Item itemBefore = itemRepository
+            .findById(item.getIdItem())
+            .orElseThrow(() -> new NotFoundException("Item not found"));
     
-  }
+        if (item.getTotalQty() < 0 || item.getAvailableQty() > item.getTotalQty() ||
+            item.getAvailableQty() < 0  || item.getPrice() < 0) {
+            throw new InvalidValueException("Invalid value");
+        }
+    
+        itemBefore.setItemName(item.getItemName());
+        itemBefore.setPictureURL(item.getPictureURL());
+        itemBefore.setPrice(item.getPrice());
+        itemBefore.setTotalQty(item.getTotalQty());
+        itemBefore.setAvailableQty(item.getAvailableQty());
+        itemBefore.setDescription(item.getDescription());
+        itemBefore.setActive(item.getActive());
+    
+        itemRepository.save(itemBefore);
+        return ResponseEntity.ok().build();
+    }
   
-  public ResponseEntity updateItem(Item item) {
-    Item itemBefore = itemRepository
-      .findById(item.getIdItem())
-      .orElseThrow(() -> new NotFoundException("Item not found"));
-    
-    if (item.getTotalQty() < 0 || item.getAvailableQty() > item.getTotalQty() ||
-      item.getAvailableQty() < 0  || item.getPrice() < 0) {
-      throw new InvalidValueException("Invalid value");
+    public Page<Item> readAllItem(Pageable pageable) {
+        return itemRepository.findAll(pageable);
     }
     
-    itemBefore.setItemName(item.getItemName());
-    itemBefore.setPictureURL(item.getPictureURL());
-    itemBefore.setPrice(item.getPrice());
-    itemBefore.setTotalQty(item.getTotalQty());
-    itemBefore.setAvailableQty(item.getAvailableQty());
-    itemBefore.setDescription(item.getDescription());
-    itemBefore.setActive(item.getActive());
-    
-    itemRepository.save(itemBefore);
-    return ResponseEntity.ok().build();
-    
-  }
-  
-  public Page<Item> readAllItem(Pageable pageable) {
-    return itemRepository.findAll(pageable);
-  }
-  
-  public Item readItemByIdItem(Long id) {
-    return itemRepository.findById(id)
-      .orElseThrow(() -> new NotFoundException("Item not found"));
-  }
-  
-  public Page<Item> readItemByAvailableGreaterThan(Integer min, Pageable pageable) {
-    if (min < 0) {
-      throw new InvalidValueException("Invalid value");
+    public Item readItemByIdItem(Long id) {
+        return itemRepository.findById(id)
+            .orElseThrow(() -> new NotFoundException("Item not found"));
     }
-    return itemRepository.findAllByAvailableQtyGreaterThan(min,pageable);
-  }
   
-  public ResponseEntity deleteItem(Long id) {
-    Item item = itemRepository.findById(id)
-      .orElseThrow(() -> new NotFoundException("Item not found"));
-    
-    if (item.getOwners().size() > 0) {
-      throw new RuntimeException("there's employee who still has " + item.getItemName());
+    public Page<Item> readItemByAvailableGreaterThan(Integer min, Pageable pageable) {
+        if (min < 0) {
+            throw new InvalidValueException("Invalid value");
+        }
+        return itemRepository.findAllByAvailableQtyGreaterThan(min,pageable);
     }
+  
+    public ResponseEntity deleteItem(Long id) {
+        Item item = itemRepository.findById(id)
+            .orElseThrow(() -> new NotFoundException("Item not found"));
     
-    item.setActive(false);
-    itemRepository.save(item);
+        if (item.getOwners().size() > 0) {
+            throw new RuntimeException("there's employee who still has " + item.getItemName());
+        }
     
-    return ResponseEntity.ok().build();
-  }
+        item.setActive(false);
+        itemRepository.save(item);
+    
+        return ResponseEntity.ok().build();
+    }
 
 }

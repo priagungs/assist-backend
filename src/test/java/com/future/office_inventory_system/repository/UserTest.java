@@ -103,27 +103,7 @@ public class UserTest {
         assertNotNull(userRepository.findById(user1.getIdUser()).get());
 
     }
-    @Test
-    public void findAllByName() {
-
-        List<User> userList = new ArrayList<>();
-        userList.add(user3);
-        userList.add(user4);
-
-        assertEquals(0,userRepository
-                .findAllByName("abcdef", PageRequest.of(0, 2))
-                .getContent()
-                .size());
-        assertNotNull(userRepository
-                .findAllByName("Priagung Satyagama", PageRequest.of(0, 2))
-                .getContent());
-        assertEquals(userList,userRepository
-                .findAllByName("Priagung Satyagama", PageRequest.of(0, 2))
-                .getContent());
-
-    }
-
-
+    
     @Test
     public void findAllBySuperior() {
 
