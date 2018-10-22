@@ -27,6 +27,4 @@ public class UserHasItem {
 
     private Integer hasQty;
 
-    private Long idAdmin;
-
 }

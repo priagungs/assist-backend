@@ -68,10 +68,7 @@ public class ItemTransactionTest {
         list.add(itemTransaction1);
         list.add(itemTransaction2);
         transaction.setItemTransactions(list);
-//        entityManager.persistAndFlush(transaction);
 
-
-        //
 
     }
 

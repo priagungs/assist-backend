@@ -9,17 +9,17 @@ import org.springframework.stereotype.Service;
 @Service
 public interface UserService {
 
-    ResponseEntity createUser(User user);
+    User createUser(User user);
     
-    ResponseEntity updateUser(User user);
+    User updateUser(User user);
     
-    Page<User> readAllUser(Pageable pageable);
+    Page<User> readAllUsers(Pageable pageable);
     
     User readUserByIdUser(Long id);
     
-    Page<User> readUserByIdSuperior(Long id, Pageable pageable);
+    Page<User> readAllUsersByIdSuperior(Long id, Pageable pageable);
     
-    Page<User> readUserByIsAdmin(Boolean isAdmin, Pageable pageable);
+    Page<User> readAllUsersByIsAdmin(Boolean isAdmin, Pageable pageable);
     
     User readUserByUsername(String username);
     

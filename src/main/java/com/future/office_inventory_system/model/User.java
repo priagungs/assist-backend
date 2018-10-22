@@ -11,8 +11,8 @@ import java.util.List;
 @Entity
 @TableGenerator(name = "employee_generator", initialValue = 16516000)
 @Data
-@Table(name = TableName.USER)
-@Where(clause = "is_active=1")
+@Table(name = "user_employee")
+@Where(clause = "is_active=TRUE")
 public class User {
 
     @Id
@@ -42,7 +42,7 @@ public class User {
 
     private Boolean isAdmin;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "requestBy")
     @JsonIgnoreProperties("user")
     private List<Request> requests;
 
