@@ -1,12 +1,11 @@
 package com.future.office_inventory_system.service;
 
-import com.future.office_inventory_system.exception.UserNotFoundException;
+import com.future.office_inventory_system.exception.NotFoundException;
 import com.future.office_inventory_system.model.Item;
 import com.future.office_inventory_system.model.Request;
 import com.future.office_inventory_system.model.RequestStatus;
 import com.future.office_inventory_system.model.User;
 import com.future.office_inventory_system.repository.RequestRepository;
-import org.hibernate.validator.internal.constraintvalidators.bv.number.bound.decimal.DecimalMaxValidatorForBigInteger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -32,14 +31,14 @@ public class RequestServiceImpl implements RequestService {
 
     public ResponseEntity createRequest(Request request){
         try {
-            User user= userService.readUserByIdUser(request.getRequestBy());
+            User user= userService.readUserByIdUser(request.getRequestBy().getIdUser());
 //            Item item= itemService.readItemById(request.getItem().getIdItem())
         }
-        catch (UserNotFoundException e)//need add Item not found exception
+        catch (NotFoundException e)//need add Item not found exception
         {
 //          throw e;
 //          if user not found
-            throw new UserNotFoundException("user not found");
+            throw new NotFoundException("user not found");
 //            if item not found
 //            throw new ItemNotFoundException
         }
@@ -66,7 +65,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     public Page<Request> readAllRequestByIdSuperior(Pageable pageable, Long id){
-        List<User> users = userService.readUserByIdSuperior(
+        List<User> users = userService.readAllUsersByIdSuperior(
                 id,
                 new PageRequest(0, Integer.MAX_VALUE))
                     .getContent();
@@ -81,12 +80,12 @@ public class RequestServiceImpl implements RequestService {
 
     public Page<Request> readAllRequestByRequestStatus(
             Pageable pageable, RequestStatus requestStatus){
-        return requestRepository.findAllRequestByStatus(requestStatus, pageable);
+        return requestRepository.findAllRequestByRequestStatus(requestStatus, pageable);
     }
 
     public Page<Request> readAllRequestByIdSuperiorAndRequestStatus(
             Pageable pageable, Long id, RequestStatus requestStatus){
-        List<User> users = userService.readUserByIdSuperior(
+        List<User> users = userService.readAllUsersByIdSuperior(
                 id,
                 new PageRequest(0, Integer.MAX_VALUE))
                 .getContent();
