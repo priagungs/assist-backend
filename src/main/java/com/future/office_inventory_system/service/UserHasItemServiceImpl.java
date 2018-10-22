@@ -34,6 +34,9 @@ public class UserHasItemServiceImpl implements UserHasItemService {
             return updateUserHasItem(userHasItem);
         }
         else {
+            if (userHasItem.getHasQty() > item.getAvailableQty()) {
+                throw new InvalidValueException("item available quantity is not sufficient");
+            }
             userHasItem.setUser(user);
             userHasItem.setItem(item);
             return repository.save(userHasItem);

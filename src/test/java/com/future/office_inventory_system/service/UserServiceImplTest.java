@@ -40,7 +40,7 @@ public class UserServiceImplTest {
         user1.setName("Priagung Satyagama");
         user1.setIsAdmin(true);
         user1.setIdUser(1L);
-        user1.setActive(true);
+        user1.setIsActive(true);
 
         user2 = new User();
         user2.setUsername("bambang");
@@ -48,7 +48,7 @@ public class UserServiceImplTest {
         user2.setIsAdmin(false);
         user2.setSuperior(user1);
         user2.setIdUser(2L);
-        user2.setActive(true);
+        user2.setIsActive(true);
 
     }
 

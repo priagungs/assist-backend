@@ -10,7 +10,7 @@ public class TableName {
 
     public static final String TRANSACTION="transaction";
 
-    public static final String USER="user";
+    public static final String USER="employee_user";
 
     public static final String USERHASITEM="user_has_item";
 }

@@ -84,18 +84,20 @@ public class RequestServiceImpl implements RequestService {
     }
 
     public Page<Request> readRequestByUser(Pageable pageable, User user){
-        return requestRepository.findAllByRequestBy(user, pageable);
+
+        return requestRepository.findAllRequestsByRequestBy(user, pageable);
+
     }
 
     public Page<Request> readAllRequestBySuperior(Pageable pageable, User superior){
         List<User> users = userService.readAllUsersByIdSuperior(
                 superior.getIdUser(),
-                new PageRequest(0, Integer.MAX_VALUE))
+                PageRequest.of(0, Integer.MAX_VALUE))
                 .getContent();
         List<Request> requests = new ArrayList<>();
 
         for (User user: users) {
-            requests.addAll(requestRepository.findAllByRequestBy(user,pageable)
+            requests.addAll(requestRepository.findAllRequestsByRequestBy(user,pageable)
                     .getContent());
         }
         return new PageImpl<>(requests, pageable, requests.size());
@@ -109,12 +111,12 @@ public class RequestServiceImpl implements RequestService {
             Pageable pageable, User superior, RequestStatus requestStatus){
         List<User> users = userService.readAllUsersByIdSuperior(
                 superior.getIdUser(),
-                new PageRequest(0, Integer.MAX_VALUE))
+                PageRequest.of(0, Integer.MAX_VALUE))
                 .getContent();
         List<Request> requests = new ArrayList<>();
 
         for (User user: users) {
-            requests.addAll(requestRepository.findAllByRequestBy(user,pageable)
+            requests.addAll(requestRepository.findAllRequestsByRequestBy(user,pageable)
                     .getContent());
         }
 
