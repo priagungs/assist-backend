@@ -1,10 +1,7 @@
 package com.future.office_inventory_system.service;
 
 import com.future.office_inventory_system.exception.NotFoundException;
-import com.future.office_inventory_system.model.Item;
-import com.future.office_inventory_system.model.Request;
-import com.future.office_inventory_system.model.RequestStatus;
-import com.future.office_inventory_system.model.User;
+import com.future.office_inventory_system.model.*;
 import com.future.office_inventory_system.repository.RequestRepository;
 import com.future.office_inventory_system.repository.UserRepository;
 import lombok.Data;
@@ -18,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.Null;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -33,23 +31,26 @@ public class RequestServiceImpl implements RequestService {
     @Autowired
     private ItemService itemService;
 
-    public Request createRequest(Request request){
+    public Page<Request> createRequest(Pageable pageable,RequestBodyRequest requestBody){
 
-        User user= userService.readUserByIdUser(request.getRequestBy().getIdUser());
+        User user= userService.readUserByIdUser(requestBody.getIdUser());
 
-        if(user == null){
-            throw new NotFoundException("user not found");
+        Item it = new Item();
+        List<Request> listNewRequest = new ArrayList<>();
+        for(Item item : requestBody.getItems()){
+             it = itemService.readItemByIdItem(item.getIdItem());
+             Request request = new Request();
+             request.setRequestBy(user);
+             request.setItem(item);
+             request.setRequestDate(new Date());
+             request.setReqQty(item.getTotalQty());
+             request.setRequestStatus(RequestStatus.REQUESTED);
+
+             listNewRequest.add(request);
+//             requestRepository.save(request);
         }
 
-        Item item= itemService
-                .readItemByIdItem(request.getItem().getIdItem());
-
-        if(item == null){
-            throw new NotFoundException("item not found");
-        }
-
-        requestRepository.save(request);
-        return request;
+        return new PageImpl<>(listNewRequest, pageable,listNewRequest.size());
     }
 
     public Request updateRequest(Request request){

@@ -1,13 +1,8 @@
 package com.future.office_inventory_system.service;
 
-<<<<<<< HEAD
-
-import com.future.office_inventory_system.exception.NotFoundException;
-=======
 import com.future.office_inventory_system.exception.InvalidValueException;
 import com.future.office_inventory_system.exception.NotFoundException;
 import com.future.office_inventory_system.model.ItemTransaction;
->>>>>>> 347029ea32feec88f8a20551c7d24d85f3defcde
 import com.future.office_inventory_system.model.Transaction;
 import com.future.office_inventory_system.model.User;
 import com.future.office_inventory_system.repository.TransactionRepository;
@@ -30,9 +25,6 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Autowired
     private ItemTransactionService itemTransactionService;
-
-    @Autowired
-    private UserService userService;
 
     @Autowired
     UserService userService;
