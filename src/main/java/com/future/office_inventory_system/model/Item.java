@@ -40,8 +40,8 @@ public class Item {
     @OneToMany(mappedBy = "item")
     @JsonIgnoreProperties("item")
     private List<ItemTransaction> itemTransactions;
-    
-    private Boolean active = true;
+
+    private Boolean isActive = true;
 
 
 }

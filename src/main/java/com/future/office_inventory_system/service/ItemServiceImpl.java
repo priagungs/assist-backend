@@ -59,7 +59,7 @@ public class ItemServiceImpl implements ItemService {
         itemBefore.setTotalQty(item.getTotalQty());
         itemBefore.setAvailableQty(item.getAvailableQty());
         itemBefore.setDescription(item.getDescription());
-        itemBefore.setActive(item.getActive());
+        itemBefore.setIsActive(item.getIsActive());
         
         itemRepository.save(itemBefore);
         return itemBefore;
@@ -89,7 +89,7 @@ public class ItemServiceImpl implements ItemService {
             throw new InvalidValueException("there's employee who still has " + item.getItemName());
         }
     
-        item.setActive(false);
+        item.setIsActive(false);
         itemRepository.save(item);
     
         return ResponseEntity.ok().build();

@@ -90,7 +90,7 @@ public class RequestServiceImpl implements RequestService {
     public Page<Request> readAllRequestBySuperior(Pageable pageable, User superior){
         List<User> users = userService.readAllUsersByIdSuperior(
                 superior.getIdUser(),
-                new PageRequest(0, Integer.MAX_VALUE))
+                PageRequest.of(0, Integer.MAX_VALUE))
                 .getContent();
         List<Request> requests = new ArrayList<>();
 
@@ -109,7 +109,7 @@ public class RequestServiceImpl implements RequestService {
             Pageable pageable, User superior, RequestStatus requestStatus){
         List<User> users = userService.readAllUsersByIdSuperior(
                 superior.getIdUser(),
-                new PageRequest(0, Integer.MAX_VALUE))
+                PageRequest.of(0, Integer.MAX_VALUE))
                 .getContent();
         List<Request> requests = new ArrayList<>();
 

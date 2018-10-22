@@ -12,7 +12,6 @@ import java.util.List;
 @TableGenerator(name = "employee_generator", initialValue = 16516000)
 @Data
 @Table(name = "user_employee")
-@Where(clause = "is_active=TRUE")
 public class User {
 
     @Id
@@ -54,7 +53,6 @@ public class User {
     @JsonIgnoreProperties("admin")
     private List<Transaction> transactions;
 
-    @Column(name = "is_active")
-    private Boolean active = true;
+    private Boolean isActive = true;
     
 }
