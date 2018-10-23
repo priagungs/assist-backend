@@ -8,10 +8,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface RequestRepository extends JpaRepository<Request,Long> {
 
-
+    Optional<Request> findRequestByIdRequest(Long idRequest);
     Page<Request> findAllRequestsByRequestBy(User user, Pageable pageable);
     Page<Request> findAllRequestsByRequestStatus(RequestStatus requestStatus, Pageable pageable);
 

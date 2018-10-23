@@ -1,9 +1,12 @@
 package com.future.office_inventory_system.service;
 
+import com.future.office_inventory_system.exception.InvalidValueException;
 import com.future.office_inventory_system.exception.NotFoundException;
 import com.future.office_inventory_system.model.*;
 import com.future.office_inventory_system.repository.RequestRepository;
-import com.future.office_inventory_system.repository.UserRepository;
+import com.future.office_inventory_system.value_object.RequestBodyRequestCreate;
+import com.future.office_inventory_system.value_object.RequestBodyRequestUpdate;
+import com.future.office_inventory_system.value_object.RequestUpdate;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,7 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.Null;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -31,7 +33,7 @@ public class RequestServiceImpl implements RequestService {
     @Autowired
     private ItemService itemService;
 
-    public Page<Request> createRequest(Pageable pageable,RequestBodyRequest requestBody){
+    public Page<Request> createRequest(Pageable pageable, RequestBodyRequestCreate requestBody){
 
         User user= userService.readUserByIdUser(requestBody.getIdUser());
 
@@ -43,7 +45,15 @@ public class RequestServiceImpl implements RequestService {
              request.setRequestBy(user);
              request.setItem(item);
              request.setRequestDate(new Date());
-             request.setReqQty(item.getTotalQty());
+
+             if(it.getAvailableQty() >= item.getTotalQty()){
+                 it.setAvailableQty(it.getAvailableQty()-item.getTotalQty());
+             } else {
+                 throw new InvalidValueException(item.getItemName()+" out of stock");
+             }
+
+             request.setReqQty(item.getTotalQty());//total qty request
+
              request.setRequestStatus(RequestStatus.REQUESTED);
 
              listNewRequest.add(request);
@@ -53,31 +63,29 @@ public class RequestServiceImpl implements RequestService {
         return new PageImpl<>(listNewRequest, pageable,listNewRequest.size());
     }
 
-    public Request updateRequest(Request request){
+    public Page<Request> updateRequest(Pageable pageable, RequestBodyRequestUpdate requestBody){
 
-        if(userService.readUserByIdUser(request.getRequestBy().getIdUser()) == null) {
-            throw new NotFoundException("not found user has request");
-        }
-
-        if(request.getApprovedBy() != null){
-            if(userService.readUserByIdUser(request.getApprovedBy()) != null){
-                throw new NotFoundException("not found user has approved");
-            } else {
-                if(request.getRejectedBy() != null){
-                    if( userService.readUserByIdUser(request.getRejectedBy()) == null){
-                        throw new NotFoundException("not found user has reject");
-                    }
-                }
+        List<Request> newRequestsUpdate = new ArrayList<>();
+        for(RequestUpdate requestUpdate: requestBody.getListUpdate()){
+            Request request = requestRepository.findRequestByIdRequest(requestUpdate.getIdRequest())
+                    .orElseThrow (()-> new NotFoundException("request not found"));
+            if(requestUpdate.getRequestStatus() == RequestStatus.APPROVED){
+                request.setApprovedBy(requestUpdate.getIdSuperior());
+                request.setApprovedDate(new Date());
+            } else if (requestUpdate.getRequestStatus() == RequestStatus.REJECTED) {
+                request.setRejectedBy(requestUpdate.getIdSuperior());
+            } else{
+                throw new InvalidValueException("request status invalid");
             }
+
+            request.setRequestStatus(requestUpdate.getRequestStatus());
+
+            requestRepository.save(request);
+
+            newRequestsUpdate.add(request);
         }
 
-        if(request.getHandedOverBy() != null){
-            if(userService.readUserByIdUser(request.getHandedOverBy()) == null){
-                throw new NotFoundException("not found admin has hand over");
-            }
-        }
-
-        return request;
+        return new PageImpl<>(newRequestsUpdate, pageable, newRequestsUpdate.size());
     }
 
     public Page<Request> readAllRequest(Pageable pageable){
