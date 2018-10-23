@@ -33,7 +33,6 @@ public class RequestServiceImpl implements RequestService {
     @Autowired
     private ItemService itemService;
 
-<<
     public Page<Request> createRequest(Pageable pageable, RequestBodyRequestCreate requestBody){
 
         User user= userService.readUserByIdUser(requestBody.getIdUser());

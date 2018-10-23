@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
@@ -36,6 +37,9 @@ public class UserServiceImplTest {
     @MockBean
     UserRepository userRepository;
 
+    @MockBean
+    UserHasItemService userHasItemService;
+
 
     private User user1;
     private User user2;
@@ -48,8 +52,14 @@ public class UserServiceImplTest {
         user1.setName("Priagung Satyagama");
         user1.setIsAdmin(true);
         user1.setIsActive(true);
+        user1.setHasItems(new ArrayList<>());
+
 
         user2 = new User();
+        List<User> subordinates = new ArrayList<>();
+        subordinates.add(user2);
+        user1.setSubordinates(subordinates);
+
         user2.setUsername("bambang");
         user2.setName("Bambang Nugroho");
         user2.setIsAdmin(false);
@@ -156,18 +166,48 @@ public class UserServiceImplTest {
 
         Assert.assertEquals(contents, userService.readAllUsersByIdSuperior(user2.getSuperior().getIdUser(),
                 PageRequest.of(0, Integer.MAX_VALUE)));
-
     }
 
     @Test
-    public void readUserByIsAdmin() {
+    public void readAllUsersByIsAdminTest() {
+        Mockito.when(userRepository.findAllByIsAdminAndIsActive(true, true,
+                PageRequest.of(0, Integer.MAX_VALUE)))
+                .thenReturn(Page.empty());
+
+        Assert.assertEquals(Page.empty(), userService.readAllUsersByIsAdmin(true,
+                PageRequest.of(0, Integer.MAX_VALUE)));
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void readUserByUsernameNotFoundTest() {
+        Mockito.when(userRepository.findByUsernameAndIsActive(user1.getUsername(), true))
+                .thenReturn(Optional.empty());
+
+        userService.readUserByUsername(user1.getUsername());
     }
 
     @Test
-    public void readUserByUsername() {
+    public void readUserByUsernameFoundTest() {
+        Mockito.when(userRepository.findByUsernameAndIsActive(user1.getUsername(), true))
+                .thenReturn(Optional.of(user1));
+
+        userService.readUserByUsername(user1.getUsername());
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void deleteUserNotFoundTest() {
+        Mockito.when(userRepository.findByIdUserAndIsActive(user1.getIdUser(), true))
+                .thenReturn(Optional.empty());
+
+        userService.deleteUser(user1.getIdUser());
     }
 
     @Test
-    public void deleteUser() {
+    public void deleteUserSuccess() {
+        Mockito.when(userRepository.findByIdUserAndIsActive(user1.getIdUser(), true))
+                .thenReturn(Optional.of(user1));
+        Mockito.when(userHasItemService.deleteUserHasItem(any())).thenReturn(ResponseEntity.ok().build());
+
+        Assert.assertEquals(ResponseEntity.ok().build(), userService.deleteUser(user1.getIdUser()));
     }
 }
