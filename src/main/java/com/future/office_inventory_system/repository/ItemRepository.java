@@ -14,4 +14,5 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     Optional<Item> findByItemName(String itemName);
     Page<Item> findAllByAvailableQtyGreaterThan(Integer min, Pageable pageable);
 
+
 }

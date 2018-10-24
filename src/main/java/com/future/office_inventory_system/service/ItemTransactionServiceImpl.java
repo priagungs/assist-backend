@@ -65,10 +65,10 @@ public class ItemTransactionServiceImpl {
     }
     
     public Page<ItemTransaction> readAllItemTransactionsByTransaction(Transaction transaction, Pageable pageable) {
-//        return repository.findAllByTransaction(
+        return repository.findAllByTransaction(transaction, pageable);
     }
     
     public ResponseEntity deleteItemTransaction(Long id) {
-        
+    
     }
 }

@@ -17,11 +17,15 @@ public class ItemServiceImpl implements ItemService {
     
     @Autowired
     private ItemRepository itemRepository;
+
+    @Autowired
+    private UserHasItemService userHasItemService;
     
     public Item createItem(Item item) {
         if (itemRepository.findByItemName(item.getItemName()).isPresent()) {
             throw new ConflictException(item.getItemName() + " is exist");
         }
+        item.setAvailableQty(item.getTotalQty());
         return itemRepository.save(item);
     }
     
@@ -29,21 +33,16 @@ public class ItemServiceImpl implements ItemService {
         Item itemBefore = itemRepository
             .findById(item.getIdItem())
             .orElseThrow(() -> new NotFoundException("Item not found"));
-        
-        if (item.getTotalQty() < 0
-            || item.getAvailableQty() > item.getTotalQty()
-            || item.getAvailableQty() < 0
-            || item.getPrice() < 0) {
+
+        if (item.getTotalQty() < itemBefore.getTotalQty() - itemBefore.getAvailableQty()) {
             throw new InvalidValueException("Invalid value");
         }
-    
+
         itemBefore.setItemName(item.getItemName());
         itemBefore.setPictureURL(item.getPictureURL());
         itemBefore.setPrice(item.getPrice());
         itemBefore.setTotalQty(item.getTotalQty());
-        itemBefore.setAvailableQty(item.getAvailableQty());
         itemBefore.setDescription(item.getDescription());
-        itemBefore.setActive(item.getActive());
         
         return itemRepository.save(itemBefore);
     }
@@ -73,7 +72,7 @@ public class ItemServiceImpl implements ItemService {
             throw new InvalidValueException("there's employee who still has " + item.getItemName());
         }
     
-        item.setActive(false);
+        item.setIsActive(false);
         itemRepository.save(item);
     
         return ResponseEntity.ok().build();

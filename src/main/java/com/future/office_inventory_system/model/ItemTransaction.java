@@ -16,14 +16,16 @@ public class ItemTransaction {
     private Long idItemTransaction;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "idTransaction", nullable = false)
+    @JoinColumn(name = "idTransaction")
     @JsonIgnoreProperties("itemTransaction")
     private Transaction transaction;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idItem", nullable = false)
-    @JsonIgnoreProperties("itemTransaction")
+
+    @JsonIgnoreProperties({"itemTransaction", "requests", "owners"})
     private Item item;
+
     private Integer boughtQty;
     private Long price;
 

@@ -22,13 +22,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserHasItemService userHasItemService;
 
-
-    public UserServiceImpl() {}
-
-
     public User createUser(User user) {
         user.setSuperior(userRepository
-                .findById(user.getSuperior().getIdUser())
+                .findByIdUserAndIsActive(user.getSuperior().getIdUser(), true)
                 .orElseThrow(() -> new NotFoundException("superior not found")));
 
         return userRepository.save(user);
@@ -36,51 +32,51 @@ public class UserServiceImpl implements UserService {
     }
 
     public User updateUser(User user) {
-        User userBeforeUpdate = userRepository
-                .findById(user.getIdUser())
+        User updatedUser = userRepository
+                .findByIdUserAndIsActive(user.getIdUser(), true)
                 .orElseThrow(() -> new NotFoundException("user not found"));
 
         user.setSuperior(userRepository
-                .findById(user.getSuperior().getIdUser())
+                .findByIdUserAndIsActive(user.getSuperior().getIdUser(), true)
                 .orElseThrow(() -> new NotFoundException("superior not found")));
 
-        userBeforeUpdate.setIsAdmin(user.getIsAdmin());
-        userBeforeUpdate.setName(user.getName());
-        userBeforeUpdate.setUsername(user.getUsername());
-        userBeforeUpdate.setPictureURL(user.getPictureURL());
-        userBeforeUpdate.setPassword(user.getPassword());
-        userBeforeUpdate.setDivision(user.getDivision());
-        userBeforeUpdate.setRole(user.getRole());
+        updatedUser.setIsAdmin(user.getIsAdmin());
+        updatedUser.setName(user.getName());
+        updatedUser.setUsername(user.getUsername());
+        updatedUser.setPictureURL(user.getPictureURL());
+        updatedUser.setPassword(user.getPassword());
+        updatedUser.setDivision(user.getDivision());
+        updatedUser.setRole(user.getRole());
 
-        return userRepository.save(userBeforeUpdate);
+        return userRepository.save(updatedUser);
     }
 
     public Page<User> readAllUsers(Pageable pageable) {
 
-        return userRepository.findAll(pageable);
+        return userRepository.findAllByIsActive(true, pageable);
     }
 
     public User readUserByIdUser(Long id) {
-        return userRepository.findById(id)
+        return userRepository.findByIdUserAndIsActive(id, true)
                 .orElseThrow(() -> new NotFoundException("user not found"));
     }
 
     public Page<User> readAllUsersByIdSuperior(Long id, Pageable pageable) {
-        return userRepository.findAllBySuperior(userRepository.findById(id)
+        return userRepository.findAllBySuperior(userRepository.findByIdUserAndIsActive(id, true)
                 .orElseThrow(() -> new NotFoundException("superior not found")), pageable);
     }
 
     public Page<User> readAllUsersByIsAdmin(Boolean isAdmin, Pageable pageable) {
-        return userRepository.findAllByIsAdmin(isAdmin, pageable);
+        return userRepository.findAllByIsAdminAndIsActive(isAdmin, true, pageable);
     }
 
     public User readUserByUsername(String username) {
-        return userRepository.findByUsername(username)
+        return userRepository.findByUsernameAndIsActive(username, true)
                 .orElseThrow(() -> new NotFoundException("user not found"));
     }
 
     public ResponseEntity deleteUser(Long id) {
-        User user = userRepository.findById(id)
+        User user = userRepository.findByIdUserAndIsActive(id, true)
                 .orElseThrow(() -> new NotFoundException("user not found"));
 
         for (User subordinate: user.getSubordinates()) {
@@ -91,7 +87,7 @@ public class UserServiceImpl implements UserService {
             userHasItemService.deleteUserHasItem(hasItem.getIdUserHasItem());
         }
 
-        user.setActive(false);
+        user.setIsActive(false);
         userRepository.save(user);
 
         return ResponseEntity.ok().build();

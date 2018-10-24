@@ -24,11 +24,11 @@ public class Transaction {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idUser", nullable = false)
-    @JsonIgnoreProperties("transaction")
+    @JsonIgnoreProperties({"transaction", "superior"})
     private User admin;
 
-    @OneToMany(mappedBy = "transaction")
-    @JsonIgnoreProperties("transaction")
+    @OneToMany(mappedBy = "transaction", cascade = CascadeType.REMOVE)
+    @JsonIgnoreProperties({"transaction"})
     private List<ItemTransaction> itemTransactions;
 
 }

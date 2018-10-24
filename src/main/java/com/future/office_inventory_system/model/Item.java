@@ -1,5 +1,6 @@
 package com.future.office_inventory_system.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import org.hibernate.annotations.Where;
@@ -11,7 +12,6 @@ import java.util.List;
 @Data
 @Table(name = TableName.ITEM)
 @TableGenerator(name = "item_generator", initialValue = 13216000)
-@Where(clause = "is_active=1")
 public class Item {
 
     @Id
@@ -31,19 +31,18 @@ public class Item {
     private String description;
 
     @OneToMany(mappedBy = "item")
-    @JsonIgnoreProperties("item")
+    @JsonIgnore
     private List<Request> requests;
 
     @OneToMany(mappedBy = "item")
-    @JsonIgnoreProperties("item")
+    @JsonIgnore
     private List<UserHasItem> owners;
 
     @OneToMany(mappedBy = "item")
-    @JsonIgnoreProperties("item")
+    @JsonIgnore
     private List<ItemTransaction> itemTransactions;
 
-    @Column(name = "is_active")
-    private Boolean active = true;
+    private Boolean isActive = true;
 
 
 }
