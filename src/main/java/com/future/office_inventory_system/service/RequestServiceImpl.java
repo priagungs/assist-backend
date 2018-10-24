@@ -33,6 +33,9 @@ public class RequestServiceImpl implements RequestService {
     @Autowired
     private ItemService itemService;
 
+    @Autowired
+    private UserHasItemService userHasItemService;
+
     public Page<Request> createRequest(Pageable pageable, RequestBodyRequestCreate requestBody){
 
         User user= userService.readUserByIdUser(requestBody.getIdUser());
@@ -46,13 +49,13 @@ public class RequestServiceImpl implements RequestService {
              request.setItem(it);
              request.setRequestDate(new Date());
 
-             if(it.getAvailableQty() >= item.getTotalQty()){
-                 it.setAvailableQty(it.getAvailableQty()-item.getTotalQty());
+             if(it.getAvailableQty() >= requestBody.getRequestQty()){
+                 it.setAvailableQty(it.getAvailableQty()-requestBody.getRequestQty());
              } else {
                  throw new InvalidValueException(item.getItemName()+" out of stock");
              }
 
-             request.setReqQty(item.getTotalQty());//total qty request
+             request.setReqQty(requestBody.getRequestQty());
 
              request.setRequestStatus(RequestStatus.REQUESTED);
 
@@ -63,30 +66,43 @@ public class RequestServiceImpl implements RequestService {
         return new PageImpl<>(listNewRequest, pageable, listNewRequest.size());
     }
 
-    public Page<Request> updateRequest(Pageable pageable, RequestBodyRequestUpdate requestBody){
+    public Request updateRequest(Pageable pageable, RequestUpdate requestUpdate){
 
-        List<Request> newRequestsUpdate = new ArrayList<>();
-        for(RequestUpdate requestUpdate: requestBody.getListUpdate()){
-            Request request = requestRepository.findRequestByIdRequest(requestUpdate.getIdRequest())
-                    .orElseThrow (()-> new NotFoundException("request not found"));
-            if(requestUpdate.getRequestStatus() == RequestStatus.APPROVED){
-                request.setApprovedBy(requestUpdate.getIdSuperior());
-                request.setApprovedDate(new Date());
-            } else if (requestUpdate.getRequestStatus() == RequestStatus.REJECTED) {
-                request.setRejectedBy(requestUpdate.getIdSuperior());
-            } else{
-                throw new InvalidValueException("request status invalid");
-            }
 
-            request.setRequestStatus(requestUpdate.getRequestStatus());
+        Request request = requestRepository.findRequestByIdRequest(requestUpdate.getIdRequest())
+                .orElseThrow (()-> new NotFoundException("request not found"));
 
-            requestRepository.save(request);
+        if(requestUpdate.getRequestStatus() == RequestStatus.APPROVED){
+            request.setApprovedBy(requestUpdate.getIdSuperior());
+            request.setApprovedDate(new Date());
 
-            newRequestsUpdate.add(request);
+        } else if (requestUpdate.getRequestStatus() == RequestStatus.REJECTED) {
+            request.setRejectedBy(requestUpdate.getIdSuperior());
+            request.setRequestDate(new Date());
+
+        } else if (requestUpdate.getRequestStatus() == RequestStatus.SENT ) {
+            request.setHandedOverBy(requestUpdate.getIdSuperior());
+            request.setHandedOverDate(new Date());
+
+
+            UserHasItem userHasItem = new UserHasItem();
+            userHasItem.setUser(request.getRequestBy());
+            userHasItem.setItem(request.getItem());
+            userHasItem.setHasQty(request.getReqQty());
+
+            userHasItemService.createUserHasItem(userHasItem);
+
+        } else {
+            throw new InvalidValueException("request status invalid");
         }
 
-        return new PageImpl<>(newRequestsUpdate, pageable, newRequestsUpdate.size());
+        request.setRequestStatus(requestUpdate.getRequestStatus());
+
+        requestRepository.save(request);
+
+        return request;
     }
+
 
     public Page<Request> readAllRequest(Pageable pageable){
         return requestRepository.findAll(pageable);

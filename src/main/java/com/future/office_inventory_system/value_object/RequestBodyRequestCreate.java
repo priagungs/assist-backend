@@ -11,4 +11,6 @@ public class RequestBodyRequestCreate {
     private Long IdUser;
 
     private List<Item> items;
+
+    private Integer requestQty;
 }

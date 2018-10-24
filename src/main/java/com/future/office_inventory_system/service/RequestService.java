@@ -3,6 +3,7 @@ package com.future.office_inventory_system.service;
 import com.future.office_inventory_system.model.*;
 import com.future.office_inventory_system.value_object.RequestBodyRequestCreate;
 import com.future.office_inventory_system.value_object.RequestBodyRequestUpdate;
+import com.future.office_inventory_system.value_object.RequestUpdate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ public interface RequestService {
 
     Page<Request> createRequest(Pageable pageable, RequestBodyRequestCreate requestBody);
 
-    Page<Request> updateRequest(Pageable pageable, RequestBodyRequestUpdate requestBody);
+    Request updateRequest(Pageable pageable, RequestUpdate requestBody);
 
     Page<Request> readAllRequest(Pageable pageable);
 
