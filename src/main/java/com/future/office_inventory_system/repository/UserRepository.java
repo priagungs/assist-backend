@@ -1,7 +1,6 @@
 package com.future.office_inventory_system.repository;
 
 import com.future.office_inventory_system.model.User;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

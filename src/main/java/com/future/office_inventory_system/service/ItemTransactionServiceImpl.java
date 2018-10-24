@@ -1,12 +1,13 @@
 package com.future.office_inventory_system.service;
 
 import com.future.office_inventory_system.exception.ConflictException;
+import com.future.office_inventory_system.exception.InvalidValueException;
 import com.future.office_inventory_system.exception.NotFoundException;
 import com.future.office_inventory_system.model.Item;
 import com.future.office_inventory_system.model.ItemTransaction;
 import com.future.office_inventory_system.model.Transaction;
 import com.future.office_inventory_system.repository.ItemTransactionRepository;
-import com.future.office_inventory_system.repository.TransactionRepository;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
+@Data
 public class ItemTransactionServiceImpl {
     
     @Autowired
@@ -36,6 +38,12 @@ public class ItemTransactionServiceImpl {
        itemTransaction.setItem(itemService
            .readItemByIdItem(itemTransaction.getItem().getIdItem()));
        
+       Item item = itemTransaction.getItem();
+       item.setTotalQty(item.getTotalQty() + itemTransaction.getBoughtQty());
+       
+       itemService.updateItem(item);
+       itemTransaction.setItem(item);
+    
        return repository.save(itemTransaction);
        
     }
@@ -51,6 +59,11 @@ public class ItemTransactionServiceImpl {
         
         before.setBoughtQty(itemTransaction.getBoughtQty());
         before.setPrice(itemTransaction.getPrice());
+        
+        Item item = before.getItem();
+        item.setTotalQty(item.getTotalQty() + itemTransaction.getBoughtQty());
+        itemService.updateItem(item);
+        itemTransaction.setItem(item);
         
         return repository.save(before);
     }
@@ -69,6 +82,20 @@ public class ItemTransactionServiceImpl {
     }
     
     public ResponseEntity deleteItemTransaction(Long id) {
+        ItemTransaction itemTransaction = repository.findById(id)
+            .orElseThrow(() -> new NotFoundException("ItemTransaction not found"));
+        
+        Item item = itemTransaction.getItem();
+        
+        if (item.getAvailableQty() < itemTransaction.getBoughtQty()) {
+            throw new InvalidValueException("Insufficient item quantity");
+        }
     
+        item.setTotalQty(item.getTotalQty() - itemTransaction.getBoughtQty());
+        itemService.updateItem(item);
+        
+        repository.delete(itemTransaction);
+        return ResponseEntity.ok().build();
+        
     }
 }
