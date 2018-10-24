@@ -14,11 +14,11 @@ public interface ItemService {
   
   Item updateItem(Item item);
  
-  Page<Item> readAllItem(Pageable pageable);
+  Page<Item> readAllItems(Pageable pageable);
   
   Item readItemByIdItem(Long id);
   
-  Page<Item> readItemByAvailableGreaterThan(Integer min, Pageable pageable);
+  Page<Item> readItemsByAvailableGreaterThan(Integer min, Pageable pageable);
   
   ResponseEntity deleteItem(Long id);
   

@@ -1,5 +1,6 @@
 package com.future.office_inventory_system.service;
 
+import com.future.office_inventory_system.exception.ConflictException;
 import com.future.office_inventory_system.exception.InvalidValueException;
 import com.future.office_inventory_system.exception.NotFoundException;
 import com.future.office_inventory_system.model.Item;
@@ -19,7 +20,7 @@ public class ItemServiceImpl implements ItemService {
     
     public Item createItem(Item item) {
         if (itemRepository.findByItemName(item.getItemName()).isPresent()) {
-            throw new RuntimeException(item.getItemName() + " is exist");
+            throw new ConflictException(item.getItemName() + " is exist");
         }
         return itemRepository.save(item);
     }
@@ -44,11 +45,11 @@ public class ItemServiceImpl implements ItemService {
         itemBefore.setDescription(item.getDescription());
         itemBefore.setActive(item.getActive());
         
-        itemRepository.save(itemBefore);
-        return itemBefore;
+        return itemRepository.save(itemBefore);
     }
   
-    public Page<Item> readAllItem(Pageable pageable) {
+    public Page<Item> readAllItems(Pageable pageable) {
+        
         return itemRepository.findAll(pageable);
     }
     
@@ -57,7 +58,7 @@ public class ItemServiceImpl implements ItemService {
             .orElseThrow(() -> new NotFoundException("Item not found"));
     }
   
-    public Page<Item> readItemByAvailableGreaterThan(Integer min, Pageable pageable) {
+    public Page<Item> readItemsByAvailableGreaterThan(Integer min, Pageable pageable) {
         if (min < 0) {
             throw new InvalidValueException("Invalid value");
         }
@@ -69,7 +70,7 @@ public class ItemServiceImpl implements ItemService {
             .orElseThrow(() -> new NotFoundException("Item not found"));
     
         if (item.getOwners().size() > 0) {
-            throw new RuntimeException("there's employee who still has " + item.getItemName());
+            throw new InvalidValueException("there's employee who still has " + item.getItemName());
         }
     
         item.setActive(false);
