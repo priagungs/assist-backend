@@ -2,11 +2,9 @@ package com.future.office_inventory_system.service;
 
 import com.future.office_inventory_system.exception.ConflictException;
 import com.future.office_inventory_system.exception.NotFoundException;
-import com.future.office_inventory_system.model.Item;
 import com.future.office_inventory_system.model.ItemTransaction;
 import com.future.office_inventory_system.model.Transaction;
 import com.future.office_inventory_system.repository.ItemTransactionRepository;
-import com.future.office_inventory_system.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -69,6 +67,6 @@ public class ItemTransactionServiceImpl {
     }
     
     public ResponseEntity deleteItemTransaction(Long id) {
-    
+        return null;
     }
 }

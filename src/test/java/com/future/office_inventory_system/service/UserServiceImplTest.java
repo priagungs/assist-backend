@@ -8,7 +8,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,7 +15,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -25,7 +23,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyObject;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -194,13 +191,13 @@ public class UserServiceImplTest {
         userService.readUserByUsername(user1.getUsername());
     }
 
-    @Test(expected = NotFoundException.class)
-    public void deleteUserNotFoundTest() {
-        Mockito.when(userRepository.findByIdUserAndIsActive(user1.getIdUser(), true))
-                .thenReturn(Optional.empty());
-
-        userService.deleteUser(user1.getIdUser());
-    }
+//    @Test(expected = NotFoundException.class)
+//    public void deleteUserNotFoundTest() {
+//        Mockito.when(userRepository.findByIdUserAndIsActive(user1.getIdUser(), true))
+//                .thenReturn(Optional.empty());
+//
+//        userService.deleteUser(user1.getIdUser());
+//    }
 
     @Test
     public void deleteUserSuccess() {
