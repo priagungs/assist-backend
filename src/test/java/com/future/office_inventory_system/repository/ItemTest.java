@@ -37,6 +37,7 @@ public class ItemTest {
         item.setTotalQty(10);
         item.setAvailableQty(1);
         item.setDescription("micin");
+        item.setIsActive(true);
 
         item2 = new Item();
         item2.setItemName("indomie");
@@ -45,6 +46,7 @@ public class ItemTest {
         item2.setTotalQty(10);
         item2.setAvailableQty(3);
         item2.setDescription("micin++");
+        item2.setIsActive(true);
     }
 
     @Test
