@@ -191,13 +191,13 @@ public class UserServiceImplTest {
         userService.readUserByUsername(user1.getUsername());
     }
 
-//    @Test(expected = NotFoundException.class)
-//    public void deleteUserNotFoundTest() {
-//        Mockito.when(userRepository.findByIdUserAndIsActive(user1.getIdUser(), true))
-//                .thenReturn(Optional.empty());
-//
-//        userService.deleteUser(user1.getIdUser());
-//    }
+    @Test(expected = NotFoundException.class)
+    public void deleteUserNotFoundTest() {
+        Mockito.when(userRepository.findByIdUserAndIsActive(user1.getIdUser(), true))
+                .thenReturn(Optional.empty());
+
+        userService.deleteUser(user1.getIdUser());
+    }
 
     @Test
     public void deleteUserSuccess() {

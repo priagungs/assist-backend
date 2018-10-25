@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ItemTransactionServiceImpl {
+public class ItemTransactionServiceImpl implements ItemTransactionService {
     
     @Autowired
     private ItemTransactionRepository repository;
