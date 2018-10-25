@@ -6,12 +6,14 @@ import com.future.office_inventory_system.model.Item;
 import com.future.office_inventory_system.model.User;
 import com.future.office_inventory_system.model.UserHasItem;
 import com.future.office_inventory_system.repository.UserHasItemRepository;
+import org.h2.store.Page;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.omg.CORBA.DynAnyPackage.Invalid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -141,8 +143,8 @@ public class UserHasItemServiceImplTest {
 
         userHasItem.setHasQty(1);
         item.setAvailableQty(1);
-        Assert.assertEquals(userHasItemService.deleteUserHasItem(userHasItem.getIdUserHasItem()),
-                ResponseEntity.ok().build());
+        Assert.assertEquals(ResponseEntity.ok().build(),
+                userHasItemService.deleteUserHasItem(userHasItem.getIdUserHasItem()));
     }
 
     @Test(expected = NotFoundException.class)
@@ -150,6 +152,80 @@ public class UserHasItemServiceImplTest {
         Mockito.when(userHasItemRepository.findById(userHasItem.getIdUserHasItem()))
                 .thenReturn(Optional.empty());
         userHasItemService.updateUserHasItem(userHasItem);
+    }
+
+    @Test(expected = InvalidValueException.class)
+    public void updateUserHasItemInvalidValueTest() {
+        Mockito.when(userHasItemRepository.findById(userHasItem.getIdUserHasItem()))
+                .thenReturn(Optional.of(userHasItem));
+        Mockito.when(itemService.readItemByIdItem(item.getIdItem())).thenReturn(item);
+
+        userHasItem.setHasQty(2);
+        item.setAvailableQty(-1);
+
+        userHasItemService.updateUserHasItem(userHasItem);
+    }
+
+    @Test
+    public void updateUserHasItemSuccessTest() {
+        Mockito.when(userHasItemRepository.findById(userHasItem.getIdUserHasItem()))
+                .thenReturn(Optional.of(userHasItem));
+        Mockito.when(userService.readUserByIdUser(userHasItem.getUser().getIdUser()))
+                .thenReturn(user);
+        Mockito.when(itemService.readItemByIdItem(userHasItem.getItem().getIdItem()))
+                .thenReturn(item);
+        Mockito.when(userHasItemRepository.save(userHasItem)).thenReturn(userHasItem);
+
+        userHasItem.setHasQty(2);
+        item.setAvailableQty(2);
+
+        Assert.assertEquals(userHasItem, userHasItemService.updateUserHasItem(userHasItem));
+    }
+
+    @Test
+    public void readAllUserHasItemsTest() {
+        List<UserHasItem> userHasItems = new ArrayList<>();
+        userHasItems.add(userHasItem);
+        PageImpl<UserHasItem> userHasItemPage = new PageImpl(userHasItems, PageRequest.of(0, Integer.MAX_VALUE),
+                userHasItems.size());
+        Mockito.when(userHasItemRepository.findAll(PageRequest.of(0, Integer.MAX_VALUE)))
+                .thenReturn(userHasItemPage);
+
+        Assert.assertEquals(userHasItemPage,
+                userHasItemService.readAllUserHasItems(PageRequest.of(0, Integer.MAX_VALUE)));
+
+    }
+
+    @Test
+    public void readAllUserHasItemsByIdUserTest() {
+        Mockito.when(userService.readUserByIdUser(user.getIdUser()))
+                .thenReturn(user);
+
+        List<UserHasItem> userHasItems = new ArrayList<>();
+        userHasItems.add(userHasItem);
+        PageImpl<UserHasItem> userHasItemPage = new PageImpl(userHasItems, PageRequest.of(0, Integer.MAX_VALUE),
+                userHasItems.size());
+        Mockito.when(userHasItemRepository.findAllByUser(user, PageRequest.of(0, Integer.MAX_VALUE)))
+                .thenReturn(userHasItemPage);
+
+        Assert.assertEquals(userHasItemPage, userHasItemService.readAllUserHasItemsByIdUser(user.getIdUser(),
+                PageRequest.of(0,  Integer.MAX_VALUE)));
+    }
+
+    @Test
+    public void readAllUserHasItemsByIdItem() {
+        Mockito.when(itemService.readItemByIdItem(item.getIdItem()))
+                .thenReturn(item);
+
+        List<UserHasItem> userHasItems = new ArrayList<>();
+        userHasItems.add(userHasItem);
+        PageImpl<UserHasItem> userHasItemPage = new PageImpl(userHasItems, PageRequest.of(0, Integer.MAX_VALUE),
+                userHasItems.size());
+        Mockito.when(userHasItemRepository.findAllByItem(item, PageRequest.of(0, Integer.MAX_VALUE)))
+                .thenReturn(userHasItemPage);
+
+        Assert.assertEquals(userHasItemPage, userHasItemService.readAllUserHasItemsByIdItem(item.getIdItem(),
+                PageRequest.of(0,  Integer.MAX_VALUE)));
     }
 
 }
