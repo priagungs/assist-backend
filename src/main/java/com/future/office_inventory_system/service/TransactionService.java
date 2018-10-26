@@ -12,7 +12,7 @@ public interface TransactionService {
     Integer MAX_ALLOWABLE_MILISECONDS_TO_UPDATE = 3600;
 
     Transaction createTransaction(Transaction transaction);
-    Page<Transaction> readAllTransactions(Transaction transaction, Pageable pageable);
+    Page<Transaction> readAllTransactions(Pageable pageable);
     Transaction readTransactionByIdTransaction(Long id);
     ResponseEntity deleteTransaction(Long id);
     
