@@ -21,5 +21,6 @@ public interface ItemTransactionService {
     Page<ItemTransaction> readAllItemTransactionsByTransaction(Transaction transaction, Pageable pageable);
     
     ResponseEntity deleteItemTransaction(Long id);
+ 
     
 }

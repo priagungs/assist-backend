@@ -45,11 +45,9 @@ public class TransactionServiceImpl implements TransactionService {
         }
         transaction.setItemTransactions(itemTransactions);
         return repository.save(transaction);
-
-
     }
 
-    public Page<Transaction> readAllTransactions(Transaction transaction, Pageable pageable) {
+    public Page<Transaction> readAllTransactions(Pageable pageable) {
         return repository.findAll(pageable);
     }
 
