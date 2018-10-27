@@ -79,6 +79,9 @@ public class RequestServiceImpl implements RequestService {
         } else if (requestUpdate.getRequestStatus() == RequestStatus.REJECTED) {
             request.setRejectedBy(requestUpdate.getIdSuperior());
             request.setRequestDate(new Date());
+            Item item = itemService.readItemByIdItem(request.getIdRequest());
+            item.setAvailableQty(request.getReqQty()+item.getAvailableQty());
+            itemService.updateItem(item);
 
         } else if (requestUpdate.getRequestStatus() == RequestStatus.SENT ) {
             request.setHandedOverBy(requestUpdate.getIdSuperior());
