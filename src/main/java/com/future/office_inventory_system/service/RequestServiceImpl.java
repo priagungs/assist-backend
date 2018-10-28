@@ -5,7 +5,6 @@ import com.future.office_inventory_system.exception.NotFoundException;
 import com.future.office_inventory_system.model.*;
 import com.future.office_inventory_system.repository.RequestRepository;
 import com.future.office_inventory_system.value_object.RequestBodyRequestCreate;
-import com.future.office_inventory_system.value_object.RequestBodyRequestUpdate;
 import com.future.office_inventory_system.value_object.RequestUpdate;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,60 +32,74 @@ public class RequestServiceImpl implements RequestService {
     @Autowired
     private ItemService itemService;
 
-    public Page<Request> createRequest(Pageable pageable, RequestBodyRequestCreate requestBody){
+    @Autowired
+    private UserHasItemService userHasItemService;
 
+    public Request createRequest(RequestBodyRequestCreate requestBody){
         User user= userService.readUserByIdUser(requestBody.getIdUser());
 
-        Item it = new Item();
-        List<Request> listNewRequest = new ArrayList<>();
-        for(Item item : requestBody.getItems()){
-             it = itemService.readItemByIdItem(item.getIdItem());
-             Request request = new Request();
-             request.setRequestBy(user);
-             request.setItem(it);
-             request.setRequestDate(new Date());
+        Item it = itemService.readItemByIdItem(requestBody.getItem().getIdItem());
 
-             if(it.getAvailableQty() >= item.getTotalQty()){
-                 it.setAvailableQty(it.getAvailableQty()-item.getTotalQty());
-             } else {
-                 throw new InvalidValueException(item.getItemName()+" out of stock");
-             }
+        Request request = new Request();
 
-             request.setReqQty(item.getTotalQty());//total qty request
+        request.setRequestBy(user);
+        request.setItem(it);
+        request.setRequestDate(requestBody.getRequestDate());
 
-             request.setRequestStatus(RequestStatus.REQUESTED);
-
-             listNewRequest.add(request);
-             requestRepository.save(request);
+        if(it.getAvailableQty() >= requestBody.getRequestQty()){
+            it.setAvailableQty(it.getAvailableQty()-requestBody.getRequestQty());
+        } else {
+            throw new InvalidValueException(requestBody.getItem().getItemName()+" out of stock");
         }
 
-        return new PageImpl<>(listNewRequest, pageable, listNewRequest.size());
+        request.setReqQty(requestBody.getRequestQty());
+
+        request.setRequestStatus(RequestStatus.REQUESTED);
+
+        requestRepository.save(request);
+
+
+        return request;
     }
 
-    public Page<Request> updateRequest(Pageable pageable, RequestBodyRequestUpdate requestBody){
+    public Request updateRequest(RequestUpdate requestUpdate){
 
-        List<Request> newRequestsUpdate = new ArrayList<>();
-        for(RequestUpdate requestUpdate: requestBody.getListUpdate()){
-            Request request = requestRepository.findRequestByIdRequest(requestUpdate.getIdRequest())
-                    .orElseThrow (()-> new NotFoundException("request not found"));
-            if(requestUpdate.getRequestStatus() == RequestStatus.APPROVED){
-                request.setApprovedBy(requestUpdate.getIdSuperior());
-                request.setApprovedDate(new Date());
-            } else if (requestUpdate.getRequestStatus() == RequestStatus.REJECTED) {
-                request.setRejectedBy(requestUpdate.getIdSuperior());
-            } else{
-                throw new InvalidValueException("request status invalid");
-            }
 
-            request.setRequestStatus(requestUpdate.getRequestStatus());
+        Request request = requestRepository.findRequestByIdRequest(requestUpdate.getIdRequest())
+                .orElseThrow (()-> new NotFoundException("request not found"));
 
-            requestRepository.save(request);
+        if(requestUpdate.getRequestStatus() == RequestStatus.APPROVED){
+            request.setApprovedBy(requestUpdate.getIdSuperior());
+            request.setApprovedDate(new Date());
 
-            newRequestsUpdate.add(request);
+        } else if (requestUpdate.getRequestStatus() == RequestStatus.REJECTED) {
+            request.setRejectedBy(requestUpdate.getIdSuperior());
+            request.setRequestDate(new Date());
+            Item item = itemService.readItemByIdItem(request.getIdRequest());
+            item.setAvailableQty(request.getReqQty()+item.getAvailableQty());
+            itemService.updateItem(item);
+
+        } else if (requestUpdate.getRequestStatus() == RequestStatus.SENT ) {
+            request.setHandedOverBy(requestUpdate.getIdSuperior());
+            request.setHandedOverDate(new Date());
+
+
+            UserHasItem userHasItem = new UserHasItem();
+            userHasItem.setUser(request.getRequestBy());
+            userHasItem.setItem(request.getItem());
+            userHasItem.setHasQty(request.getReqQty());
+
+            userHasItemService.createUserHasItem(userHasItem);
+
         }
 
-        return new PageImpl<>(newRequestsUpdate, pageable, newRequestsUpdate.size());
+        request.setRequestStatus(requestUpdate.getRequestStatus());
+
+        requestRepository.save(request);
+
+        return request;
     }
+
 
     public Page<Request> readAllRequest(Pageable pageable){
         return requestRepository.findAll(pageable);
@@ -95,7 +108,6 @@ public class RequestServiceImpl implements RequestService {
     public Page<Request> readRequestByUser(Pageable pageable, User user){
 
         return requestRepository.findAllRequestsByRequestBy(user, pageable);
-
     }
 
     public Page<Request> readAllRequestBySuperior(Pageable pageable, User superior){
@@ -141,6 +153,11 @@ public class RequestServiceImpl implements RequestService {
     }
 
     public ResponseEntity deleteRequest(Request request){
+        if(request.getRequestStatus() == RequestStatus.REQUESTED) {
+            Item item = itemService.readItemByIdItem(request.getIdRequest());
+            item.setAvailableQty(request.getReqQty()+item.getAvailableQty());
+            itemService.updateItem(item);
+        }
 
         requestRepository.delete(request);
 
