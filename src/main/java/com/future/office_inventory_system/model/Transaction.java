@@ -11,11 +11,10 @@ import java.util.List;
 @Entity
 @Data
 @Table(name=TableName.TRANSACTION)
-@TableGenerator(name = "transaction_generator" , initialValue = 18216000)
 public class Transaction {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "transaction_generator")
+    @GeneratedValue
     private Long idTransaction;
 
     private Date transactionDate;
