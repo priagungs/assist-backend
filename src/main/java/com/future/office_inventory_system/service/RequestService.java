@@ -13,9 +13,9 @@ import org.springframework.http.ResponseEntity;
 @Service
 public interface RequestService {
 
-    Page<Request> createRequest(Pageable pageable, RequestBodyRequestCreate requestBody);
+    Request createRequest(RequestBodyRequestCreate requestBody);
 
-    Request updateRequest(Pageable pageable, RequestUpdate requestBody);
+    Request updateRequest(RequestUpdate requestBody);
 
     Page<Request> readAllRequest(Pageable pageable);
 
