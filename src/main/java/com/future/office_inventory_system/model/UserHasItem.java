@@ -7,12 +7,11 @@ import javax.persistence.*;
 
 @Entity
 @Data
-@TableGenerator(name = "user_has_item_generator", initialValue = 00000000)
 @Table(name = TableName.USERHASITEM)
 public class UserHasItem {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "user_has_item_generator")
+    @GeneratedValue
     private Long idUserHasItem;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

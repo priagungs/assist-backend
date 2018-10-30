@@ -2,6 +2,7 @@ package com.future.office_inventory_system.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.hibernate.annotations.Where;
 
@@ -9,18 +10,17 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@TableGenerator(name = "employee_generator", initialValue = 16516000)
 @Data
 @Table(name = TableName.USER)
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "employee_generator")
+    @GeneratedValue
     private Long idUser;
 
     private String username;
 
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     private String name;
@@ -32,8 +32,9 @@ public class User {
     private String division;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idSuperior", updatable = false, insertable = false)
-    @JsonIgnoreProperties({"superior", "subordinates", "requests", "hasItems", "transactions"})
+    @JoinColumn(name = "idSuperior")
+    @JsonIgnoreProperties({"superior", "subordinates", "requests", "hasItems", "transactions",
+            "hibernateLazyInitializer", "handler"})
     private User superior;
 
     @OneToMany(mappedBy = "superior")

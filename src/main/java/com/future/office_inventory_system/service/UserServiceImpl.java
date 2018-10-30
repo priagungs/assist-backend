@@ -23,12 +23,16 @@ public class UserServiceImpl implements UserService {
     private UserHasItemService userHasItemService;
 
     public User createUser(User user) {
-        user.setSuperior(userRepository
-                .findByIdUserAndIsActive(user.getSuperior().getIdUser(), true)
-                .orElseThrow(() -> new NotFoundException("superior not found")));
+        if (user.getSuperior() != null) {
+            user.setSuperior(userRepository
+                    .findByIdUserAndIsActive(user.getSuperior().getIdUser(), true)
+                    .orElseThrow(() -> new NotFoundException("superior not found")));
+        }
+        if (userRepository.findByUsernameAndIsActive(user.getUsername(), true).isPresent()) {
+            throw new ConflictException("username already exist");
+        }
 
         return userRepository.save(user);
-
     }
 
     public User updateUser(User user) {
@@ -36,12 +40,15 @@ public class UserServiceImpl implements UserService {
                 .findByIdUserAndIsActive(user.getIdUser(), true)
                 .orElseThrow(() -> new NotFoundException("user not found"));
 
-        user.setSuperior(userRepository
+        updatedUser.setSuperior(userRepository
                 .findByIdUserAndIsActive(user.getSuperior().getIdUser(), true)
                 .orElseThrow(() -> new NotFoundException("superior not found")));
 
         updatedUser.setIsAdmin(user.getIsAdmin());
         updatedUser.setName(user.getName());
+        if (userRepository.findByUsernameAndIsActive(user.getUsername(), true).isPresent() && !updatedUser.getUsername().equals(user.getUsername())) {
+            throw new ConflictException("username already exist");
+        }
         updatedUser.setUsername(user.getUsername());
         updatedUser.setPictureURL(user.getPictureURL());
         updatedUser.setPassword(user.getPassword());
@@ -62,12 +69,8 @@ public class UserServiceImpl implements UserService {
     }
 
     public Page<User> readAllUsersByIdSuperior(Long id, Pageable pageable) {
-        return userRepository.findAllBySuperior(userRepository.findByIdUserAndIsActive(id, true)
-                .orElseThrow(() -> new NotFoundException("superior not found")), pageable);
-    }
-
-    public Page<User> readAllUsersByIsAdmin(Boolean isAdmin, Pageable pageable) {
-        return userRepository.findAllByIsAdminAndIsActive(isAdmin, true, pageable);
+        return userRepository.findAllBySuperiorAndIsActive(userRepository.findByIdUserAndIsActive(id, true)
+                .orElseThrow(() -> new NotFoundException("superior not found")), true, pageable);
     }
 
     public User readUserByUsername(String username) {

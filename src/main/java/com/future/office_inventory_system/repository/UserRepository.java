@@ -23,8 +23,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Page<User> findAllBySuperiorAndIsActive(User superior, Boolean isActive, Pageable page);
 
-    Page<User> findAllByIsAdminAndIsActive(Boolean isAdmin, Boolean isActive, Pageable page);
-
     Optional<User> findByIdUserAndIsActive(Long idUser, Boolean isActive);
 
     Page<User> findAllByIsActive(Boolean isActive, Pageable pageable);

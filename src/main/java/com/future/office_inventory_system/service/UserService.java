@@ -18,9 +18,7 @@ public interface UserService {
     User readUserByIdUser(Long id);
     
     Page<User> readAllUsersByIdSuperior(Long id, Pageable pageable);
-    
-    Page<User> readAllUsersByIsAdmin(Boolean isAdmin, Pageable pageable);
-    
+
     User readUserByUsername(String username);
     
     ResponseEntity deleteUser(Long id);

@@ -18,10 +18,9 @@ import lombok.Data;
 @Entity
 @Data
 @Table(name = TableName.REQUEST)
-@TableGenerator(name = "request_generator")
 public class Request {
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "request_generator")
+    @GeneratedValue
     private Long idRequest;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

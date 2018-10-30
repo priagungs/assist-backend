@@ -1,6 +1,7 @@
 package com.future.office_inventory_system.service;
 
 
+import com.future.office_inventory_system.exception.ConflictException;
 import com.future.office_inventory_system.exception.NotFoundException;
 import com.future.office_inventory_system.model.User;
 import com.future.office_inventory_system.repository.UserRepository;
@@ -8,6 +9,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -76,12 +78,22 @@ public class UserServiceImplTest {
         userService.createUser(user2);
     }
 
+    @Test(expected = ConflictException.class)
+    public void createUserUsernameConflictTest() {
+        Mockito.when(userRepository.findByIdUserAndIsActive(user2.getSuperior().getIdUser(), true))
+                .thenReturn(Optional.of(user1));
+        Mockito.when(userRepository.findByUsernameAndIsActive(user2.getUsername(), true))
+                .thenReturn(Optional.of(user2));
+        userService.createUser(user2);
+    }
+
     @Test
     public void createUserSuccessTest() {
         Mockito.when(userRepository.save(user2)).thenReturn(user2);
         Mockito.when(userRepository.findByIdUserAndIsActive(user2.getSuperior().getIdUser(), true))
                 .thenReturn(Optional.of(user1));
-
+        Mockito.when(userRepository.findByUsernameAndIsActive(user2.getUsername(), true))
+                .thenReturn(Optional.empty());
         Assert.assertEquals(user2, userService.createUser(user2));
     }
 
@@ -103,14 +115,27 @@ public class UserServiceImplTest {
         userService.updateUser(user2);
     }
 
+    @Test(expected = ConflictException.class)
+    public void updateUserSuccessUsernameConflictTest() {
+        Mockito.when(userRepository.findByIdUserAndIsActive(user2.getIdUser(), true))
+                .thenReturn(Optional.of(user2));
+        Mockito.when(userRepository.findByIdUserAndIsActive(user2.getSuperior().getIdUser(), true))
+                .thenReturn(Optional.of(user1));
+        Mockito.when(userRepository.findByUsernameAndIsActive(user2.getUsername(), true))
+                .thenReturn(Optional.of(user2));
+
+        userService.updateUser(user2);
+    }
+
     @Test
     public void updateUserSuccessTest() {
         Mockito.when(userRepository.findByIdUserAndIsActive(user2.getIdUser(), true))
                 .thenReturn(Optional.of(user2));
         Mockito.when(userRepository.findByIdUserAndIsActive(user2.getSuperior().getIdUser(), true))
                 .thenReturn(Optional.of(user1));
-
         Mockito.when(userRepository.save(any())).thenReturn(user2);
+        Mockito.when(userRepository.findByUsernameAndIsActive(user2.getUsername(), true))
+                .thenReturn(Optional.empty());
 
         User result = userService.updateUser(user2);
         Assert.assertEquals("Bambang Nugroho", result.getName());
@@ -162,16 +187,6 @@ public class UserServiceImplTest {
                 .thenReturn(contents);
 
         Assert.assertEquals(contents, userService.readAllUsersByIdSuperior(user2.getSuperior().getIdUser(),
-                PageRequest.of(0, Integer.MAX_VALUE)));
-    }
-
-    @Test
-    public void readAllUsersByIsAdminTest() {
-        Mockito.when(userRepository.findAllByIsAdminAndIsActive(true, true,
-                PageRequest.of(0, Integer.MAX_VALUE)))
-                .thenReturn(Page.empty());
-
-        Assert.assertEquals(Page.empty(), userService.readAllUsersByIsAdmin(true,
                 PageRequest.of(0, Integer.MAX_VALUE)));
     }
 
