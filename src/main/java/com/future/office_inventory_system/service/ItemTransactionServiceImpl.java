@@ -29,6 +29,10 @@ public class ItemTransactionServiceImpl implements ItemTransactionService {
        if (repository.findById(itemTransaction.getIdItemTransaction()).isPresent()) {
            throw new ConflictException(itemTransaction.getTransaction().toString() + " is already exist");
        }
+    
+        if (itemTransaction.getBoughtQty() <= 0 ) {
+            throw new InvalidValueException("Bought quantity must be greater than 0");
+        }
        
        itemTransaction.setTransaction(transactionService
            .readTransactionByIdTransaction(itemTransaction.getTransaction().getIdTransaction()));
@@ -37,7 +41,7 @@ public class ItemTransactionServiceImpl implements ItemTransactionService {
            .readItemByIdItem(itemTransaction.getItem().getIdItem()));
     
         Item item = itemTransaction.getItem();
-        item.setTotalQty(item.getTotalQty() + itemTransaction.getBoughtQty());
+//        item.setTotalQty(item.getTotalQty() + itemTransaction.getBoughtQty());
     
         itemService.updateItem(item);
         itemTransaction.setItem(item);
@@ -50,6 +54,9 @@ public class ItemTransactionServiceImpl implements ItemTransactionService {
         ItemTransaction before = repository
             .findById(itemTransaction.getIdItemTransaction())
             .orElseThrow(() -> new NotFoundException("Item Transaction not found"));
+        if (itemTransaction.getBoughtQty() <= 0 ) {
+            throw new InvalidValueException("Bought quantity must be greater than 0");
+        }
         before.setTransaction(transactionService
             .readTransactionByIdTransaction(itemTransaction.getTransaction().getIdTransaction()));
         before.setItem(itemService
@@ -59,7 +66,7 @@ public class ItemTransactionServiceImpl implements ItemTransactionService {
         before.setPrice(itemTransaction.getPrice());
         
         Item item = before.getItem();
-        item.setTotalQty(item.getTotalQty() + itemTransaction.getBoughtQty());
+//        item.setTotalQty(item.getTotalQty() + itemTransaction.getBoughtQty());
         itemService.updateItem(item);
         itemTransaction.setItem(item);
         
@@ -77,7 +84,12 @@ public class ItemTransactionServiceImpl implements ItemTransactionService {
     }
     
     public Page<ItemTransaction> readAllItemTransactionsByTransaction(Transaction transaction, Pageable pageable) {
-        return repository.findAllByTransaction(transaction, pageable);
+        Page<ItemTransaction> itemTransactionPage = repository.findAllByTransaction(transaction, pageable);
+        if (itemTransactionPage.getTotalElements() == 0) {
+            throw new NotFoundException("No transaction found");
+        } else {
+            return itemTransactionPage;
+        }
     }
     
     public ResponseEntity deleteItemTransaction(Long id) {
@@ -90,7 +102,7 @@ public class ItemTransactionServiceImpl implements ItemTransactionService {
             throw new InvalidValueException("Insufficient item quantity");
         }
     
-        item.setTotalQty(item.getTotalQty() - itemTransaction.getBoughtQty());
+//        item.setTotalQty(item.getTotalQty() - itemTransaction.getBoughtQty());
         itemService.updateItem(item);
     
         repository.delete(itemTransaction);
