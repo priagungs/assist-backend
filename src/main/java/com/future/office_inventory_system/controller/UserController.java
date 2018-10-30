@@ -3,9 +3,11 @@ package com.future.office_inventory_system.controller;
 import com.future.office_inventory_system.model.User;
 import com.future.office_inventory_system.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Role;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
@@ -58,4 +60,5 @@ public class UserController {
     public ResponseEntity deleteUser(@RequestBody User user) {
         return userService.deleteUser(user.getIdUser());
     }
+
 }

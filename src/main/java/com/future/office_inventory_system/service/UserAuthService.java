@@ -19,7 +19,7 @@ public class UserAuthService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),
-                AuthorityUtils.createAuthorityList(user.getIsAdmin() ? "ADMIN" : "NOT_ADMIN")
+                AuthorityUtils.NO_AUTHORITIES
         );
     }
 }
