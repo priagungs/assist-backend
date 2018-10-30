@@ -1,7 +1,9 @@
 package com.future.office_inventory_system.controller;
 
+import com.future.office_inventory_system.exception.UnauthorizedException;
 import com.future.office_inventory_system.model.User;
 import com.future.office_inventory_system.service.UserService;
+import com.future.office_inventory_system.value_object.LoggedinUserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Role;
 import org.springframework.data.domain.Page;
@@ -21,8 +23,15 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    LoggedinUserInfo loggedinUserInfo;
+
     @PostMapping("/users")
-    public List<User> createUser(@RequestBody List<User> users, HttpSession session) {
+    public List<User> createUser(@RequestBody List<User> users) {
+        if (!loggedinUserInfo.getUser().getIsAdmin()) {
+            throw new UnauthorizedException("you are not an admin");
+        }
+
         List<User> result = new ArrayList<>();
         for (User user: users) {
             result.add(userService.createUser(user));
@@ -53,12 +62,17 @@ public class UserController {
 
     @PutMapping("/user")
     public User updateUser(@RequestBody User user) {
+        if (!loggedinUserInfo.getUser().getIsAdmin() && loggedinUserInfo.getUser().getIdUser() != user.getIdUser()) {
+            throw new UnauthorizedException("You are not permitted to update this user");
+        }
         return userService.updateUser(user);
     }
 
     @DeleteMapping("/user")
     public ResponseEntity deleteUser(@RequestBody User user) {
+        if (!loggedinUserInfo.getUser().getIsAdmin()) {
+            throw new UnauthorizedException("You are not permitted to delete this user");
+        }
         return userService.deleteUser(user.getIdUser());
     }
-
 }
