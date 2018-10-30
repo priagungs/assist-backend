@@ -25,6 +25,11 @@ public class ItemServiceImpl implements ItemService {
         if (itemRepository.findByItemName(item.getItemName()).isPresent()) {
             throw new ConflictException(item.getItemName() + " is exist");
         }
+        
+        if (item.getTotalQty() < 0 ||  item.getPrice() < 0) {
+            throw new InvalidValueException("Invalid value");
+        }
+        
         item.setAvailableQty(item.getTotalQty());
         return itemRepository.save(item);
     }
@@ -34,10 +39,11 @@ public class ItemServiceImpl implements ItemService {
             .findById(item.getIdItem())
             .orElseThrow(() -> new NotFoundException("Item not found"));
 
-        if (item.getTotalQty() < itemBefore.getTotalQty() - itemBefore.getAvailableQty()) {
+        if (item.getTotalQty() < itemBefore.getTotalQty() - itemBefore.getAvailableQty() || item.getAvailableQty() > item.getTotalQty() ||
+            item.getAvailableQty() < 0  || item.getPrice() < 0) {
             throw new InvalidValueException("Invalid value");
         }
-
+        
         itemBefore.setItemName(item.getItemName());
         itemBefore.setPictureURL(item.getPictureURL());
         itemBefore.setPrice(item.getPrice());
