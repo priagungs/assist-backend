@@ -63,16 +63,18 @@ public class ItemTransactionServiceImplTest {
         item1 = new Item();
         item1.setIdItem(1L);
         item1.setAvailableQty(1);
+        item1.setTotalQty(10);
         item2 = new Item();
         item2.setIdItem(2L);
         item3 = new Item();
         item3.setIdItem(1L);
         item3.setAvailableQty(100);
-        
+        item3.setTotalQty(1000);
         itemTransaction1 = new ItemTransaction();
         itemTransaction1.setIdItemTransaction(1L);
         itemTransaction1.setTransaction(transaction);
         itemTransaction1.setItem(item1);
+        itemTransaction1.getItem().setTotalQty(1);
         itemTransaction1.setBoughtQty(10);
         itemTransaction1.setPrice(5000L);
         
@@ -87,6 +89,7 @@ public class ItemTransactionServiceImplTest {
         itemTransaction3.setIdItemTransaction(3L);
         itemTransaction3.setTransaction(transaction);
         itemTransaction3.setItem(item3);
+        itemTransaction3.getItem().setTotalQty(1000);
         itemTransaction3.setBoughtQty(1);
         itemTransaction3.setPrice(5000L);
     }

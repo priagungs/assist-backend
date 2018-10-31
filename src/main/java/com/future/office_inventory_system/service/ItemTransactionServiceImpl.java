@@ -41,7 +41,7 @@ public class ItemTransactionServiceImpl implements ItemTransactionService {
            .readItemByIdItem(itemTransaction.getItem().getIdItem()));
     
         Item item = itemTransaction.getItem();
-//        item.setTotalQty(item.getTotalQty() + itemTransaction.getBoughtQty());
+        item.setTotalQty(item.getTotalQty() + itemTransaction.getBoughtQty());
     
         itemService.updateItem(item);
         itemTransaction.setItem(item);
@@ -66,7 +66,7 @@ public class ItemTransactionServiceImpl implements ItemTransactionService {
         before.setPrice(itemTransaction.getPrice());
         
         Item item = before.getItem();
-//        item.setTotalQty(item.getTotalQty() + itemTransaction.getBoughtQty());
+        item.setTotalQty(item.getTotalQty() + itemTransaction.getBoughtQty());
         itemService.updateItem(item);
         itemTransaction.setItem(item);
         
@@ -102,7 +102,7 @@ public class ItemTransactionServiceImpl implements ItemTransactionService {
             throw new InvalidValueException("Insufficient item quantity");
         }
     
-//        item.setTotalQty(item.getTotalQty() - itemTransaction.getBoughtQty());
+        item.setTotalQty(item.getTotalQty() - itemTransaction.getBoughtQty());
         itemService.updateItem(item);
     
         repository.delete(itemTransaction);
