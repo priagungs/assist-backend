@@ -22,7 +22,7 @@ public class ItemServiceImpl implements ItemService {
     private UserHasItemService userHasItemService;
     
     public Item createItem(Item item) {
-        if (itemRepository.findByItemName(item.getItemName()).isPresent()) {
+        if (itemRepository.findByItemNameAndIsActive(item.getItemName(), true).isPresent()) {
             throw new ConflictException(item.getItemName() + " is exist");
         }
         
@@ -36,30 +36,30 @@ public class ItemServiceImpl implements ItemService {
     
     public Item updateItem(Item item) {
         Item itemBefore = itemRepository
-            .findById(item.getIdItem())
+            .findByIdItemAndIsActive(item.getIdItem(), true)
             .orElseThrow(() -> new NotFoundException("Item not found"));
 
-        if (item.getTotalQty() < itemBefore.getTotalQty() - itemBefore.getAvailableQty() || item.getAvailableQty() > item.getTotalQty() ||
-            item.getAvailableQty() < 0  || item.getPrice() < 0) {
+        if (item.getTotalQty() < itemBefore.getTotalQty() - itemBefore.getAvailableQty() || item.getPrice() < 0) {
             throw new InvalidValueException("Invalid value");
         }
         
         itemBefore.setItemName(item.getItemName());
         itemBefore.setPictureURL(item.getPictureURL());
         itemBefore.setPrice(item.getPrice());
-        itemBefore.setTotalQty(item.getTotalQty());
         itemBefore.setDescription(item.getDescription());
-        
+        itemBefore.setAvailableQty(itemBefore.getAvailableQty() + item.getTotalQty() - itemBefore.getTotalQty());
+        itemBefore.setTotalQty(item.getTotalQty());
+
         return itemRepository.save(itemBefore);
     }
   
     public Page<Item> readAllItems(Pageable pageable) {
         
-        return itemRepository.findAll(pageable);
+        return itemRepository.findAllByIsActive(true, pageable);
     }
     
     public Item readItemByIdItem(Long id) {
-        return itemRepository.findById(id)
+        return itemRepository.findByIdItemAndIsActive(id, true)
             .orElseThrow(() -> new NotFoundException("Item not found"));
     }
   
@@ -67,11 +67,11 @@ public class ItemServiceImpl implements ItemService {
         if (min < 0) {
             throw new InvalidValueException("Invalid value");
         }
-        return itemRepository.findAllByAvailableQtyGreaterThan(min,pageable);
+        return itemRepository.findAllByAvailableQtyGreaterThanAndIsActive(min, true, pageable);
     }
   
     public ResponseEntity deleteItem(Long id) {
-        Item item = itemRepository.findById(id)
+        Item item = itemRepository.findByIdItemAndIsActive(id, true)
             .orElseThrow(() -> new NotFoundException("Item not found"));
     
         if (item.getOwners().size() > 0) {

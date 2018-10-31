@@ -3,7 +3,6 @@ import com.future.office_inventory_system.exception.ConflictException;
 import com.future.office_inventory_system.exception.InvalidValueException;
 import com.future.office_inventory_system.exception.NotFoundException;
 import com.future.office_inventory_system.model.Item;
-import com.future.office_inventory_system.model.Transaction;
 import com.future.office_inventory_system.repository.ItemRepository;
 import org.junit.Assert;
 import org.junit.Before;
@@ -62,14 +61,14 @@ public class ItemServiceImplTest {
     
     @Test(expected = ConflictException.class)
     public void createItemAlreadyExistTest() {
-        Mockito.when(itemRepository.findByItemName(item1.getItemName()))
+        Mockito.when(itemRepository.findByItemNameAndIsActive(item1.getItemName(), true))
             .thenReturn(Optional.of(item1));
         itemService.createItem(item1);
     }
     
     @Test(expected = InvalidValueException.class)
     public void createItemInvalidValueTest() {
-        Mockito.when(itemRepository.findByItemName(item2.getItemName()))
+        Mockito.when(itemRepository.findByItemNameAndIsActive(item2.getItemName(), true))
             .thenReturn(Optional.empty());
         itemService.createItem(item2);
     }
@@ -77,21 +76,21 @@ public class ItemServiceImplTest {
     @Test
     public void createItemSuccessTest() {
         Mockito.when(itemRepository.save(item1)).thenReturn(item1);
-        Mockito.when(itemRepository.findByItemName(item1.getItemName()))
+        Mockito.when(itemRepository.findByItemNameAndIsActive(item1.getItemName(), true))
             .thenReturn(Optional.empty());
         Assert.assertEquals(item1, itemService.createItem(item1));
     }
     
     @Test(expected = NotFoundException.class)
     public void updateItemNotFoundTest() {
-        Mockito.when(itemRepository.findById(item1.getIdItem()))
+        Mockito.when(itemRepository.findByIdItemAndIsActive(item1.getIdItem(), true))
             .thenReturn(Optional.empty());
         itemService.updateItem(item1);
     }
     
     @Test(expected = InvalidValueException.class)
     public void updateItemInvalidValueTest() {
-        Mockito.when(itemRepository.findById(item2.getIdItem()))
+        Mockito.when(itemRepository.findByIdItemAndIsActive(item2.getIdItem(), true))
             .thenReturn(Optional.of(item2));
         itemService.updateItem(item2);
     }
@@ -99,7 +98,7 @@ public class ItemServiceImplTest {
     @Test
     public void updateItemSuccessTest() {
         Mockito.when(itemRepository.save(item1)).thenReturn(item1);
-        Mockito.when(itemRepository.findById(item1.getIdItem()))
+        Mockito.when(itemRepository.findByIdItemAndIsActive(item1.getIdItem(), true))
             .thenReturn(Optional.of(item1));
         Assert.assertEquals(item1, itemService.updateItem(item1));
     }
@@ -108,21 +107,21 @@ public class ItemServiceImplTest {
     public void readAllItemsTest() {
         PageImpl contents = new PageImpl(new ArrayList());
         
-        Mockito.when(itemRepository.findAll(PageRequest.of(0, Integer.MAX_VALUE)))
+        Mockito.when(itemRepository.findAllByIsActive(true, PageRequest.of(0, Integer.MAX_VALUE)))
             .thenReturn(contents);
         Assert.assertEquals(contents, itemService.readAllItems(PageRequest.of(0, Integer.MAX_VALUE)));
     }
     
     @Test(expected = NotFoundException.class)
     public void readItemByIdItemNotFoundTest() {
-        Mockito.when(itemRepository.findById(item1.getIdItem()))
+        Mockito.when(itemRepository.findByIdItemAndIsActive(item1.getIdItem(), true))
             .thenReturn(Optional.empty());
         itemService.readItemByIdItem(item1.getIdItem());
     }
     
     @Test
     public void readItemByIdItemSuccessTest() {
-        Mockito.when(itemRepository.findById(item1.getIdItem()))
+        Mockito.when(itemRepository.findByIdItemAndIsActive(item1.getIdItem(), true))
             .thenReturn(Optional.of(item1));
         Assert.assertEquals(item1, itemService.readItemByIdItem(item1.getIdItem()));
     }
@@ -141,7 +140,7 @@ public class ItemServiceImplTest {
 
         Page<Item> itemPage =
             new PageImpl<Item>(items, PageRequest.of(0, Integer.MAX_VALUE), items.size());
-        Mockito.when(itemRepository.findAllByAvailableQtyGreaterThan(0, PageRequest.of(0, Integer.MAX_VALUE)))
+        Mockito.when(itemRepository.findAllByAvailableQtyGreaterThanAndIsActive(0, true, PageRequest.of(0, Integer.MAX_VALUE)))
             .thenReturn(itemPage);
         
         Assert.assertEquals(itemPage, itemService.readItemsByAvailableGreaterThan(0, PageRequest.of(0, Integer.MAX_VALUE)));
@@ -149,14 +148,14 @@ public class ItemServiceImplTest {
     
     @Test(expected = NotFoundException.class)
     public void deleteItemNotFoundTest() {
-        Mockito.when(itemRepository.findById(item1.getIdItem()))
+        Mockito.when(itemRepository.findByIdItemAndIsActive(item1.getIdItem(), true))
             .thenReturn(Optional.empty());
         itemService.deleteItem(item1.getIdItem());
     }
     
     @Test
     public void deleteItemSuccess() {
-        Mockito.when(itemRepository.findById(item1.getIdItem()))
+        Mockito.when(itemRepository.findByIdItemAndIsActive(item1.getIdItem(), true))
             .thenReturn(Optional.of(item1));
         Assert.assertEquals(ResponseEntity.ok().build(), itemService.deleteItem(item1.getIdItem()));
     }

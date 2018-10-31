@@ -53,10 +53,11 @@ public class ItemController {
     }
     
     @PutMapping("/items/{idItem}")
-    public Item updateItem(@RequestBody Item item) {
+    public Item updateItem(@RequestBody Item item, @PathVariable("idItem") Long id) {
         if (!loggedinUserInfo.getUser().getIsAdmin()) {
             throw new UnauthorizedException("You are not permitted to update this item");
         }
+        item.setIdItem(id);
         return itemService.updateItem(item);
     }
     

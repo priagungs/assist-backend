@@ -54,7 +54,7 @@ public class ItemTest {
 
         entityManager.persist(item);
 
-        Item i = itemRepository.findById(item.getIdItem()).get();
+        Item i = itemRepository.findByIdItemAndIsActive(item.getIdItem(), true).get();
         assertNotNull(i);
         assertEquals(item, i);
 
@@ -67,7 +67,7 @@ public class ItemTest {
         entityManager.persist(item2);
 
         List<Item> items = itemRepository
-                .findAllByAvailableQtyGreaterThan(0, PageRequest.of(0, 2))
+                .findAllByAvailableQtyGreaterThanAndIsActive(0, true, PageRequest.of(0, 2))
                 .getContent();
 
         assertEquals(2, items.size());
@@ -75,19 +75,19 @@ public class ItemTest {
         assertTrue(items.get(1).getAvailableQty() > 0);
 
         items = itemRepository
-                .findAllByAvailableQtyGreaterThan(0, PageRequest.of(1, 2))
+                .findAllByAvailableQtyGreaterThanAndIsActive(0, true, PageRequest.of(1, 2))
                 .getContent();
 
         assertEquals(0, items.size());
 
         items = itemRepository
-                .findAllByAvailableQtyGreaterThan(2, PageRequest.of(0, 2))
+                .findAllByAvailableQtyGreaterThanAndIsActive(2, true, PageRequest.of(0, 2))
                 .getContent();
 
         assertEquals(1, items.size());
 
         items = itemRepository
-                .findAllByAvailableQtyGreaterThan(2, PageRequest.of(1, 2))
+                .findAllByAvailableQtyGreaterThanAndIsActive(2, true, PageRequest.of(1, 2))
                 .getContent();
 
         assertEquals(0, items.size());
@@ -101,7 +101,7 @@ public class ItemTest {
 
         itemRepository.save(item);
 
-        List<Item> items = itemRepository.findAll();
+        List<Item> items = itemRepository.findAllByIsActive(true);
 
         assertNotNull(items);
         assertEquals(1, items.size());
@@ -113,11 +113,11 @@ public class ItemTest {
     public void testDeleteItem() {
 
         entityManager.persist(item);
-        assertNotNull(itemRepository.findAll());
-        assertEquals(1, itemRepository.findAll().size());
+        assertNotNull(itemRepository.findAllByIsActive(true));
+        assertEquals(1, itemRepository.findAllByIsActive(true).size());
 
         itemRepository.delete(item);
-        assertEquals(0, itemRepository.findAll().size());
+        assertEquals(0, itemRepository.findAllByIsActive(true).size());
 
     }
 
