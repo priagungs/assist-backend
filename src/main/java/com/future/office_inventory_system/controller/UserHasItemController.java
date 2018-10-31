@@ -57,7 +57,7 @@ public class UserHasItemController {
     }
 
     @DeleteMapping("/user-items")
-    ResponseEntity deleteUserHasItem(@RequestParam UserHasItem userHasItem) {
+    ResponseEntity deleteUserHasItem(@RequestBody UserHasItem userHasItem) {
         if (!loggedinUserInfo.getUser().getIsAdmin()) {
             throw new UnauthorizedException("you are not permitted to create userhasitem");
         }

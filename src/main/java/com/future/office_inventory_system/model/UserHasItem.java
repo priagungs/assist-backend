@@ -16,12 +16,12 @@ public class UserHasItem {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idUser", nullable = false)
-    @JsonIgnoreProperties({"hasItem", "superior"})
+    @JsonIgnoreProperties({"hasItem", "superior", "hibernateLazyInitializer", "handler"})
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idItem", nullable = false)
-    @JsonIgnoreProperties("owner")
+    @JsonIgnoreProperties({"owner","hibernateLazyInitializer", "handler"})
     private Item item;
 
     private Integer hasQty;
