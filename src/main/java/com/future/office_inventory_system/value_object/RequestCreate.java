@@ -7,13 +7,10 @@ import java.util.Date;
 import java.util.List;
 
 @Data
-public class RequestBodyRequestCreate {
+public class RequestCreate {
 
     private Long IdUser;
 
-    private Item item;
+    private List<ItemRequest> items;
 
-    private Integer requestQty;
-
-    private Date requestDate = new Date();
 }

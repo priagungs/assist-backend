@@ -10,5 +10,7 @@ public class RequestUpdate {
 
     private Long idSuperior;
 
+    private Long idAdmin;
+
     private RequestStatus requestStatus;
 }

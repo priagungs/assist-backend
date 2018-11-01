@@ -4,9 +4,11 @@ import com.future.office_inventory_system.exception.InvalidValueException;
 import com.future.office_inventory_system.exception.NotFoundException;
 import com.future.office_inventory_system.model.*;
 import com.future.office_inventory_system.repository.RequestRepository;
-import com.future.office_inventory_system.value_object.RequestBodyRequestCreate;
+import com.future.office_inventory_system.value_object.ItemRequest;
+import com.future.office_inventory_system.value_object.RequestCreate;
 import com.future.office_inventory_system.value_object.RequestUpdate;
 import lombok.Data;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -35,31 +37,37 @@ public class RequestServiceImpl implements RequestService {
     @Autowired
     private UserHasItemService userHasItemService;
 
-    public Request createRequest(RequestBodyRequestCreate requestBody){
+    public List<Request> createRequest(RequestCreate requestBody){
         User user= userService.readUserByIdUser(requestBody.getIdUser());
+        List<Request> requests = new ArrayList<>();
 
-        Item it = itemService.readItemByIdItem(requestBody.getItem().getIdItem());
+        for (ItemRequest el: requestBody.getItems()) {
+            Item item = itemService.readItemByIdItem(el.getItem().getIdItem());
+            Request request = new Request();
 
-        Request request = new Request();
+            request.setRequestBy(user);
+            request.setItem(item);
+            request.setRequestDate(new Date());
+            if(item.getAvailableQty() >= el.getRequestQty()){
+                item.setAvailableQty(item.getAvailableQty()-el.getRequestQty());
+                itemService.updateItem(item);
+            } else {
+                throw new InvalidValueException(el.getItem().getItemName()+" out of stock");
+            }
 
-        request.setRequestBy(user);
-        request.setItem(it);
-        request.setRequestDate(requestBody.getRequestDate());
+            request.setReqQty(el.getRequestQty());
 
-        if(it.getAvailableQty() >= requestBody.getRequestQty()){
-            it.setAvailableQty(it.getAvailableQty()-requestBody.getRequestQty());
-        } else {
-            throw new InvalidValueException(requestBody.getItem().getItemName()+" out of stock");
+            if (user.getSuperior() == null) {
+                request.setRequestStatus(RequestStatus.APPROVED);
+            }
+            else {
+                request.setRequestStatus(RequestStatus.REQUESTED);
+            }
+
+            requests.add(requestRepository.save(request));
         }
 
-        request.setReqQty(requestBody.getRequestQty());
-
-        request.setRequestStatus(RequestStatus.REQUESTED);
-
-        requestRepository.save(request);
-
-
-        return request;
+        return requests;
     }
 
     public Request updateRequest(RequestUpdate requestUpdate){
@@ -68,19 +76,31 @@ public class RequestServiceImpl implements RequestService {
         Request request = requestRepository.findRequestByIdRequest(requestUpdate.getIdRequest())
                 .orElseThrow (()-> new NotFoundException("request not found"));
 
-        if(requestUpdate.getRequestStatus() == RequestStatus.APPROVED){
+        if(requestUpdate.getRequestStatus() == RequestStatus.APPROVED &&
+                request.getRequestStatus() == RequestStatus.REQUESTED){
+            if (userService.readUserByIdUser(requestUpdate.getIdSuperior()) == null) {
+                throw new NotFoundException("Superior not found");
+            }
             request.setApprovedBy(requestUpdate.getIdSuperior());
             request.setApprovedDate(new Date());
 
-        } else if (requestUpdate.getRequestStatus() == RequestStatus.REJECTED) {
+        } else if (requestUpdate.getRequestStatus() == RequestStatus.REJECTED &&
+                request.getRequestStatus() == RequestStatus.REQUESTED) {
+            if (userService.readUserByIdUser(requestUpdate.getIdSuperior()) == null) {
+                throw new NotFoundException("Superior not found");
+            }
             request.setRejectedBy(requestUpdate.getIdSuperior());
             request.setRequestDate(new Date());
             Item item = itemService.readItemByIdItem(request.getIdRequest());
             item.setAvailableQty(request.getReqQty()+item.getAvailableQty());
             itemService.updateItem(item);
 
-        } else if (requestUpdate.getRequestStatus() == RequestStatus.SENT ) {
-            request.setHandedOverBy(requestUpdate.getIdSuperior());
+        } else if (requestUpdate.getRequestStatus() == RequestStatus.SENT &&
+                request.getRequestStatus() == RequestStatus.APPROVED) {
+            if (userService.readUserByIdUser(requestUpdate.getIdAdmin()) == null) {
+                throw new NotFoundException("Admin not found");
+            }
+            request.setHandedOverBy(requestUpdate.getIdAdmin());
             request.setHandedOverDate(new Date());
 
 
@@ -90,14 +110,13 @@ public class RequestServiceImpl implements RequestService {
             userHasItem.setHasQty(request.getReqQty());
 
             userHasItemService.createUserHasItem(userHasItem);
-
         }
-
+        else {
+            throw new InvalidValueException("Invalid input");
+        }
         request.setRequestStatus(requestUpdate.getRequestStatus());
 
-        requestRepository.save(request);
-
-        return request;
+        return requestRepository.save(request);
     }
 
 
@@ -152,7 +171,9 @@ public class RequestServiceImpl implements RequestService {
         return new PageImpl<>(reqs, pageable, reqs.size());
     }
 
-    public ResponseEntity deleteRequest(Request request){
+    public ResponseEntity deleteRequest(Request req){
+        Request request = requestRepository.findById(req.getIdRequest()).orElseThrow(
+                () -> new NotFoundException("Request not found"));
         if(request.getRequestStatus() == RequestStatus.REQUESTED) {
             Item item = itemService.readItemByIdItem(request.getIdRequest());
             item.setAvailableQty(request.getReqQty()+item.getAvailableQty());
@@ -162,5 +183,9 @@ public class RequestServiceImpl implements RequestService {
         requestRepository.delete(request);
 
         return ResponseEntity.ok().build();
+    }
+
+    public Request readRequestByIdRequest(Long id) {
+        return requestRepository.findById(id).orElseThrow(() -> new NotFoundException("Request not found"));
     }
 }
