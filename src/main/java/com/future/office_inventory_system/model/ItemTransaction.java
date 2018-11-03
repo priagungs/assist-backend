@@ -16,14 +16,13 @@ public class ItemTransaction {
     private Long idItemTransaction;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "idTransaction")
+    @JoinColumn(name = "idTransaction", nullable = false)
     @JsonIgnore
     private Transaction transaction;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idItem", nullable = false)
-
-    @JsonIgnoreProperties({"itemTransaction", "requests", "owners"})
+    @JsonIgnoreProperties({"itemTransaction", "requests", "owners", "hibernateLazyInitializer", "handler"})
     private Item item;
 
     private Integer boughtQty;

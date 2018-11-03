@@ -35,16 +35,19 @@ public class TransactionServiceImpl implements TransactionService {
         if (!admin.getIsAdmin()) {
             throw new InvalidValueException("admin is not an admin");
         }
-        transaction.setAdmin(admin);
-        transaction.setTransactionDate(new Date());
         List<ItemTransaction> itemTransactions = new ArrayList<>();
+        Transaction newTrx = new Transaction();
+        newTrx.setAdmin(admin);
+        newTrx.setSupplier(transaction.getSupplier());
+        newTrx.setTransactionDate(new Date());
+        newTrx = repository.save(newTrx);
         for (ItemTransaction el : transaction.getItemTransactions()) {
+            el.setTransaction(newTrx);
             ItemTransaction itemTrx = itemTransactionService.createItemTransaction(el);
-            itemTrx.setTransaction(transaction);
             itemTransactions.add(itemTrx);
         }
-        transaction.setItemTransactions(itemTransactions);
-        return repository.save(transaction);
+        newTrx.setItemTransactions(itemTransactions);
+        return repository.save(newTrx);
     }
 
     public Page<Transaction> readAllTransactions(Pageable pageable) {

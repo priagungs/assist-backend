@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface TransactionService {
 
-    Integer MAX_ALLOWABLE_MILISECONDS_TO_UPDATE = 3600;
+    Integer MAX_ALLOWABLE_MILISECONDS_TO_UPDATE = 3600000;
 
     Transaction createTransaction(Transaction transaction);
     Page<Transaction> readAllTransactions(Pageable pageable);

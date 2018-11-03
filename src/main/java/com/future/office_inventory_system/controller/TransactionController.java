@@ -31,7 +31,7 @@ public class TransactionController {
         return transactionService.createTransaction(transaction);
     }
 
-    @GetMapping("/api/transactions")
+    @GetMapping("/transactions")
     Page<Transaction> readAllTransactions(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit) {
         if (!loggedinUserInfo.getUser().getIsAdmin()) {
             throw new UnauthorizedException("you are not permitted to read transaction");
@@ -39,7 +39,7 @@ public class TransactionController {
         return transactionService.readAllTransactions(PageRequest.of(page, limit));
     }
 
-    @GetMapping("/api/transactions/{id}")
+    @GetMapping("/transactions/{id}")
     Transaction readTransactionById(@PathVariable("id") Long id) {
         if (!loggedinUserInfo.getUser().getIsAdmin()) {
             throw new UnauthorizedException("you are not permitted to read transaction");
@@ -47,8 +47,8 @@ public class TransactionController {
         return transactionService.readTransactionByIdTransaction(id);
     }
 
-    @DeleteMapping("/api/transactions")
-    ResponseEntity deleteTransaction(@RequestParam Transaction transaction) {
+    @DeleteMapping("/transactions")
+    ResponseEntity deleteTransaction(@RequestBody Transaction transaction) {
         if (!loggedinUserInfo.getUser().getIsAdmin()) {
             throw new UnauthorizedException("you are not permitted to read transaction");
         }

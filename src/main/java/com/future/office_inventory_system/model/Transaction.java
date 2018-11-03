@@ -23,10 +23,10 @@ public class Transaction {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idUser", nullable = false)
-    @JsonIgnoreProperties({"transaction", "superior"})
+    @JsonIgnoreProperties({"transaction", "superior", "hibernateLazyInitializer", "handler"})
     private User admin;
 
-    @OneToMany(mappedBy = "transaction", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "transaction")
     @JsonIgnoreProperties({"transaction"})
     private List<ItemTransaction> itemTransactions;
 
