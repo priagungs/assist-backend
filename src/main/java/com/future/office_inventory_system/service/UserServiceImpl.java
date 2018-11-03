@@ -7,6 +7,8 @@ import com.future.office_inventory_system.model.UserHasItem;
 import com.future.office_inventory_system.repository.UserRepository;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -14,39 +16,36 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Data
+@EnableConfigurationProperties(UserServiceProperties.class)
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private UserHasItemService userHasItemService;
+    public final UserServiceProperties userServiceProperties;
 
     public User createUser(User user) {
         if (user.getSuperior() != null) {
-            user.setSuperior(userRepository
+            user.setSuperior(userServiceProperties.getUserRepository()
                     .findByIdUserAndIsActive(user.getSuperior().getIdUser(), true)
                     .orElseThrow(() -> new NotFoundException("superior not found")));
         }
-        if (userRepository.findByUsernameAndIsActive(user.getUsername(), true).isPresent()) {
+        if (userServiceProperties.getUserRepository().findByUsernameAndIsActive(user.getUsername(), true).isPresent()) {
             throw new ConflictException("username already exist");
         }
 
-        return userRepository.save(user);
+        return userServiceProperties.getUserRepository().save(user);
     }
 
     public User updateUser(User user) {
-        User updatedUser = userRepository
+        User updatedUser = userServiceProperties.getUserRepository()
                 .findByIdUserAndIsActive(user.getIdUser(), true)
                 .orElseThrow(() -> new NotFoundException("user not found"));
 
-        updatedUser.setSuperior(userRepository
+        updatedUser.setSuperior(userServiceProperties.getUserRepository()
                 .findByIdUserAndIsActive(user.getSuperior().getIdUser(), true)
                 .orElseThrow(() -> new NotFoundException("superior not found")));
 
         updatedUser.setIsAdmin(user.getIsAdmin());
         updatedUser.setName(user.getName());
-        if (userRepository.findByUsernameAndIsActive(user.getUsername(), true).isPresent() && !updatedUser.getUsername().equals(user.getUsername())) {
+        if (userServiceProperties.getUserRepository().findByUsernameAndIsActive(user.getUsername(), true).isPresent() && !updatedUser.getUsername().equals(user.getUsername())) {
             throw new ConflictException("username already exist");
         }
         updatedUser.setUsername(user.getUsername());
@@ -55,31 +54,31 @@ public class UserServiceImpl implements UserService {
         updatedUser.setDivision(user.getDivision());
         updatedUser.setRole(user.getRole());
 
-        return userRepository.save(updatedUser);
+        return userServiceProperties.getUserRepository().save(updatedUser);
     }
 
     public Page<User> readAllUsers(Pageable pageable) {
 
-        return userRepository.findAllByIsActive(true, pageable);
+        return userServiceProperties.getUserRepository().findAllByIsActive(true, pageable);
     }
 
     public User readUserByIdUser(Long id) {
-        return userRepository.findByIdUserAndIsActive(id, true)
+        return userServiceProperties.getUserRepository().findByIdUserAndIsActive(id, true)
                 .orElseThrow(() -> new NotFoundException("user not found"));
     }
 
     public Page<User> readAllUsersByIdSuperior(Long id, Pageable pageable) {
-        return userRepository.findAllBySuperiorAndIsActive(userRepository.findByIdUserAndIsActive(id, true)
+        return userServiceProperties.getUserRepository().findAllBySuperiorAndIsActive(userServiceProperties.getUserRepository().findByIdUserAndIsActive(id, true)
                 .orElseThrow(() -> new NotFoundException("superior not found")), true, pageable);
     }
 
     public User readUserByUsername(String username) {
-        return userRepository.findByUsernameAndIsActive(username, true)
+        return userServiceProperties.getUserRepository().findByUsernameAndIsActive(username, true)
                 .orElseThrow(() -> new NotFoundException("user not found"));
     }
 
     public ResponseEntity deleteUser(Long id) {
-        User user = userRepository.findByIdUserAndIsActive(id, true)
+        User user = userServiceProperties.getUserRepository().findByIdUserAndIsActive(id, true)
                 .orElseThrow(() -> new NotFoundException("user not found"));
 
         for (User subordinate: user.getSubordinates()) {
@@ -87,11 +86,11 @@ public class UserServiceImpl implements UserService {
         }
 
         for (UserHasItem hasItem : user.getHasItems()) {
-            userHasItemService.deleteUserHasItem(hasItem.getIdUserHasItem());
+            userServiceProperties.getUserHasItemService().deleteUserHasItem(hasItem.getIdUserHasItem());
         }
 
         user.setIsActive(false);
-        userRepository.save(user);
+        userServiceProperties.getUserRepository().save(user);
 
         return ResponseEntity.ok().build();
 
