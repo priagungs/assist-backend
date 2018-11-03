@@ -4,15 +4,21 @@ import com.future.office_inventory_system.exception.ConflictException;
 import com.future.office_inventory_system.exception.InvalidValueException;
 import com.future.office_inventory_system.exception.NotFoundException;
 import com.future.office_inventory_system.model.Item;
+import com.future.office_inventory_system.model.Request;
 import com.future.office_inventory_system.model.User;
 import com.future.office_inventory_system.model.UserHasItem;
 import com.future.office_inventory_system.repository.UserHasItemRepository;
+import com.future.office_inventory_system.value_object.LoggedinUserInfo;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class UserHasItemServiceImpl implements UserHasItemService {
@@ -25,6 +31,12 @@ public class UserHasItemServiceImpl implements UserHasItemService {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    RequestService requestService;
+
+    @Autowired
+    LoggedinUserInfo loggedinUserInfo;
 
     public UserHasItem createUserHasItem(UserHasItem userHasItem) {
         User user = userService.readUserByIdUser(userHasItem.getUser().getIdUser());
@@ -45,6 +57,19 @@ public class UserHasItemServiceImpl implements UserHasItemService {
         }
     }
 
+    public UserHasItem createUserHasItemFromRequest(UserHasItem userHasItem) {
+        if (repository.findAllByUserAndItem(userHasItem.getUser(), userHasItem.getItem()).size() > 0) {
+            return updateUserHasItemFromRequest(userHasItem);
+        }
+        return repository.save(userHasItem);
+    }
+
+    public UserHasItem updateUserHasItemFromRequest(UserHasItem userHasItem) {
+        UserHasItem updated = repository.findById(userHasItem.getIdUserHasItem()).get();
+        updated.setHasQty(userHasItem.getHasQty() + updated.getHasQty());
+        return repository.save(updated);
+    }
+
     public UserHasItem readUserHasItemById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new NotFoundException("userhasitem not found"));
@@ -56,6 +81,15 @@ public class UserHasItemServiceImpl implements UserHasItemService {
         Item item = hasItem.getItem();
         item.setAvailableQty(item.getAvailableQty() + hasItem.getHasQty());
         itemService.updateItem(item);
+
+        List<Request> requests = userService.readUserByIdUser(hasItem.getUser().getIdUser()).getRequests();
+        for (Request request: requests) {
+            if (request.getItem().getIdItem() == item.getIdItem()) {
+                request.setReturnedBy(loggedinUserInfo.getUser().getIdUser());
+                request.setReturnedDate(new Date());
+                requestService.updateRequestStatusToReturned(request);
+            }
+        }
 
         repository.delete(hasItem);
         return ResponseEntity.ok().build();

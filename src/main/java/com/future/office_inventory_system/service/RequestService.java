@@ -18,7 +18,11 @@ public interface RequestService {
 
     Request updateRequest(RequestUpdate requestBody);
 
+    Request updateRequestByRequestObject(Request request);
+
     Page<Request> readAllRequest(Pageable pageable);
+
+    List<Request> readAllRequestsByItem(Item item);
 
     Page<Request> readRequestByUser(Pageable pageable, User user);
 
@@ -32,4 +36,6 @@ public interface RequestService {
     ResponseEntity deleteRequest(Request request);
 
     public Request readRequestByIdRequest(Long id);
+
+    public Request updateRequestStatusToReturned(Request request);
 }

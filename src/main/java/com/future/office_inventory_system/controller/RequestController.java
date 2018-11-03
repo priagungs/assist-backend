@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -61,24 +62,26 @@ public class RequestController {
     }
 
     @PutMapping("/requests")
-    Request updateRequest(@RequestBody RequestUpdate requestBody) {
-        if (requestBody.getRequestStatus() == RequestStatus.APPROVED ||
-                requestBody.getRequestStatus() == RequestStatus.REJECTED) {
-            if (userInfo.getUser().getIdUser() != requestBody.getIdSuperior()) {
-                throw new UnauthorizedException("You can't approved this request");
+    List<Request> updateRequest(@RequestBody List<RequestUpdate> requestBodies) {
+        List<Request> result = new ArrayList<>();
+        for (RequestUpdate requestBody : requestBodies) {
+            if (requestBody.getRequestStatus() == RequestStatus.APPROVED ||
+                    requestBody.getRequestStatus() == RequestStatus.REJECTED) {
+                if (userInfo.getUser().getIdUser() != requestBody.getIdSuperior()) {
+                    throw new UnauthorizedException("You can't approved this request");
+                }
+                result.add(requestService.updateRequest(requestBody));
+            } else if (requestBody.getRequestStatus() == RequestStatus.SENT) {
+                if (!userInfo.getUser().getIsAdmin() &&
+                        requestBody.getIdAdmin() != userInfo.getUser().getIdUser()) {
+                    throw new UnauthorizedException("You can't hand over this request");
+                }
+                result.add(requestService.updateRequest(requestBody));
+            } else {
+                throw new InvalidValueException("Invalid request body");
             }
-            return requestService.updateRequest(requestBody);
         }
-        else if (requestBody.getRequestStatus() == RequestStatus.SENT) {
-            if (!userInfo.getUser().getIsAdmin() &&
-                    requestBody.getIdAdmin() != userInfo.getUser().getIdUser()) {
-                throw new UnauthorizedException("You can't hand over this request");
-            }
-            return requestService.updateRequest(requestBody);
-        }
-        else {
-            throw new InvalidValueException("Invalid request body");
-        }
+        return result;
     }
 
     @DeleteMapping("/requests")

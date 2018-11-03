@@ -25,12 +25,12 @@ public class Request {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idUser", nullable = false)
-    @JsonIgnoreProperties("request")
+    @JsonIgnoreProperties({"request", "hibernateLazyInitializer", "handler"})
     private User requestBy;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idItem", nullable = false)
-    @JsonIgnoreProperties("request")
+    @JsonIgnoreProperties({"request", "hibernateLazyInitializer", "handler"})
     private Item item;
 
     private Date requestDate;
@@ -51,5 +51,9 @@ public class Request {
     private Long handedOverBy;
 
     private Date handedOverDate;
+
+    private Long returnedBy;
+
+    private Date returnedDate;
 
 }

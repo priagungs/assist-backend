@@ -18,5 +18,7 @@ public interface UserHasItemService {
     Page<UserHasItem> readAllUserHasItems(Pageable pageable);
     Page<UserHasItem> readAllUserHasItemsByIdUser(Long idUser, Pageable pageable);
     Page<UserHasItem> readAllUserHasItemsByIdItem(Long idItem, Pageable pageable);
+    UserHasItem createUserHasItemFromRequest(UserHasItem userHasItem);
+    UserHasItem updateUserHasItemFromRequest(UserHasItem userHasItem);
 
 }

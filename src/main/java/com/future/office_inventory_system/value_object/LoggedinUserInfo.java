@@ -15,10 +15,8 @@ public class LoggedinUserInfo {
     User user;
 
     public User getUser() {
-        if (user == null) {
-            user = userService.readUserByUsername(
-                    SecurityContextHolder.getContext().getAuthentication().getName());
-        }
+        user = userService.readUserByUsername(
+                SecurityContextHolder.getContext().getAuthentication().getName());
         return user;
     }
 }

@@ -37,7 +37,7 @@ public class RequestServiceImpl implements RequestService {
     @Autowired
     private UserHasItemService userHasItemService;
 
-    public List<Request> createRequest(RequestCreate requestBody){
+    public List<Request> createRequest(RequestCreate requestBody) {
         User user= userService.readUserByIdUser(requestBody.getIdUser());
         List<Request> requests = new ArrayList<>();
 
@@ -70,7 +70,7 @@ public class RequestServiceImpl implements RequestService {
         return requests;
     }
 
-    public Request updateRequest(RequestUpdate requestUpdate){
+    public Request updateRequest(RequestUpdate requestUpdate) {
 
 
         Request request = requestRepository.findRequestByIdRequest(requestUpdate.getIdRequest())
@@ -91,7 +91,7 @@ public class RequestServiceImpl implements RequestService {
             }
             request.setRejectedBy(requestUpdate.getIdSuperior());
             request.setRequestDate(new Date());
-            Item item = itemService.readItemByIdItem(request.getIdRequest());
+            Item item = itemService.readItemByIdItem(request.getItem().getIdItem());
             item.setAvailableQty(request.getReqQty()+item.getAvailableQty());
             itemService.updateItem(item);
 
@@ -109,7 +109,7 @@ public class RequestServiceImpl implements RequestService {
             userHasItem.setItem(request.getItem());
             userHasItem.setHasQty(request.getReqQty());
 
-            userHasItemService.createUserHasItem(userHasItem);
+            userHasItemService.createUserHasItemFromRequest(userHasItem);
         }
         else {
             throw new InvalidValueException("Invalid input");
@@ -119,17 +119,54 @@ public class RequestServiceImpl implements RequestService {
         return requestRepository.save(request);
     }
 
+    public Request updateRequestByRequestObject(Request request) {
+        Request beforeUpdate = requestRepository.findById(request.getIdRequest())
+                .orElseThrow(() -> new NotFoundException("request not found"));
+        if (request.getRequestStatus() == RequestStatus.REJECTED) {
+            Item item = itemService.readItemByIdItem(request.getIdRequest());
+            item.setAvailableQty(request.getReqQty()+item.getAvailableQty());
+            itemService.updateItem(item);
+        }
+        else if (request.getRequestStatus() == RequestStatus.RETURNED) {
+            List<UserHasItem> userHasItems = beforeUpdate.getRequestBy().getHasItems();
+            for (UserHasItem userHasItem: userHasItems) {
+                if (userHasItem.getItem().getIdItem() == beforeUpdate.getItem().getIdItem()) {
+                    userHasItemService.deleteUserHasItem(userHasItem.getIdUserHasItem());
+                }
+            }
+        }
+        beforeUpdate.setRejectedBy(request.getRejectedBy());
+        beforeUpdate.setRejectedDate(request.getRejectedDate());
+        beforeUpdate.setRequestStatus(request.getRequestStatus());
+        beforeUpdate.setReturnedBy(request.getReturnedBy());
+        beforeUpdate.setReturnedDate(request.getReturnedDate());
+
+        return requestRepository.save(beforeUpdate);
+    }
+
+    public Request updateRequestStatusToReturned(Request request) {
+        Request updated = requestRepository.findById(request.getIdRequest())
+                .orElseThrow(() -> new NotFoundException("Request not found"));
+        updated.setRequestStatus(RequestStatus.RETURNED);
+        updated.setReturnedDate(request.getReturnedDate());
+        updated.setReturnedBy(request.getReturnedBy());
+        return requestRepository.save(updated);
+    }
+
+    public List<Request> readAllRequestsByItem(Item item) {
+        return requestRepository.findAllRequestsByItem(item);
+    }
 
     public Page<Request> readAllRequest(Pageable pageable){
         return requestRepository.findAll(pageable);
     }
 
-    public Page<Request> readRequestByUser(Pageable pageable, User user){
+    public Page<Request> readRequestByUser(Pageable pageable, User user) {
 
         return requestRepository.findAllRequestsByRequestBy(user, pageable);
     }
 
-    public Page<Request> readAllRequestBySuperior(Pageable pageable, User superior){
+    public Page<Request> readAllRequestBySuperior(Pageable pageable, User superior) {
         List<User> users = userService.readAllUsersByIdSuperior(
                 superior.getIdUser(),
                 PageRequest.of(0, Integer.MAX_VALUE))
@@ -143,12 +180,12 @@ public class RequestServiceImpl implements RequestService {
         return new PageImpl<>(requests, pageable, requests.size());
     }
 
-    public Page<Request> readAllRequestByRequestStatus(Pageable pageable, RequestStatus requestStatus){
+    public Page<Request> readAllRequestByRequestStatus(Pageable pageable, RequestStatus requestStatus) {
         return requestRepository.findAllRequestsByRequestStatus(requestStatus, pageable);
     }
 
     public Page<Request> readAllRequestBySuperiorAndRequestStatus(
-            Pageable pageable, User superior, RequestStatus requestStatus){
+            Pageable pageable, User superior, RequestStatus requestStatus) {
         List<User> users = userService.readAllUsersByIdSuperior(
                 superior.getIdUser(),
                 PageRequest.of(0, Integer.MAX_VALUE))
@@ -163,7 +200,7 @@ public class RequestServiceImpl implements RequestService {
         List<Request> reqs = new ArrayList<>();
 
         for (Request request : requests) {
-            if(request.getRequestStatus() == requestStatus){
+            if(request.getRequestStatus() == requestStatus) {
                 reqs.add(request);
             }
         }
@@ -171,7 +208,7 @@ public class RequestServiceImpl implements RequestService {
         return new PageImpl<>(reqs, pageable, reqs.size());
     }
 
-    public ResponseEntity deleteRequest(Request req){
+    public ResponseEntity deleteRequest(Request req) {
         Request request = requestRepository.findById(req.getIdRequest()).orElseThrow(
                 () -> new NotFoundException("Request not found"));
         if(request.getRequestStatus() == RequestStatus.REQUESTED) {
