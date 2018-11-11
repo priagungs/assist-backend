@@ -53,9 +53,13 @@ public class ItemServiceImpl implements ItemService {
             .findByIdItemAndIsActive(item.getIdItem(), true)
             .orElseThrow(() -> new NotFoundException("Item not found"));
 
-        if (item.getTotalQty() < itemBefore.getTotalQty() - itemBefore.getAvailableQty() || item.getPrice() < 0 ||
-                item.getAvailableQty() < 0) {
+        if (item.getTotalQty() < itemBefore.getTotalQty() - itemBefore.getAvailableQty() || item.getPrice() < 0) {
             throw new InvalidValueException("Invalid value");
+        }
+
+        if (itemRepository.findByItemNameAndIsActive(item.getItemName(), true).isPresent() &&
+                !itemBefore.getItemName().equals(item.getItemName())) {
+            throw new ConflictException("Item already present");
         }
         
         itemBefore.setItemName(item.getItemName());
@@ -66,6 +70,9 @@ public class ItemServiceImpl implements ItemService {
             itemBefore.setAvailableQty(itemBefore.getAvailableQty() + item.getTotalQty() - itemBefore.getTotalQty());
         }
         else {
+            if (item.getAvailableQty() < 0) {
+                throw new InvalidValueException("available quantity must be positive");
+            }
             itemBefore.setAvailableQty(item.getAvailableQty());
         }
         itemBefore.setTotalQty(item.getTotalQty());
@@ -89,14 +96,15 @@ public class ItemServiceImpl implements ItemService {
         }
         return itemRepository.findAllByAvailableQtyGreaterThanAndIsActive(min, true, pageable);
     }
+
+    public Item readItemByItemName(String name) {
+        return itemRepository.findByItemNameAndIsActive(name, true)
+                .orElseThrow(() -> new NotFoundException("not found"));
+    }
   
     public ResponseEntity deleteItem(Long id) {
         Item item = itemRepository.findByIdItemAndIsActive(id, true)
             .orElseThrow(() -> new NotFoundException("Item not found"));
-    
-//        if (item.getOwners().size() > 0) {
-//            throw new InvalidValueException("there's employee who still has " + item.getItemName());
-//        }
 
         List<Request> requests = requestService.readAllRequestsByItem(item);
 

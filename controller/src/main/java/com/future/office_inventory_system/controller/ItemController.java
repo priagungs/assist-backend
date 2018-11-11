@@ -47,11 +47,19 @@ public class ItemController {
         }
     }
     
-    @GetMapping("items/{idItem}")
+    @GetMapping("/items/{idItem}")
     public Item readItemByIdItem(@PathVariable("idItem") Long idItem) {
         return itemService.readItemByIdItem(idItem);
     }
-    
+
+    @GetMapping("/item")
+    public Item readItemByItemName(@RequestParam("name") String name) {
+        if (!loggedinUserInfo.getUser().getIsAdmin()) {
+            throw new UnauthorizedException("you are not an admin");
+        }
+        return itemService.readItemByItemName(name);
+    }
+
     @PutMapping("/items/{idItem}")
     public Item updateItem(@RequestBody Item item, @PathVariable("idItem") Long id) {
         if (!loggedinUserInfo.getUser().getIsAdmin()) {

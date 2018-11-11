@@ -33,7 +33,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.exceptionHandling().authenticationEntryPoint((httpServletRequest, httpServletResponse, e) ->
                 httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED));
         http
-                .authorizeRequests().anyRequest().authenticated()
+                .authorizeRequests()
+                .anyRequest().authenticated()
                 .and()
                 .formLogin()
                     .loginPage("/api/login")

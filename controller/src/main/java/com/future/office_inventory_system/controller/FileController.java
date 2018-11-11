@@ -11,7 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,7 +42,11 @@ public class FileController {
         String contentType = null;
         try {
             contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
-        } catch (IOException ex) {
+        } catch (Exception ex) {
+            contentType = "application/octet-stream";
+        }
+
+        if (contentType == null) {
             contentType = "application/octet-stream";
         }
 
