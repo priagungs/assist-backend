@@ -24,7 +24,10 @@
 /dist/
 /nbdist/
 /.nb-gradle/
-/target
+/controller/target
+/model/target
+/repo/target
+/service/target
 
 ### Other ###
 /.pgadmin
