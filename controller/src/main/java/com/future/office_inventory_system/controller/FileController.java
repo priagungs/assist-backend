@@ -50,8 +50,12 @@ public class FileController {
             contentType = "application/octet-stream";
         }
 
+
+
         return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        contentType.equals("application/octet-stream") ? "attachment; filename=\"" : "inline; filename=\""
+                                + resource.getFilename() + "\"")
                 .body(resource);
     }
 

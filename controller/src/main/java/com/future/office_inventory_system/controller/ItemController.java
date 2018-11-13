@@ -43,10 +43,10 @@ public class ItemController {
         
         if (loggedinUserInfo.getUser().getIsAdmin()) {
             return itemService.readAllItems(
-                    PageRequest.of(page, limit, Sort.Direction.ASC, "idItem"));
+                    PageRequest.of(page, limit, Sort.Direction.ASC, "itemName"));
         } else {
             return itemService.readItemsByAvailableGreaterThan(0,
-                    PageRequest.of(page, limit, Sort.Direction.ASC, "idItem"));
+                    PageRequest.of(page, limit, Sort.Direction.ASC, "itemName"));
         }
     }
     

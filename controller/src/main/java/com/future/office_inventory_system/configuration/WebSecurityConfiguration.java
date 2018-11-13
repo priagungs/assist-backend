@@ -49,7 +49,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                             .setStatus(HttpServletResponse.SC_UNAUTHORIZED))
                     .permitAll()
                 .and()
-                .logout()
+                .logout().logoutUrl("/api/logout")
                     .logoutSuccessHandler((httpServletRequest, httpServletResponse, authentication) ->
                             httpServletResponse.setStatus(HttpServletResponse.SC_OK))
                     .permitAll()
