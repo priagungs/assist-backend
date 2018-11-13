@@ -7,6 +7,7 @@ import com.future.office_inventory_system.value_object.LoggedinUserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,17 +42,27 @@ public class ItemController {
                                    @RequestParam("limit") Integer limit) {
         
         if (loggedinUserInfo.getUser().getIsAdmin()) {
-            return itemService.readAllItems(PageRequest.of(page, limit));
+            return itemService.readAllItems(
+                    PageRequest.of(page, limit, Sort.Direction.ASC, "idItem"));
         } else {
-            return itemService.readItemsByAvailableGreaterThan(0, PageRequest.of(page, limit));
+            return itemService.readItemsByAvailableGreaterThan(0,
+                    PageRequest.of(page, limit, Sort.Direction.ASC, "idItem"));
         }
     }
     
-    @GetMapping("items/{idItem}")
+    @GetMapping("/items/{idItem}")
     public Item readItemByIdItem(@PathVariable("idItem") Long idItem) {
         return itemService.readItemByIdItem(idItem);
     }
-    
+
+    @GetMapping("/item")
+    public Item readItemByItemName(@RequestParam("name") String name) {
+        if (!loggedinUserInfo.getUser().getIsAdmin()) {
+            throw new UnauthorizedException("you are not an admin");
+        }
+        return itemService.readItemByItemName(name);
+    }
+
     @PutMapping("/items/{idItem}")
     public Item updateItem(@RequestBody Item item, @PathVariable("idItem") Long id) {
         if (!loggedinUserInfo.getUser().getIsAdmin()) {
