@@ -75,6 +75,10 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new NotFoundException("superior not found")), true, pageable);
     }
 
+    public Page<User> readAllUsersContaining(String keyword, Pageable pageable) {
+        return userRepository.findByNameIgnoreCaseContaining(keyword, pageable);
+    }
+
     public User readUserByUsername(String username) {
         return userRepository.findByUsernameAndIsActive(username, true)
                 .orElseThrow(() -> new NotFoundException("user not found"));
