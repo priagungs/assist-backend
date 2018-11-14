@@ -15,6 +15,7 @@ public class UserAuthService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String s) {
+
         User user = userService.readUserByUsername(s);
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),

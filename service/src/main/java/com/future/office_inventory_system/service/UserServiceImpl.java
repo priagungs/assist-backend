@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
         }
         updatedUser.setUsername(user.getUsername());
         updatedUser.setPictureURL(user.getPictureURL());
-        updatedUser.setPassword(user.getPassword());
+        updatedUser.setPasswordWithoutEncode(user.getPassword());
         updatedUser.setDivision(user.getDivision());
         updatedUser.setRole(user.getRole());
 
