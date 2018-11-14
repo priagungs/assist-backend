@@ -40,9 +40,11 @@ public class UserServiceImpl implements UserService {
                 .findByIdUserAndIsActive(user.getIdUser(), true)
                 .orElseThrow(() -> new NotFoundException("user not found"));
 
-        updatedUser.setSuperior(userRepository
-                .findByIdUserAndIsActive(user.getSuperior().getIdUser(), true)
-                .orElseThrow(() -> new NotFoundException("superior not found")));
+        if (user.getSuperior() != null) {
+            updatedUser.setSuperior(userRepository
+                    .findByIdUserAndIsActive(user.getSuperior().getIdUser(), true)
+                    .orElseThrow(() -> new NotFoundException("superior not found")));
+        }
 
         updatedUser.setIsAdmin(user.getIsAdmin());
         updatedUser.setName(user.getName());
