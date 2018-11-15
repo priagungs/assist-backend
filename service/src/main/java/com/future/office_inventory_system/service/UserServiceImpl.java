@@ -1,6 +1,7 @@
 package com.future.office_inventory_system.service;
 
 import com.future.office_inventory_system.exception.ConflictException;
+import com.future.office_inventory_system.exception.InvalidValueException;
 import com.future.office_inventory_system.exception.NotFoundException;
 import com.future.office_inventory_system.model.User;
 import com.future.office_inventory_system.model.UserHasItem;
@@ -41,10 +42,17 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new NotFoundException("user not found"));
 
         if (user.getSuperior() != null) {
+            for (User subordinate: updatedUser.getSubordinates()) {
+                if (user.getSuperior().getIdUser() == subordinate.getIdUser()) {
+                    throw new InvalidValueException("Subordinates can't be superior");
+                }
+            }
             updatedUser.setSuperior(userRepository
                     .findByIdUserAndIsActive(user.getSuperior().getIdUser(), true)
                     .orElseThrow(() -> new NotFoundException("superior not found")));
         }
+
+
 
         updatedUser.setIsAdmin(user.getIsAdmin());
         updatedUser.setName(user.getName());
