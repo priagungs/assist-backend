@@ -16,6 +16,10 @@
             <groupId>com.future.office_inventory_system</groupId>
             <artifactId>repo</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
