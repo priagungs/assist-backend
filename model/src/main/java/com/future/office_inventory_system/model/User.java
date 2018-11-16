@@ -33,10 +33,9 @@ public class User {
 
     private String division;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idSuperior")
-    @JsonIgnoreProperties({"superior", "subordinates", "requests", "hasItems", "transactions",
-            "hibernateLazyInitializer", "handler"})
+    @JsonIgnoreProperties({"superior", "subordinates", "requests", "hasItems", "transactions"})
     private User superior;
 
     @OneToMany(mappedBy = "superior")
