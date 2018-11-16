@@ -19,6 +19,8 @@ public interface UserService {
     
     Page<User> readAllUsersByIdSuperior(Long id, Pageable pageable);
 
+    Page<User> readAllUsersContaining(String keyword, Pageable pageable);
+
     User readUserByUsername(String username);
     
     ResponseEntity deleteUser(Long id);

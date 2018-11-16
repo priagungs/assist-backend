@@ -7,6 +7,7 @@ import com.future.office_inventory_system.value_object.LoggedinUserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,9 +42,11 @@ public class ItemController {
                                    @RequestParam("limit") Integer limit) {
         
         if (loggedinUserInfo.getUser().getIsAdmin()) {
-            return itemService.readAllItems(PageRequest.of(page, limit));
+            return itemService.readAllItems(
+                    PageRequest.of(page, limit, Sort.Direction.ASC, "itemName"));
         } else {
-            return itemService.readItemsByAvailableGreaterThan(0, PageRequest.of(page, limit));
+            return itemService.readItemsByAvailableGreaterThan(0,
+                    PageRequest.of(page, limit, Sort.Direction.ASC, "itemName"));
         }
     }
     

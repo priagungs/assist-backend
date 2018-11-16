@@ -7,6 +7,7 @@ import com.future.office_inventory_system.value_object.LoggedinUserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,12 +39,18 @@ public class UserController {
 
     @GetMapping("/users")
     public Page<User> readAllUsers(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit,
-                                   @RequestParam(value = "idSuperior", required = false) Long idSuperior) {
-        if(idSuperior != null) {
-            return userService.readAllUsersByIdSuperior(idSuperior, PageRequest.of(page, limit));
+                                   @RequestParam(value = "idSuperior", required = false) Long idSuperior,
+                                   @RequestParam(value = "keyword", required = false) String keyword) {
+        if (idSuperior != null) {
+            return userService.readAllUsersByIdSuperior(idSuperior,
+                    PageRequest.of(page, limit, Sort.Direction.ASC, "name"));
+        }
+        else if (keyword != null) {
+            return userService.readAllUsersContaining(keyword,
+                    PageRequest.of(page, limit, Sort.Direction.ASC, "name"));
         }
         else {
-            return userService.readAllUsers(PageRequest.of(page, limit));
+            return userService.readAllUsers(PageRequest.of(page, limit, Sort.Direction.ASC, "name"));
         }
     }
 
