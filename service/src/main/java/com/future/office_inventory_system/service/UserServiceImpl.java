@@ -84,7 +84,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public Page<User> readAllUsersContaining(String keyword, Pageable pageable) {
-        return userRepository.findByNameIgnoreCaseContaining(keyword, pageable);
+        return userRepository.findByNameIgnoreCaseContainingAndIsActive(keyword, true, pageable);
     }
 
     public User readUserByUsername(String username) {
