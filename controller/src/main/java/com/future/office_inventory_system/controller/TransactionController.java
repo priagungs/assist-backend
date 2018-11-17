@@ -7,6 +7,7 @@ import com.future.office_inventory_system.value_object.LoggedinUserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,11 +31,13 @@ public class TransactionController {
     }
 
     @GetMapping("/transactions")
-    Page<Transaction> readAllTransactions(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit) {
+    Page<Transaction> readAllTransactions(@RequestParam("page") Integer page,
+                                          @RequestParam("limit") Integer limit,
+                                          @RequestParam("sort") String sort) {
         if (!loggedinUserInfo.getUser().getIsAdmin()) {
             throw new UnauthorizedException("you are not permitted to read transaction");
         }
-        return transactionService.readAllTransactions(PageRequest.of(page, limit));
+        return transactionService.readAllTransactions(PageRequest.of(page, limit, Sort.Direction.ASC, sort));
     }
 
     @GetMapping("/transactions/{id}")
