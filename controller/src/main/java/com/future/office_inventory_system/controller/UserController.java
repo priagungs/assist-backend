@@ -40,17 +40,18 @@ public class UserController {
     @GetMapping("/users")
     public Page<User> readAllUsers(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit,
                                    @RequestParam(value = "idSuperior", required = false) Long idSuperior,
-                                   @RequestParam(value = "keyword", required = false) String keyword) {
+                                   @RequestParam(value = "keyword", required = false) String keyword,
+                                   @RequestParam("sort") String sort) {
         if (idSuperior != null) {
             return userService.readAllUsersByIdSuperior(idSuperior,
-                    PageRequest.of(page, limit, Sort.Direction.ASC, "name"));
+                    PageRequest.of(page, limit, Sort.Direction.ASC, sort));
         }
         else if (keyword != null) {
             return userService.readAllUsersContaining(keyword,
-                    PageRequest.of(page, limit, Sort.Direction.ASC, "name"));
+                    PageRequest.of(page, limit, Sort.Direction.ASC, sort));
         }
         else {
-            return userService.readAllUsers(PageRequest.of(page, limit, Sort.Direction.ASC, "name"));
+            return userService.readAllUsers(PageRequest.of(page, limit, Sort.Direction.ASC, sort));
         }
     }
 
