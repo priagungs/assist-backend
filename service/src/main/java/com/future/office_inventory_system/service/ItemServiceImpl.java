@@ -97,6 +97,15 @@ public class ItemServiceImpl implements ItemService {
         return itemRepository.findAllByAvailableQtyGreaterThanAndIsActive(min, true, pageable);
     }
 
+    public Page<Item> readAllItemsContaining(String keyword, Pageable pageable) {
+        return itemRepository.findByItemNameIgnoreCaseContainingAndIsActive(keyword, true, pageable);
+    }
+
+    public Page<Item> readAllItemsByKeywordAndAvailableGreaterThan(String keyword, Integer min, Pageable pageable) {
+        return itemRepository.findByItemNameIgnoreCaseContainingAndAvailableQtyGreaterThanAndIsActive(
+                keyword, min, true, pageable);
+    }
+
     public Item readItemByItemName(String name) {
         return itemRepository.findByItemNameAndIsActive(name, true)
                 .orElseThrow(() -> new NotFoundException("not found"));
