@@ -45,7 +45,11 @@ public class RequestController {
                                @RequestParam(required = false, name = "status") RequestStatus status,
                                @RequestParam("sort") String sort) {
         
-        if (idUser != null) {
+        if (idUser != null && status != null) {
+            return requestService.readAllRequestByUserAndStatus(PageRequest.of(page, limit, Sort.Direction.ASC, sort),
+                userService.readUserByIdUser(idUser), status);
+        }
+        else if (idUser != null) {
             return requestService.readRequestByUser(PageRequest.of(page, limit, Sort.Direction.ASC, sort), userService.readUserByIdUser(idUser));
         }
         else if (idSuperior != null && status != null) {

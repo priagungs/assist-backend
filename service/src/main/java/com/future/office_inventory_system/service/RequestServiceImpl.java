@@ -206,6 +206,10 @@ public class RequestServiceImpl implements RequestService {
 
         return new PageImpl<>(reqs, pageable, reqs.size());
     }
+    
+    public Page<Request> readAllRequestByUserAndStatus(Pageable pageable, User user, RequestStatus requestStatus) {
+        return requestRepository.findAllByRequestByAndRequestStatus(user, requestStatus, pageable);
+    }
 
     public ResponseEntity deleteRequest(Request req) {
         Request request = requestRepository.findById(req.getIdRequest()).orElseThrow(
