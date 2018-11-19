@@ -51,6 +51,9 @@ public class UserServiceImpl implements UserService {
                     .findByIdUserAndIsActive(user.getSuperior().getIdUser(), true)
                     .orElseThrow(() -> new NotFoundException("superior not found")));
         }
+        else {
+            updatedUser.setSuperior(null);
+        }
 
 
 
