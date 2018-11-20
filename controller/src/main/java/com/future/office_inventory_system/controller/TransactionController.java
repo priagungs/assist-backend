@@ -37,7 +37,12 @@ public class TransactionController {
         if (!loggedinUserInfo.getUser().getIsAdmin()) {
             throw new UnauthorizedException("you are not permitted to read transaction");
         }
-        return transactionService.readAllTransactions(PageRequest.of(page, limit, Sort.Direction.ASC, sort));
+        if (sort.equals("transactionDate")) {
+            return transactionService.readAllTransactions(PageRequest.of(page, limit, Sort.Direction.DESC, sort));
+        }
+        else {
+            return transactionService.readAllTransactions(PageRequest.of(page, limit, Sort.Direction.ASC, sort));
+        }
     }
 
     @GetMapping("/transactions/{id}")

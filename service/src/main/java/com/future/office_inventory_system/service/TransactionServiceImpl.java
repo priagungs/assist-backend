@@ -1,5 +1,6 @@
 package com.future.office_inventory_system.service;
 
+import com.future.office_inventory_system.exception.ForbiddenException;
 import com.future.office_inventory_system.exception.InvalidValueException;
 import com.future.office_inventory_system.exception.NotFoundException;
 import com.future.office_inventory_system.model.ItemTransaction;
@@ -63,7 +64,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .orElseThrow(() -> new NotFoundException("transaction not found"));
         if (new Date().getTime() - transaction.getTransactionDate().getTime() >
                 TransactionService.MAX_ALLOWABLE_MILISECONDS_TO_UPDATE) {
-            throw new InvalidValueException("transaction has been created for more than" +
+            throw new ForbiddenException("transaction has been created for more than" +
                     TransactionService.MAX_ALLOWABLE_MILISECONDS_TO_UPDATE.toString() + "ms");
         }
 
