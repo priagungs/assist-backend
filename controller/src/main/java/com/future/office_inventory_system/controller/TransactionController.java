@@ -2,6 +2,7 @@ package com.future.office_inventory_system.controller;
 
 import com.future.office_inventory_system.exception.UnauthorizedException;
 import com.future.office_inventory_system.model.Transaction;
+import com.future.office_inventory_system.printer.PrinterService;
 import com.future.office_inventory_system.service.TransactionService;
 import com.future.office_inventory_system.value_object.LoggedinUserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import static com.future.office_inventory_system.printer.PrinterService.printInvoice;
 
 @RestController
 @RequestMapping("/api")
@@ -50,6 +53,9 @@ public class TransactionController {
         if (!loggedinUserInfo.getUser().getIsAdmin()) {
             throw new UnauthorizedException("you are not permitted to read transaction");
         }
+    
+        PrinterService p = new PrinterService();
+        p.printInvoice(readTransactionById(id));
         return transactionService.readTransactionByIdTransaction(id);
     }
 
