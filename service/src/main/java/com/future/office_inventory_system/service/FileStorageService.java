@@ -35,12 +35,7 @@ public class FileStorageService {
 
     public String storeFile(MultipartFile file) {
         String[] originalName = StringUtils.cleanPath(file.getOriginalFilename()).split("\\.");
-        String filename;
-        try {
-            filename = new Date().toString() + "." + originalName[originalName.length - 1];
-        } catch (Exception e) {
-            throw new FileStorageException("File format not supported", e);
-        }
+        String filename = new Date().toString() + (originalName.length - 1 == 0 ? "" : "." + originalName[originalName.length - 1]);
         
         try {
             Path targetLocation = this.fileStorageLocation.resolve(filename);
