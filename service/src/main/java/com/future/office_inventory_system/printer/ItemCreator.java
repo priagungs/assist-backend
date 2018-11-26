@@ -1,13 +1,9 @@
 package com.future.office_inventory_system.printer;
 
-import com.future.office_inventory_system.model.ItemTransaction;
-import com.future.office_inventory_system.model.Transaction;
+import com.future.office_inventory_system.model.*;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
-
-import java.util.Date;
-import java.util.List;
 
 /**
  
@@ -15,9 +11,9 @@ import java.util.List;
  
  */
 
-public class PDFCreator {
+public class ItemCreator {
     
-    private final static String[] HEADER_ARRAY = {"ID Item Transaction", "Item Name", "Price/item", "Bought Qty", "Subtotal"};
+    private final static String[] HEADER_ARRAY = {"ID Employee", "Name", "Total Qty"};
     
     public final static Font SMALL_BOLD = new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.BOLD);
     
@@ -31,47 +27,40 @@ public class PDFCreator {
         
     }
     
-    public static void addContent(Document document, Transaction trx) throws DocumentException {
+    public static void addContent(Document document, Item item) throws DocumentException {
         
         Paragraph paragraph = new Paragraph();
         
         paragraph.setFont(NORMAL_FONT);
         
-        createReportTable(paragraph, trx);
+        createReportTable(paragraph, item);
         
         document.add(paragraph);
         
     }
     
-    private static void createReportTable(Paragraph paragraph, Transaction trx) throws BadElementException {
+    private static void createReportTable(Paragraph paragraph, Item item) throws BadElementException {
         
-        PdfPTable table = new PdfPTable(5);
+        PdfPTable table = new PdfPTable(3);
         
         table.setWidthPercentage(100);
         
-        paragraph.add(new Chunk("Invoice For Transaction ID = " + trx.getItemTransactions().toString(), SMALL_BOLD));
-        paragraph.add(new Chunk("Transaction Date = " + trx.getTransactionDate().toString(), NORMAL_FONT));
-        paragraph.add(new Chunk("Supplier = " + trx.getSupplier().toString(), NORMAL_FONT));
-        paragraph.add(new Chunk("Admin in charge = " + trx.getAdmin().getName() + " (" + trx.getAdmin().getIdUser().toString() + ")", NORMAL_FONT));
-        
+        paragraph.add(new Paragraph("ID Item        = " + item.getIdItem().toString(), NORMAL_FONT));
+        paragraph.add(new Paragraph("Item Name      = " + item.getItemName(), SMALL_BOLD));
+        paragraph.add(new Paragraph("Available Qty  = " + item.getAvailableQty().toString(), NORMAL_FONT));
+        paragraph.add(new Paragraph("Total Qty      = " + item.getTotalQty().toString(), NORMAL_FONT));
+        paragraph.add(new Paragraph("Price          = " + item.getPrice().toString(), NORMAL_FONT));
+        paragraph.add(new Paragraph("ID Item        = " + item.getDescription(), NORMAL_FONT));
         addEmptyLine(paragraph, 2);
-        
+    
+        paragraph.add(new Paragraph("Employees who have this item = " , NORMAL_FONT));
+        paragraph.add(new Paragraph(" "));
         addHeaderInTable(HEADER_ARRAY, table);
         
-        for(ItemTransaction itemtrx : trx.getItemTransactions()){
-            
-            addToTable(table, itemtrx.getIdItemTransaction().toString());
-            
-            addToTable(table, itemtrx.getItem().getItemName());
-            
-            addToTable(table, itemtrx.getBoughtQty().toString());
-            
-            addToTable(table, itemtrx.getPrice().toString());
-            
-            Long subtotal = itemtrx.getPrice() * itemtrx.getBoughtQty();
-            
-            addToTable(table, subtotal.toString());
-            
+        for (UserHasItem owner : item.getOwners()) {
+            addToTable(table, owner.getUser().getIdUser().toString());
+            addToTable(table, owner.getUser().getName());
+            addToTable(table, owner.getHasQty().toString());
         }
         
         paragraph.add(table);
@@ -97,7 +86,7 @@ public class PDFCreator {
         
         for(String header : headerArray) {
             
-            c1 = new PdfPCell(new Phrase(header, PDFCreator.SMALL_BOLD));
+            c1 = new PdfPCell(new Phrase(header, InvoiceCreator.SMALL_BOLD));
             
             c1.setBackgroundColor(BaseColor.LIGHT_GRAY);
             
@@ -113,7 +102,7 @@ public class PDFCreator {
     
     public static void addToTable(PdfPTable table, String data){
         
-        table.addCell(new Phrase(data, PDFCreator.NORMAL_FONT));
+        table.addCell(new Phrase(data, InvoiceCreator.NORMAL_FONT));
         
     }
     
@@ -121,7 +110,7 @@ public class PDFCreator {
         
         Paragraph paragraph = new Paragraph();
         
-        paragraph.setFont(PDFCreator.NORMAL_FONT);
+        paragraph.setFont(InvoiceCreator.NORMAL_FONT);
         
         addEmptyLine(paragraph, 1);
         

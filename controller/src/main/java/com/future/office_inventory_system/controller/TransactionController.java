@@ -12,8 +12,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static com.future.office_inventory_system.printer.PrinterService.printInvoice;
-
 @RestController
 @RequestMapping("/api")
 public class TransactionController {
@@ -23,6 +21,9 @@ public class TransactionController {
 
     @Autowired
     LoggedinUserInfo loggedinUserInfo;
+    
+    @Autowired
+    PrinterService p;
 
     @PostMapping("/transactions")
     Transaction createTransactions(@RequestBody Transaction transaction) {
@@ -30,7 +31,10 @@ public class TransactionController {
                 transaction.getAdmin().getIdUser() != loggedinUserInfo.getUser().getIdUser()) {
             throw new UnauthorizedException("you are not permitted to create transaction");
         }
-        return transactionService.createTransaction(transaction);
+        Transaction createdTransaction = transactionService.createTransaction(transaction);
+        p.printInvoice(transactionService.readTransactionByIdTransaction(createdTransaction.getIdTransaction()));
+        return createdTransaction;
+        
     }
 
     @GetMapping("/transactions")
@@ -53,9 +57,6 @@ public class TransactionController {
         if (!loggedinUserInfo.getUser().getIsAdmin()) {
             throw new UnauthorizedException("you are not permitted to read transaction");
         }
-    
-        PrinterService p = new PrinterService();
-        p.printInvoice(readTransactionById(id));
         return transactionService.readTransactionByIdTransaction(id);
     }
 
