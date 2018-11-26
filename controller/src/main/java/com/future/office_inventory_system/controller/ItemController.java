@@ -41,16 +41,27 @@ public class ItemController {
     public Page<Item> readAllItems(@RequestParam("page") Integer page,
                                    @RequestParam("limit") Integer limit,
                                    @RequestParam(value = "keyword", required = false) String keyword,
-                                   @RequestParam("sort") String sort) {
+                                   @RequestParam("sort") String sort,
+                                   @RequestParam(value = "minqty", required = false) Integer minqty) {
         
         if (loggedinUserInfo.getUser().getIsAdmin()) {
             if (keyword != null) {
-                return itemService.readAllItemsContaining(keyword,
+                if (minqty != null) {
+                    return itemService.readAllItemsByKeywordAndAvailableGreaterThan(keyword, minqty,
                         PageRequest.of(page, limit, Sort.Direction.ASC, sort));
+                } else {
+                    return itemService.readAllItemsContaining(keyword,
+                        PageRequest.of(page, limit, Sort.Direction.ASC, sort));
+                }
             }
             else {
-                return itemService.readAllItems(
+                if (minqty != null) {
+                    return itemService.readItemsByAvailableGreaterThan(minqty,
                         PageRequest.of(page, limit, Sort.Direction.ASC, sort));
+                } else {
+                    return itemService.readAllItems(
+                        PageRequest.of(page, limit, Sort.Direction.ASC, sort));
+                }
             }
         } else {
             if (keyword != null) {
