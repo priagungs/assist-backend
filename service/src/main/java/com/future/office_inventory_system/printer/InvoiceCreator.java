@@ -14,7 +14,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 
 public class InvoiceCreator {
     
-    private final static String[] HEADER_ARRAY = {"ID Item Transaction", "Item Name", "Price/item", "Bought Qty", "Subtotal"};
+    private final static String[] HEADER_ARRAY = {"ID Item", "Item Name", "Price/item", "Bought Qty", "Subtotal"};
     
     public final static Font SMALL_BOLD = new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.BOLD);
     
@@ -60,7 +60,7 @@ public class InvoiceCreator {
 
         for(ItemTransaction itemtrx : trx.getItemTransactions()){
 
-            addToTable(table, itemtrx.getIdItemTransaction().toString());
+            addToTable(table, itemtrx.getItem().getIdItem().toString());
 
             addToTable(table, itemtrx.getItem().getItemName());
 
