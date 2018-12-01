@@ -96,19 +96,20 @@ public class RequestServiceImpl implements RequestService {
 
         } else if (requestUpdate.getRequestStatus() == RequestStatus.SENT &&
                 request.getRequestStatus() == RequestStatus.APPROVED) {
+
             if (userService.readUserByIdUser(requestUpdate.getIdAdmin()) == null) {
                 throw new NotFoundException("Admin not found");
             }
             request.setHandedOverBy(requestUpdate.getIdAdmin());
             request.setHandedOverDate(new Date());
 
-
             UserHasItem userHasItem = new UserHasItem();
             userHasItem.setUser(request.getRequestBy());
             userHasItem.setItem(request.getItem());
             userHasItem.setHasQty(request.getReqQty());
-
             userHasItemService.createUserHasItemFromRequest(userHasItem);
+
+
         }
         else {
             throw new InvalidValueException("Invalid input");
