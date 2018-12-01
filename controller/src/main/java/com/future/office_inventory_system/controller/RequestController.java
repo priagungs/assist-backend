@@ -44,27 +44,31 @@ public class RequestController {
                                @RequestParam(required = false, name = "idSuperior") Long idSuperior,
                                @RequestParam(required = false, name = "status") RequestStatus status,
                                @RequestParam("sort") String sort) {
-        
+        Sort.Direction direction = Sort.Direction.ASC;
+        if (sort.equals("requestDate") || sort.equals("rejectedDate") || sort.equals("handedOverDate") ||
+                sort.equals("returnedDate")) {
+            direction = Sort.Direction.DESC;
+        }
         if (idUser != null && status != null) {
-            return requestService.readAllRequestByUserAndStatus(PageRequest.of(page, limit, Sort.Direction.ASC, sort),
+            return requestService.readAllRequestByUserAndStatus(PageRequest.of(page, limit, direction, sort),
                 userService.readUserByIdUser(idUser), status);
         }
         else if (idUser != null) {
-            return requestService.readRequestByUser(PageRequest.of(page, limit, Sort.Direction.ASC, sort), userService.readUserByIdUser(idUser));
+            return requestService.readRequestByUser(PageRequest.of(page, limit, direction, sort), userService.readUserByIdUser(idUser));
         }
         else if (idSuperior != null && status != null) {
-            return requestService.readAllRequestBySuperiorAndRequestStatus(PageRequest.of(page, limit, Sort.Direction.ASC, sort),
+            return requestService.readAllRequestBySuperiorAndRequestStatus(PageRequest.of(page, limit, direction, sort),
                     userService.readUserByIdUser(idSuperior), status);
         }
         else if (idSuperior != null) {
-            return requestService.readAllRequestBySuperior(PageRequest.of(page, limit, Sort.Direction.ASC, sort),
+            return requestService.readAllRequestBySuperior(PageRequest.of(page, limit, direction, sort),
                     userService.readUserByIdUser(idSuperior));
         }
         else if (status != null) {
-            return requestService.readAllRequestByRequestStatus(PageRequest.of(page, limit, Sort.Direction.ASC, sort), status);
+            return requestService.readAllRequestByRequestStatus(PageRequest.of(page, limit, direction, sort), status);
         }
         else {
-            return requestService.readAllRequest(PageRequest.of(page ,limit, Sort.Direction.ASC, sort));
+            return requestService.readAllRequest(PageRequest.of(page ,limit, direction, sort));
         }
     }
 
