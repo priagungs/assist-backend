@@ -24,7 +24,6 @@ public class FileController {
     @PostMapping("/upload")
     public Map<String, String> uploadFile(@RequestParam("file") MultipartFile file) {
         String filename = storageService.storeFile(file);
-
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/api/download/")
                 .path(filename)

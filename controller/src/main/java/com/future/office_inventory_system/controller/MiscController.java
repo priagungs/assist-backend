@@ -1,7 +1,9 @@
 package com.future.office_inventory_system.controller;
 
+import com.future.office_inventory_system.exception.UnauthorizedException;
 import com.future.office_inventory_system.model.User;
 import com.future.office_inventory_system.printer.PrinterService;
+import com.future.office_inventory_system.service.BackupRestore;
 import com.future.office_inventory_system.service.FileStorageService;
 import com.future.office_inventory_system.service.ItemService;
 import com.future.office_inventory_system.service.TransactionService;
@@ -11,13 +13,11 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.ws.Response;
+import javax.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/api")
@@ -37,6 +37,9 @@ public class MiscController {
     
     @Autowired
     ItemService itemService;
+
+    @Autowired
+    BackupRestore backupRestore;
 
     @GetMapping("/login-detail")
     public User getLoginDetail() {
@@ -71,5 +74,27 @@ public class MiscController {
         return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
             .body(resource);
+    }
+
+    @GetMapping("/backup")
+    ResponseEntity backup() {
+        if (loggedinUserInfo.getUser().getIsAdmin()) {
+            return backupRestore.backup();
+        }
+        else {
+            throw new UnauthorizedException("you are not admin");
+        }
+    }
+
+    @PostMapping("/restore")
+    ResponseEntity restore(@RequestParam("file") MultipartFile file, HttpSession session) {
+        if (loggedinUserInfo.getUser().getIsAdmin()) {
+            session.invalidate();
+            return backupRestore.restore(file);
+        }
+        else {
+            throw new UnauthorizedException("you are not admin");
+        }
+
     }
 }
