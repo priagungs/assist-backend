@@ -77,6 +77,8 @@ public class BackupRestore {
                 "--format=custom",
                 "--verbose",
                 "--clean",
+                "-n",
+                "public",
                 "static/" + filename);
         Process process = null;
         try {
