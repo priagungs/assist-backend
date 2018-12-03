@@ -1,5 +1,6 @@
 package com.future.office_inventory_system.controller;
 
+import com.future.office_inventory_system.exception.ForbiddenException;
 import com.future.office_inventory_system.exception.UnauthorizedException;
 import com.future.office_inventory_system.model.User;
 import com.future.office_inventory_system.service.UserService;
@@ -77,6 +78,9 @@ public class UserController {
     public ResponseEntity deleteUser(@RequestBody User user) {
         if (!loggedinUserInfo.getUser().getIsAdmin()) {
             throw new UnauthorizedException("You are not permitted to delete this user");
+        }
+        if (loggedinUserInfo.getUser().getIdUser() == user.getIdUser()) {
+            throw new ForbiddenException("You are not permitted to delete yourself");
         }
         return userService.deleteUser(user.getIdUser());
     }
