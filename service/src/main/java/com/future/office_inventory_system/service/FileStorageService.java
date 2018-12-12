@@ -14,6 +14,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Service
 public class FileStorageService {
@@ -33,8 +35,13 @@ public class FileStorageService {
     }
 
     public String storeFile(MultipartFile file) {
-        String filename = StringUtils.cleanPath(file.getOriginalFilename());
-
+        String[] originalName = StringUtils.cleanPath(file.getOriginalFilename()).split("\\.");
+    
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+    
+        String dateString = format.format(new Date());
+        String filename = dateString + (originalName.length - 1 == 0 ? "" : "." + originalName[originalName.length - 1]);
+        
         try {
             Path targetLocation = this.fileStorageLocation.resolve(filename);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);

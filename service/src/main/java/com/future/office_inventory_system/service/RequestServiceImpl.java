@@ -96,19 +96,20 @@ public class RequestServiceImpl implements RequestService {
 
         } else if (requestUpdate.getRequestStatus() == RequestStatus.SENT &&
                 request.getRequestStatus() == RequestStatus.APPROVED) {
+
             if (userService.readUserByIdUser(requestUpdate.getIdAdmin()) == null) {
                 throw new NotFoundException("Admin not found");
             }
             request.setHandedOverBy(requestUpdate.getIdAdmin());
             request.setHandedOverDate(new Date());
 
-
             UserHasItem userHasItem = new UserHasItem();
             userHasItem.setUser(request.getRequestBy());
             userHasItem.setItem(request.getItem());
             userHasItem.setHasQty(request.getReqQty());
-
             userHasItemService.createUserHasItemFromRequest(userHasItem);
+
+
         }
         else {
             throw new InvalidValueException("Invalid input");
@@ -205,6 +206,10 @@ public class RequestServiceImpl implements RequestService {
         }
 
         return new PageImpl<>(reqs, pageable, reqs.size());
+    }
+    
+    public Page<Request> readAllRequestByUserAndStatus(Pageable pageable, User user, RequestStatus requestStatus) {
+        return requestRepository.findAllByRequestByAndRequestStatus(user, requestStatus, pageable);
     }
 
     public ResponseEntity deleteRequest(Request req) {

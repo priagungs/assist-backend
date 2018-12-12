@@ -22,6 +22,10 @@ public interface ItemService {
   
     Page<Item> readItemsByAvailableGreaterThan(Integer min, Pageable pageable);
 
+    Page<Item> readAllItemsContaining(String keyword, Pageable pageable);
+
+    Page<Item> readAllItemsByKeywordAndAvailableGreaterThan(String keyword, Integer min, Pageable pageable);
+
     ResponseEntity deleteItem(Long id);
   
 }

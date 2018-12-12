@@ -32,6 +32,8 @@ public interface RequestService {
 
     Page<Request> readAllRequestBySuperiorAndRequestStatus(
             Pageable pageable, User superior, RequestStatus requestStatus);
+    
+    Page<Request> readAllRequestByUserAndStatus(Pageable pageable, User user, RequestStatus requestStatus);
 
     ResponseEntity deleteRequest(Request request);
 

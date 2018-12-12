@@ -55,7 +55,10 @@ public class UserHasItemServiceImpl implements UserHasItemService {
     }
 
     public UserHasItem createUserHasItemFromRequest(UserHasItem userHasItem) {
-        if (repository.findAllByUserAndItem(userHasItem.getUser(), userHasItem.getItem()).size() > 0) {
+        List<UserHasItem> hasItems = repository.findAllByUserAndItem(userHasItem.getUser(), userHasItem.getItem());
+        if (hasItems.size() > 0) {
+            UserHasItem hasItem = hasItems.get(0);
+            userHasItem.setIdUserHasItem(hasItem.getIdUserHasItem());
             return updateUserHasItemFromRequest(userHasItem);
         }
         return repository.save(userHasItem);

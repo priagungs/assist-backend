@@ -1,5 +1,6 @@
 package com.future.office_inventory_system.controller;
 
+import com.future.office_inventory_system.exception.ForbiddenException;
 import com.future.office_inventory_system.exception.UnauthorizedException;
 import com.future.office_inventory_system.model.User;
 import com.future.office_inventory_system.service.UserService;
@@ -40,17 +41,18 @@ public class UserController {
     @GetMapping("/users")
     public Page<User> readAllUsers(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit,
                                    @RequestParam(value = "idSuperior", required = false) Long idSuperior,
-                                   @RequestParam(value = "keyword", required = false) String keyword) {
+                                   @RequestParam(value = "keyword", required = false) String keyword,
+                                   @RequestParam("sort") String sort) {
         if (idSuperior != null) {
             return userService.readAllUsersByIdSuperior(idSuperior,
-                    PageRequest.of(page, limit, Sort.Direction.ASC, "name"));
+                    PageRequest.of(page, limit, Sort.Direction.ASC, sort));
         }
         else if (keyword != null) {
             return userService.readAllUsersContaining(keyword,
-                    PageRequest.of(page, limit, Sort.Direction.ASC, "name"));
+                    PageRequest.of(page, limit, Sort.Direction.ASC, sort));
         }
         else {
-            return userService.readAllUsers(PageRequest.of(page, limit, Sort.Direction.ASC, "name"));
+            return userService.readAllUsers(PageRequest.of(page, limit, Sort.Direction.ASC, sort));
         }
     }
 
@@ -76,6 +78,9 @@ public class UserController {
     public ResponseEntity deleteUser(@RequestBody User user) {
         if (!loggedinUserInfo.getUser().getIsAdmin()) {
             throw new UnauthorizedException("You are not permitted to delete this user");
+        }
+        if (loggedinUserInfo.getUser().getIdUser() == user.getIdUser()) {
+            throw new ForbiddenException("You are not permitted to delete yourself");
         }
         return userService.deleteUser(user.getIdUser());
     }

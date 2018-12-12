@@ -12,6 +12,7 @@ import com.future.office_inventory_system.value_object.RequestUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,23 +42,33 @@ public class RequestController {
                                @RequestParam("limit") Integer limit,
                                @RequestParam(required = false, name = "idUser") Long idUser,
                                @RequestParam(required = false, name = "idSuperior") Long idSuperior,
-                               @RequestParam(required = false, name = "status") RequestStatus status) {
-        if (idUser != null) {
-            return requestService.readRequestByUser(PageRequest.of(page, limit), userService.readUserByIdUser(idUser));
+                               @RequestParam(required = false, name = "status") RequestStatus status,
+                               @RequestParam("sort") String sort) {
+        Sort.Direction direction = Sort.Direction.ASC;
+        if (sort.equals("requestDate") || sort.equals("rejectedDate") || sort.equals("handedOverDate") ||
+                sort.equals("returnedDate")) {
+            direction = Sort.Direction.DESC;
+        }
+        if (idUser != null && status != null) {
+            return requestService.readAllRequestByUserAndStatus(PageRequest.of(page, limit, direction, sort),
+                userService.readUserByIdUser(idUser), status);
+        }
+        else if (idUser != null) {
+            return requestService.readRequestByUser(PageRequest.of(page, limit, direction, sort), userService.readUserByIdUser(idUser));
         }
         else if (idSuperior != null && status != null) {
-            return requestService.readAllRequestBySuperiorAndRequestStatus(PageRequest.of(page, limit),
+            return requestService.readAllRequestBySuperiorAndRequestStatus(PageRequest.of(page, limit, direction, sort),
                     userService.readUserByIdUser(idSuperior), status);
         }
         else if (idSuperior != null) {
-            return requestService.readAllRequestBySuperior(PageRequest.of(page, limit),
+            return requestService.readAllRequestBySuperior(PageRequest.of(page, limit, direction, sort),
                     userService.readUserByIdUser(idSuperior));
         }
         else if (status != null) {
-            return requestService.readAllRequestByRequestStatus(PageRequest.of(page, limit), status);
+            return requestService.readAllRequestByRequestStatus(PageRequest.of(page, limit, direction, sort), status);
         }
         else {
-            return requestService.readAllRequest(PageRequest.of(page ,limit));
+            return requestService.readAllRequest(PageRequest.of(page ,limit, direction, sort));
         }
     }
 

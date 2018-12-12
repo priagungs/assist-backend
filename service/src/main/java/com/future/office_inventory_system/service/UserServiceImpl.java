@@ -51,6 +51,9 @@ public class UserServiceImpl implements UserService {
                     .findByIdUserAndIsActive(user.getSuperior().getIdUser(), true)
                     .orElseThrow(() -> new NotFoundException("superior not found")));
         }
+        else {
+            updatedUser.setSuperior(null);
+        }
 
 
 
@@ -84,7 +87,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public Page<User> readAllUsersContaining(String keyword, Pageable pageable) {
-        return userRepository.findByNameIgnoreCaseContaining(keyword, pageable);
+        return userRepository.findByNameIgnoreCaseContainingAndIsActive(keyword, true, pageable);
     }
 
     public User readUserByUsername(String username) {

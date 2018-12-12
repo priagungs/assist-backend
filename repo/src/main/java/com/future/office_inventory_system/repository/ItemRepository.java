@@ -17,5 +17,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     Page<Item> findAllByIsActive(Boolean active, Pageable pageable);
     Optional<Item> findByIdItemAndIsActive(Long id, Boolean active);
     List<Item> findAllByIsActive(Boolean active);
-
+    Page<Item> findByItemNameIgnoreCaseContainingAndIsActive(String name, Boolean active, Pageable pageable);
+    Page<Item> findByItemNameIgnoreCaseContainingAndAvailableQtyGreaterThanAndIsActive(
+            String keyword, Integer min, Boolean active, Pageable pageable);
 }
