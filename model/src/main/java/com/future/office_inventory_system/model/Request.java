@@ -23,14 +23,14 @@ public class Request {
     @GeneratedValue
     private Long idRequest;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "idUser", nullable = false)
-    @JsonIgnoreProperties({"request", "hibernateLazyInitializer", "handler"})
+    @JsonIgnoreProperties({"request"})
     private User requestBy;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "idItem", nullable = false)
-    @JsonIgnoreProperties({"request", "hibernateLazyInitializer", "handler"})
+    @JsonIgnoreProperties({"request"})
     private Item item;
 
     private Date requestDate;

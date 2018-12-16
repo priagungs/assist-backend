@@ -114,6 +114,8 @@ public class UserServiceImpl implements UserService {
             requestService.deleteRequest(request);
         }
 
+        user.setRequests(null);
+        user.setHasItems(null);
         user.setIsActive(false);
         userRepository.save(user);
 
