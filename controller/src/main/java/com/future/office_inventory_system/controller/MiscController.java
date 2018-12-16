@@ -48,14 +48,12 @@ public class MiscController {
     
     @GetMapping("/item-detail/{id}")
     public ResponseEntity generateItemDetail(@PathVariable Long id, HttpServletRequest request) {
-    
         p.printItem(itemService.readItemByIdItem(id));
         String filename = "item_" + id.toString() + ".pdf";
         Resource resource = storageService.loadFileAsResource(filename);
     
         String contentType = "application/octet-stream";
-    
-    
+
         return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
             .body(resource);

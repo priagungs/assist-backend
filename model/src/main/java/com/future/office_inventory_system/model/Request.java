@@ -1,19 +1,10 @@
 package com.future.office_inventory_system.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.util.Date;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.ManyToOne;
-import javax.persistence.FetchType;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
-import javax.persistence.JoinColumn;
-import javax.persistence.Enumerated;
-import javax.persistence.EnumType;
 import lombok.Data;
+
+import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Data

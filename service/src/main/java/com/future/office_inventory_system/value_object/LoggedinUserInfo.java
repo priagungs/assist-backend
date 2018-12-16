@@ -12,8 +12,13 @@ public class LoggedinUserInfo {
     @Autowired
     UserService userService;
 
+    Long idUser;
+
     public User getUser() {
-        return userService.readUserByUsername(
-                SecurityContextHolder.getContext().getAuthentication().getName());
+        if (idUser == null) {
+            idUser = userService.readUserByUsername(SecurityContextHolder.getContext().getAuthentication()
+                    .getName()).getIdUser();
+        }
+        return userService.readUserByIdUser(idUser);
     }
 }

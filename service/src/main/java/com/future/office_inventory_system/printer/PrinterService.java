@@ -2,7 +2,10 @@ package com.future.office_inventory_system.printer;
 
 import com.future.office_inventory_system.model.Item;
 import com.future.office_inventory_system.model.Transaction;
-import com.itextpdf.text.*;
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.PageSize;
 import com.itextpdf.text.pdf.PdfWriter;
 import org.springframework.stereotype.Component;
 

@@ -7,7 +7,6 @@ import com.future.office_inventory_system.repository.RequestRepository;
 import com.future.office_inventory_system.value_object.ItemRequest;
 import com.future.office_inventory_system.value_object.RequestCreate;
 import com.future.office_inventory_system.value_object.RequestUpdate;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;

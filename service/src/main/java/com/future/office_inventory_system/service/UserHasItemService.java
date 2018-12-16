@@ -1,7 +1,5 @@
 package com.future.office_inventory_system.service;
 
-import com.future.office_inventory_system.model.Item;
-import com.future.office_inventory_system.model.User;
 import com.future.office_inventory_system.model.UserHasItem;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
