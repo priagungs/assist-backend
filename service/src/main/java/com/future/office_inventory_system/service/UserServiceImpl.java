@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
     private RequestService requestService;
 
     public User createUser(User user) {
-        if (user.getSuperior().getIdUser() != null) {
+        if (user.getSuperior() != null) {
             user.setSuperior(userRepository
                     .findByIdUserAndIsActive(user.getSuperior().getIdUser(), true)
                     .orElseThrow(() -> new NotFoundException("superior not found")));
