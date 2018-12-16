@@ -214,7 +214,8 @@ public class RequestServiceImpl implements RequestService {
     public ResponseEntity deleteRequest(Request req) {
         Request request = requestRepository.findById(req.getIdRequest()).orElseThrow(
                 () -> new NotFoundException("Request not found"));
-        if(request.getRequestStatus() == RequestStatus.REQUESTED) {
+        if(request.getRequestStatus() == RequestStatus.REQUESTED ||
+                request.getRequestStatus() == RequestStatus.APPROVED) {
             Item item = itemService.readItemByIdItem(request.getItem().getIdItem());
             item.setAvailableQty(request.getReqQty()+item.getAvailableQty());
             itemService.updateItem(item);
