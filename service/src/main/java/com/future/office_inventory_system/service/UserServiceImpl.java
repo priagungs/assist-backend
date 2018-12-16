@@ -3,6 +3,7 @@ package com.future.office_inventory_system.service;
 import com.future.office_inventory_system.exception.ConflictException;
 import com.future.office_inventory_system.exception.InvalidValueException;
 import com.future.office_inventory_system.exception.NotFoundException;
+import com.future.office_inventory_system.model.Request;
 import com.future.office_inventory_system.model.User;
 import com.future.office_inventory_system.model.UserHasItem;
 import com.future.office_inventory_system.repository.UserRepository;
@@ -14,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
-@Data
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -23,8 +23,11 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserHasItemService userHasItemService;
 
+    @Autowired
+    private RequestService requestService;
+
     public User createUser(User user) {
-        if (user.getSuperior() != null) {
+        if (user.getSuperior().getIdUser() != null) {
             user.setSuperior(userRepository
                     .findByIdUserAndIsActive(user.getSuperior().getIdUser(), true)
                     .orElseThrow(() -> new NotFoundException("superior not found")));
@@ -105,6 +108,10 @@ public class UserServiceImpl implements UserService {
 
         for (UserHasItem hasItem : user.getHasItems()) {
             userHasItemService.deleteUserHasItem(hasItem.getIdUserHasItem());
+        }
+
+        for (Request request : user.getRequests()) {
+            requestService.deleteRequest(request);
         }
 
         user.setIsActive(false);

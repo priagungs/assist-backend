@@ -21,7 +21,6 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-@Data
 public class RequestServiceImpl implements RequestService {
 
     @Autowired
@@ -123,7 +122,7 @@ public class RequestServiceImpl implements RequestService {
         Request beforeUpdate = requestRepository.findById(request.getIdRequest())
                 .orElseThrow(() -> new NotFoundException("request not found"));
         if (request.getRequestStatus() == RequestStatus.REJECTED) {
-            Item item = itemService.readItemByIdItem(request.getIdRequest());
+            Item item = itemService.readItemByIdItem(request.getItem().getIdItem());
             item.setAvailableQty(request.getReqQty()+item.getAvailableQty());
             itemService.updateItem(item);
         }
@@ -216,7 +215,7 @@ public class RequestServiceImpl implements RequestService {
         Request request = requestRepository.findById(req.getIdRequest()).orElseThrow(
                 () -> new NotFoundException("Request not found"));
         if(request.getRequestStatus() == RequestStatus.REQUESTED) {
-            Item item = itemService.readItemByIdItem(request.getIdRequest());
+            Item item = itemService.readItemByIdItem(request.getItem().getIdItem());
             item.setAvailableQty(request.getReqQty()+item.getAvailableQty());
             itemService.updateItem(item);
         }
