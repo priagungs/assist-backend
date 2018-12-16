@@ -2,10 +2,7 @@ package com.future.office_inventory_system.service;
 
 import com.future.office_inventory_system.exception.InvalidValueException;
 import com.future.office_inventory_system.exception.NotFoundException;
-import com.future.office_inventory_system.model.Item;
-import com.future.office_inventory_system.model.Request;
-import com.future.office_inventory_system.model.User;
-import com.future.office_inventory_system.model.UserHasItem;
+import com.future.office_inventory_system.model.*;
 import com.future.office_inventory_system.repository.UserHasItemRepository;
 import com.future.office_inventory_system.value_object.LoggedinUserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,7 +81,8 @@ public class UserHasItemServiceImpl implements UserHasItemService {
 
         List<Request> requests = userService.readUserByIdUser(hasItem.getUser().getIdUser()).getRequests();
         for (Request request: requests) {
-            if (request.getItem().getIdItem() == item.getIdItem()) {
+            if (request.getItem().getIdItem() == item.getIdItem() &&
+                    request.getRequestStatus() == RequestStatus.SENT) {
                 request.setReturnedBy(loggedinUserInfo.getUser().getIdUser());
                 request.setReturnedDate(new Date());
                 requestService.updateRequestStatusToReturned(request);
