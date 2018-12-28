@@ -1,10 +1,10 @@
-package com.future.office_inventory_system.model.request_body_model;
+package com.future.office_inventory_system.model.request_body_model.request;
 
 import com.future.office_inventory_system.model.RequestStatus;
 import lombok.Data;
 
 @Data
-public class RequestUpdate {
+public class ReqUpdateRequest {
 
     private Long idRequest;
 

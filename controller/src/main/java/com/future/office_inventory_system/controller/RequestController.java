@@ -4,8 +4,8 @@ import com.future.office_inventory_system.exception.InvalidValueException;
 import com.future.office_inventory_system.exception.UnauthorizedException;
 import com.future.office_inventory_system.model.RequestStatus;
 import com.future.office_inventory_system.model.entity_model.Request;
-import com.future.office_inventory_system.model.request_body_model.RequestCreate;
-import com.future.office_inventory_system.model.request_body_model.RequestUpdate;
+import com.future.office_inventory_system.model.request_body_model.request.ReqCreateRequest;
+import com.future.office_inventory_system.model.request_body_model.request.ReqUpdateRequest;
 import com.future.office_inventory_system.service.service_impl.LoggedinUserInfo;
 import com.future.office_inventory_system.service.service_interface.RequestService;
 import com.future.office_inventory_system.service.service_interface.UserService;
@@ -33,7 +33,7 @@ public class RequestController {
     LoggedinUserInfo userInfo;
 
     @PostMapping("/requests")
-    List<Request> createRequests(@RequestBody RequestCreate requestBody) {
+    List<Request> createRequests(@RequestBody ReqCreateRequest requestBody) {
         return requestService.createRequest(requestBody);
     }
 
@@ -68,9 +68,9 @@ public class RequestController {
     }
 
     @PutMapping("/requests")
-    List<Request> updateRequest(@RequestBody List<RequestUpdate> requestBodies) {
+    List<Request> updateRequest(@RequestBody List<ReqUpdateRequest> requestBodies) {
         List<Request> result = new ArrayList<>();
-        for (RequestUpdate requestBody : requestBodies) {
+        for (ReqUpdateRequest requestBody : requestBodies) {
             if (requestBody.getRequestStatus() == RequestStatus.APPROVED ||
                     requestBody.getRequestStatus() == RequestStatus.REJECTED) {
                 if (userInfo.getUser().getIdUser() != requestBody.getIdSuperior()) {

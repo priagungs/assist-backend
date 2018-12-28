@@ -7,9 +7,9 @@ import com.future.office_inventory_system.model.entity_model.Item;
 import com.future.office_inventory_system.model.entity_model.Request;
 import com.future.office_inventory_system.model.entity_model.User;
 import com.future.office_inventory_system.model.entity_model.UserHasItem;
-import com.future.office_inventory_system.model.request_body_model.RequestCreate;
-import com.future.office_inventory_system.model.request_body_model.RequestItem;
-import com.future.office_inventory_system.model.request_body_model.RequestUpdate;
+import com.future.office_inventory_system.model.request_body_model.request.ReqCreateRequest;
+import com.future.office_inventory_system.model.request_body_model.request.ReqItemCreateRequest;
+import com.future.office_inventory_system.model.request_body_model.request.ReqUpdateRequest;
 import com.future.office_inventory_system.repository.RequestRepository;
 import com.future.office_inventory_system.service.service_interface.ItemService;
 import com.future.office_inventory_system.service.service_interface.RequestService;
@@ -44,11 +44,11 @@ public class RequestServiceImpl implements RequestService {
     private UserHasItemService userHasItemService;
 
     @Transactional
-    public List<Request> createRequest(RequestCreate requestBody) {
+    public List<Request> createRequest(ReqCreateRequest requestBody) {
         User user = userService.readUserByIdUser(requestBody.getIdUser());
         List<Request> requests = new ArrayList<>();
 
-        for (RequestItem el : requestBody.getItems()) {
+        for (ReqItemCreateRequest el : requestBody.getItems()) {
             Item item = itemService.readItemByIdItem(el.getItem().getIdItem());
             Request request = new Request();
 
@@ -77,38 +77,38 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Transactional
-    public Request updateRequest(RequestUpdate requestUpdate) {
+    public Request updateRequest(ReqUpdateRequest reqUpdateRequest) {
 
 
-        Request request = requestRepository.findRequestByIdRequest(requestUpdate.getIdRequest())
+        Request request = requestRepository.findRequestByIdRequest(reqUpdateRequest.getIdRequest())
                 .orElseThrow(() -> new NotFoundException("request not found"));
 
-        if (requestUpdate.getRequestStatus() == RequestStatus.APPROVED &&
+        if (reqUpdateRequest.getRequestStatus() == RequestStatus.APPROVED &&
                 request.getRequestStatus() == RequestStatus.REQUESTED) {
-            if (userService.readUserByIdUser(requestUpdate.getIdSuperior()) == null) {
+            if (userService.readUserByIdUser(reqUpdateRequest.getIdSuperior()) == null) {
                 throw new NotFoundException("Superior not found");
             }
-            request.setApprovedBy(requestUpdate.getIdSuperior());
+            request.setApprovedBy(reqUpdateRequest.getIdSuperior());
             request.setApprovedDate(new Date());
 
-        } else if (requestUpdate.getRequestStatus() == RequestStatus.REJECTED &&
+        } else if (reqUpdateRequest.getRequestStatus() == RequestStatus.REJECTED &&
                 request.getRequestStatus() == RequestStatus.REQUESTED) {
-            if (userService.readUserByIdUser(requestUpdate.getIdSuperior()) == null) {
+            if (userService.readUserByIdUser(reqUpdateRequest.getIdSuperior()) == null) {
                 throw new NotFoundException("Superior not found");
             }
-            request.setRejectedBy(requestUpdate.getIdSuperior());
+            request.setRejectedBy(reqUpdateRequest.getIdSuperior());
             request.setRequestDate(new Date());
             Item item = itemService.readItemByIdItem(request.getItem().getIdItem());
             item.setAvailableQty(request.getReqQty() + item.getAvailableQty());
             itemService.updateItem(item);
 
-        } else if (requestUpdate.getRequestStatus() == RequestStatus.SENT &&
+        } else if (reqUpdateRequest.getRequestStatus() == RequestStatus.SENT &&
                 request.getRequestStatus() == RequestStatus.APPROVED) {
 
-            if (userService.readUserByIdUser(requestUpdate.getIdAdmin()) == null) {
+            if (userService.readUserByIdUser(reqUpdateRequest.getIdAdmin()) == null) {
                 throw new NotFoundException("Admin not found");
             }
-            request.setHandedOverBy(requestUpdate.getIdAdmin());
+            request.setHandedOverBy(reqUpdateRequest.getIdAdmin());
             request.setHandedOverDate(new Date());
 
             UserHasItem userHasItem = new UserHasItem();
@@ -121,7 +121,7 @@ public class RequestServiceImpl implements RequestService {
         } else {
             throw new InvalidValueException("Invalid input");
         }
-        request.setRequestStatus(requestUpdate.getRequestStatus());
+        request.setRequestStatus(reqUpdateRequest.getRequestStatus());
 
         return requestRepository.save(request);
     }

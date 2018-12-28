@@ -4,8 +4,8 @@ import com.future.office_inventory_system.model.RequestStatus;
 import com.future.office_inventory_system.model.entity_model.Item;
 import com.future.office_inventory_system.model.entity_model.Request;
 import com.future.office_inventory_system.model.entity_model.User;
-import com.future.office_inventory_system.model.request_body_model.RequestCreate;
-import com.future.office_inventory_system.model.request_body_model.RequestUpdate;
+import com.future.office_inventory_system.model.request_body_model.request.ReqCreateRequest;
+import com.future.office_inventory_system.model.request_body_model.request.ReqUpdateRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +17,9 @@ import java.util.List;
 @Service
 public interface RequestService {
 
-    List<Request> createRequest(RequestCreate requestBody);
+    List<Request> createRequest(ReqCreateRequest requestBody);
 
-    Request updateRequest(RequestUpdate requestBody);
+    Request updateRequest(ReqUpdateRequest requestBody);
 
     Request updateRequestByRequestObject(Request request);
 
