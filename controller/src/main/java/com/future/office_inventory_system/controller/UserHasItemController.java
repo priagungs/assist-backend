@@ -21,14 +21,6 @@ public class UserHasItemController {
     @Autowired
     LoggedinUserInfo loggedinUserInfo;
 
-    @PostMapping("/user-items")
-    UserHasItem createUserHasItem(@RequestBody UserHasItem userHasItem) {
-        if (!loggedinUserInfo.getUser().getIsAdmin()) {
-            throw new UnauthorizedException("you are not permitted to create userhasitem");
-        }
-        return userHasItemService.createUserHasItem(userHasItem);
-    }
-
     @GetMapping("/user-items")
     Page<UserHasItem> readUserHasItems(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit,
                                        @RequestParam(value = "idUser", required = false) Long idUser,
@@ -46,14 +38,6 @@ public class UserHasItemController {
     @GetMapping("/user-items/{id}")
     UserHasItem readUserHasItem(@PathVariable("id") Long id) {
         return userHasItemService.readUserHasItemById(id);
-    }
-
-    @PutMapping("/user-items")
-    UserHasItem updateUserHasItem(@RequestParam UserHasItem userHasItem) {
-        if (!loggedinUserInfo.getUser().getIsAdmin()) {
-            throw new UnauthorizedException("you are not permitted to create userhasitem");
-        }
-        return userHasItemService.updateUserHasItem(userHasItem);
     }
 
     @DeleteMapping("/user-items")
