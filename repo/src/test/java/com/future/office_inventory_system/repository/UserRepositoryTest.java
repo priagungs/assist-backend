@@ -15,9 +15,9 @@ import java.util.Optional;
 
 import static org.junit.Assert.*;
 
-//@RunWith(SpringRunner.class) kalau pakai initialization error
+@RunWith(SpringRunner.class) //kalau pakai initialization error
 @DataJpaTest
-@SpringBootTest //kalau pakai ini TestEntitymanagernya null mulu
+//@SpringBootTest //kalau pakai ini TestEntitymanagernya null mulu
 public class UserRepositoryTest {
 
     @Autowired
