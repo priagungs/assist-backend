@@ -2,6 +2,8 @@ package com.future.office_inventory_system.controller;
 
 import com.future.office_inventory_system.exception.UnauthorizedException;
 import com.future.office_inventory_system.model.entity_model.Item;
+import com.future.office_inventory_system.model.request_body_model.item.ItemCreateUpdateRequest;
+import com.future.office_inventory_system.model.request_body_model.item.ItemModelRequest;
 import com.future.office_inventory_system.service.service_impl.LoggedinUserInfo;
 import com.future.office_inventory_system.service.service_interface.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +27,20 @@ public class ItemController {
     LoggedinUserInfo loggedinUserInfo;
 
     @PostMapping("/items")
-    public List<Item> createItem(@RequestBody List<Item> items) {
+    public List<Item> createItem(@RequestBody List<ItemCreateUpdateRequest> itemRequests) {
         if (!loggedinUserInfo.getUser().getIsAdmin()) {
             throw new UnauthorizedException("You are not an admin");
+        }
+
+        List<Item> items = new ArrayList<>();
+        for (ItemCreateUpdateRequest itemRequest : itemRequests) {
+            Item item = new Item();
+            item.setItemName(itemRequest.getItemName());
+            item.setDescription(itemRequest.getDescription());
+            item.setPictureURL(itemRequest.getPictureURL());
+            item.setPrice(itemRequest.getPrice());
+            item.setTotalQty(itemRequest.getTotalQty());
+            items.add(item);
         }
 
         List<Item> result = new ArrayList<>();
@@ -88,16 +101,22 @@ public class ItemController {
     }
 
     @PutMapping("/items/{idItem}")
-    public Item updateItem(@RequestBody Item item, @PathVariable("idItem") Long id) {
+    public Item updateItem(@RequestBody ItemCreateUpdateRequest itemRequest, @PathVariable("idItem") Long id) {
         if (!loggedinUserInfo.getUser().getIsAdmin()) {
             throw new UnauthorizedException("You are not permitted to update this item");
         }
+        Item item = new Item();
+        item.setItemName(itemRequest.getItemName());
+        item.setDescription(itemRequest.getDescription());
+        item.setPictureURL(itemRequest.getPictureURL());
+        item.setPrice(itemRequest.getPrice());
+        item.setTotalQty(itemRequest.getTotalQty());
         item.setIdItem(id);
         return itemService.updateItem(item);
     }
 
     @DeleteMapping("/items")
-    public ResponseEntity deleteItem(@RequestBody Item item) {
+    public ResponseEntity deleteItem(@RequestBody ItemModelRequest item) {
         if (!loggedinUserInfo.getUser().getIsAdmin()) {
             throw new UnauthorizedException("You are not permitted to delete this item");
         }

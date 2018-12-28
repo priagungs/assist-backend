@@ -3,6 +3,9 @@ package com.future.office_inventory_system.controller;
 import com.future.office_inventory_system.exception.ForbiddenException;
 import com.future.office_inventory_system.exception.UnauthorizedException;
 import com.future.office_inventory_system.model.entity_model.User;
+import com.future.office_inventory_system.model.request_body_model.user.UserCreateRequest;
+import com.future.office_inventory_system.model.request_body_model.user.UserModelRequest;
+import com.future.office_inventory_system.model.request_body_model.user.UserUpdateRequest;
 import com.future.office_inventory_system.service.service_impl.LoggedinUserInfo;
 import com.future.office_inventory_system.service.service_interface.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +30,23 @@ public class UserController {
     LoggedinUserInfo loggedinUserInfo;
 
     @PostMapping("/users")
-    public List<User> createUser(@RequestBody List<User> users) {
+    public List<User> createUser(@RequestBody List<UserCreateRequest> userRequests) {
         if (!loggedinUserInfo.getUser().getIsAdmin()) {
             throw new UnauthorizedException("you are not an admin");
+        }
+
+        List<User> users = new ArrayList<>();
+        for (UserCreateRequest userRequest : userRequests) {
+            User user = new User();
+            user.setIsAdmin(userRequest.getIsAdmin());
+            user.setName(userRequest.getName());
+            user.setUsername(userRequest.getUsername());
+            user.setPassword(userRequest.getPassword());
+            user.setPictureURL(userRequest.getPictureURL());
+            user.setDivision(userRequest.getDivision());
+            user.setRole(userRequest.getRole());
+            user.setSuperior(userService.readUserByIdUser(userRequest.getSuperior().getIdUser()));
+            users.add(user);
         }
 
         List<User> result = new ArrayList<>();
@@ -66,16 +83,28 @@ public class UserController {
     }
 
     @PutMapping("/user")
-    public User updateUser(@RequestBody User user, HttpSession session) {
-        if (!loggedinUserInfo.getUser().getIsAdmin() && loggedinUserInfo.getUser().getIdUser() != user.getIdUser()) {
+    public User updateUser(@RequestBody UserUpdateRequest userRequest, HttpSession session) {
+        if (!loggedinUserInfo.getUser().getIsAdmin() && loggedinUserInfo.getUser().getIdUser() != userRequest.getIdUser()) {
             throw new UnauthorizedException("You are not permitted to update this user");
         }
-        session.invalidate();
+        if (loggedinUserInfo.getUser().getIdUser() == userRequest.getIdUser()) {
+            session.invalidate();
+        }
+        User user = new User();
+        user.setIsAdmin(userRequest.getIsAdmin());
+        user.setName(userRequest.getName());
+        user.setUsername(userRequest.getUsername());
+        user.setPassword(userRequest.getPassword());
+        user.setPictureURL(userRequest.getPictureURL());
+        user.setDivision(userRequest.getDivision());
+        user.setRole(userRequest.getRole());
+        user.setSuperior(userService.readUserByIdUser(userRequest.getSuperior().getIdUser()));
+        user.setIdUser(userRequest.getIdUser());
         return userService.updateUser(user);
     }
 
     @DeleteMapping("/user")
-    public ResponseEntity deleteUser(@RequestBody User user) {
+    public ResponseEntity deleteUser(@RequestBody UserModelRequest user) {
         if (!loggedinUserInfo.getUser().getIsAdmin()) {
             throw new UnauthorizedException("You are not permitted to delete this user");
         }

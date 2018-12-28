@@ -2,6 +2,7 @@ package com.future.office_inventory_system.controller;
 
 import com.future.office_inventory_system.exception.UnauthorizedException;
 import com.future.office_inventory_system.model.entity_model.UserHasItem;
+import com.future.office_inventory_system.model.request_body_model.user.UserHasItemModelRequest;
 import com.future.office_inventory_system.service.service_impl.LoggedinUserInfo;
 import com.future.office_inventory_system.service.service_interface.UserHasItemService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,7 @@ public class UserHasItemController {
     }
 
     @DeleteMapping("/user-items")
-    ResponseEntity deleteUserHasItem(@RequestBody UserHasItem userHasItem) {
+    ResponseEntity deleteUserHasItem(@RequestBody UserHasItemModelRequest userHasItem) {
         Long idUser = userHasItemService.readUserHasItemById(userHasItem.getIdUserHasItem()).getUser().getIdUser();
         if (!loggedinUserInfo.getUser().getIsAdmin() && loggedinUserInfo.getUser().getIdUser() != idUser) {
             throw new UnauthorizedException("you are not permitted to create userhasitem");

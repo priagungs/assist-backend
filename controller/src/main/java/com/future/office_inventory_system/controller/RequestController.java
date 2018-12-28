@@ -5,6 +5,7 @@ import com.future.office_inventory_system.exception.UnauthorizedException;
 import com.future.office_inventory_system.model.RequestStatus;
 import com.future.office_inventory_system.model.entity_model.Request;
 import com.future.office_inventory_system.model.request_body_model.request.ReqCreateRequest;
+import com.future.office_inventory_system.model.request_body_model.request.ReqModelRequest;
 import com.future.office_inventory_system.model.request_body_model.request.ReqUpdateRequest;
 import com.future.office_inventory_system.service.service_impl.LoggedinUserInfo;
 import com.future.office_inventory_system.service.service_interface.RequestService;
@@ -91,12 +92,12 @@ public class RequestController {
     }
 
     @DeleteMapping("/requests")
-    ResponseEntity deleteRequest(@RequestBody Request request) {
+    ResponseEntity deleteRequest(@RequestBody ReqModelRequest request) {
         Request req = requestService.readRequestByIdRequest(request.getIdRequest());
         if (userInfo.getUser().getIdUser() != req.getRequestBy().getIdUser()) {
             throw new UnauthorizedException("You can't delete this request");
         }
-        requestService.deleteRequest(request);
+        requestService.deleteRequest(req);
         return ResponseEntity.ok().build();
     }
 }
