@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,10 +68,11 @@ public class UserController {
     }
 
     @PutMapping("/user")
-    public User updateUser(@RequestBody User user) {
+    public User updateUser(@RequestBody User user, HttpSession session) {
         if (!loggedinUserInfo.getUser().getIsAdmin() && loggedinUserInfo.getUser().getIdUser() != user.getIdUser()) {
             throw new UnauthorizedException("You are not permitted to update this user");
         }
+        session.invalidate();
         return userService.updateUser(user);
     }
 

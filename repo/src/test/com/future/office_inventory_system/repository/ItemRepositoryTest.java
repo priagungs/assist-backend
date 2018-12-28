@@ -1,6 +1,5 @@
 package com.future.office_inventory_system.repository;
 
-import com.future.office_inventory_system.FutureOfficeInventorySystemApplication;
 import com.future.office_inventory_system.model.Item;
 import org.junit.Before;
 import org.junit.Test;
