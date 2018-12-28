@@ -1,10 +1,10 @@
 package com.future.office_inventory_system.controller;
 
 import com.future.office_inventory_system.exception.UnauthorizedException;
-import com.future.office_inventory_system.model.Transaction;
+import com.future.office_inventory_system.model.entity_model.Transaction;
 import com.future.office_inventory_system.printer.PrinterService;
-import com.future.office_inventory_system.service.TransactionService;
-import com.future.office_inventory_system.value_object.LoggedinUserInfo;
+import com.future.office_inventory_system.service.service_impl.LoggedinUserInfo;
+import com.future.office_inventory_system.service.service_interface.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,9 +21,9 @@ public class TransactionController {
 
     @Autowired
     LoggedinUserInfo loggedinUserInfo;
-    
+
     @Autowired
-    PrinterService p;
+    PrinterService printerService;
 
     @PostMapping("/transactions")
     Transaction createTransactions(@RequestBody Transaction transaction) {
@@ -32,9 +32,9 @@ public class TransactionController {
             throw new UnauthorizedException("you are not permitted to create transaction");
         }
         Transaction createdTransaction = transactionService.createTransaction(transaction);
-        p.printInvoice(transactionService.readTransactionByIdTransaction(createdTransaction.getIdTransaction()));
+        printerService.printInvoice(transactionService.readTransactionByIdTransaction(createdTransaction.getIdTransaction()));
         return createdTransaction;
-        
+
     }
 
     @GetMapping("/transactions")
@@ -46,8 +46,7 @@ public class TransactionController {
         }
         if (sort.equals("transactionDate")) {
             return transactionService.readAllTransactions(PageRequest.of(page, limit, Sort.Direction.DESC, sort));
-        }
-        else {
+        } else {
             return transactionService.readAllTransactions(PageRequest.of(page, limit, Sort.Direction.ASC, sort));
         }
     }

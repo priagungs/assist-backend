@@ -1,6 +1,8 @@
-package com.future.office_inventory_system.model;
+package com.future.office_inventory_system.model.entity_model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.future.office_inventory_system.model.RequestStatus;
+import com.future.office_inventory_system.model.TableName;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -30,7 +32,7 @@ public class Request {
 
     @Enumerated(EnumType.STRING)
     private RequestStatus requestStatus;
-    
+
     private Long approvedBy;
 
     private Date approvedDate;

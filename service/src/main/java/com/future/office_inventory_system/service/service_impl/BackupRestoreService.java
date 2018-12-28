@@ -1,4 +1,4 @@
-package com.future.office_inventory_system.service;
+package com.future.office_inventory_system.service.service_impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,7 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Component
-public class BackupRestore {
+public class BackupRestoreService {
 
     @Autowired
     FileStorageService fileStorageService;

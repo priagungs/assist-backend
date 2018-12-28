@@ -1,20 +1,24 @@
-package com.future.office_inventory_system.service;
+package com.future.office_inventory_system.service.service_impl;
 
 import com.future.office_inventory_system.exception.InvalidValueException;
 import com.future.office_inventory_system.exception.NotFoundException;
-import com.future.office_inventory_system.model.Item;
-import com.future.office_inventory_system.model.ItemTransaction;
-import com.future.office_inventory_system.model.Transaction;
+import com.future.office_inventory_system.model.entity_model.Item;
+import com.future.office_inventory_system.model.entity_model.ItemTransaction;
+import com.future.office_inventory_system.model.entity_model.Transaction;
 import com.future.office_inventory_system.repository.ItemTransactionRepository;
+import com.future.office_inventory_system.service.service_interface.ItemService;
+import com.future.office_inventory_system.service.service_interface.ItemTransactionService;
+import com.future.office_inventory_system.service.service_interface.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ItemTransactionServiceImpl implements ItemTransactionService {
-    
+
     @Autowired
     private ItemTransactionRepository repository;
 
@@ -24,8 +28,9 @@ public class ItemTransactionServiceImpl implements ItemTransactionService {
     @Autowired
     private TransactionService transactionService;
 
+    @Transactional
     public ItemTransaction createItemTransaction(ItemTransaction itemTransaction) {
-        if (itemTransaction.getBoughtQty() <= 0 ) {
+        if (itemTransaction.getBoughtQty() <= 0) {
             throw new InvalidValueException("Bought quantity must be greater than 0");
         }
 
@@ -39,15 +44,16 @@ public class ItemTransactionServiceImpl implements ItemTransactionService {
 
         itemTransaction.setItem(item);
 
-       return repository.save(itemTransaction);
+        return repository.save(itemTransaction);
 
     }
 
+    @Transactional
     public ItemTransaction updateItemTransaction(ItemTransaction itemTransaction) {
         ItemTransaction before = repository
-            .findById(itemTransaction.getIdItemTransaction())
-            .orElseThrow(() -> new NotFoundException("Item Transaction not found"));
-        if (itemTransaction.getBoughtQty() <= 0 ) {
+                .findById(itemTransaction.getIdItemTransaction())
+                .orElseThrow(() -> new NotFoundException("Item Transaction not found"));
+        if (itemTransaction.getBoughtQty() <= 0) {
             throw new InvalidValueException("Bought quantity must be greater than 0");
         }
 
@@ -69,7 +75,7 @@ public class ItemTransactionServiceImpl implements ItemTransactionService {
 
     public ItemTransaction readItemTransactionByIdItemTransaction(Long id) {
         return repository.findById(id)
-            .orElseThrow(() -> new NotFoundException("Item Transaction not found"));
+                .orElseThrow(() -> new NotFoundException("Item Transaction not found"));
     }
 
     public Page<ItemTransaction> readAllItemTransactionsByTransaction(Transaction transaction, Pageable pageable) {
@@ -81,9 +87,10 @@ public class ItemTransactionServiceImpl implements ItemTransactionService {
         }
     }
 
+    @Transactional
     public ResponseEntity deleteItemTransaction(Long id) {
         ItemTransaction itemTransaction = repository.findById(id)
-            .orElseThrow(() -> new NotFoundException("ItemTransaction not found"));
+                .orElseThrow(() -> new NotFoundException("ItemTransaction not found"));
 
         Item item = itemTransaction.getItem();
 

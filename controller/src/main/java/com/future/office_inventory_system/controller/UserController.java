@@ -2,9 +2,9 @@ package com.future.office_inventory_system.controller;
 
 import com.future.office_inventory_system.exception.ForbiddenException;
 import com.future.office_inventory_system.exception.UnauthorizedException;
-import com.future.office_inventory_system.model.User;
-import com.future.office_inventory_system.service.UserService;
-import com.future.office_inventory_system.value_object.LoggedinUserInfo;
+import com.future.office_inventory_system.model.entity_model.User;
+import com.future.office_inventory_system.service.service_impl.LoggedinUserInfo;
+import com.future.office_inventory_system.service.service_interface.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,7 +33,7 @@ public class UserController {
         }
 
         List<User> result = new ArrayList<>();
-        for (User user: users) {
+        for (User user : users) {
             result.add(userService.createUser(user));
         }
         return result;
@@ -47,12 +47,10 @@ public class UserController {
         if (idSuperior != null) {
             return userService.readAllUsersByIdSuperior(idSuperior,
                     PageRequest.of(page, limit, Sort.Direction.ASC, sort));
-        }
-        else if (keyword != null) {
+        } else if (keyword != null) {
             return userService.readAllUsersContaining(keyword,
                     PageRequest.of(page, limit, Sort.Direction.ASC, sort));
-        }
-        else {
+        } else {
             return userService.readAllUsers(PageRequest.of(page, limit, Sort.Direction.ASC, sort));
         }
     }

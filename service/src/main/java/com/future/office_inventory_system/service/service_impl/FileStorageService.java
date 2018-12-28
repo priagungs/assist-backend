@@ -1,4 +1,4 @@
-package com.future.office_inventory_system.service;
+package com.future.office_inventory_system.service.service_impl;
 
 import com.future.office_inventory_system.exception.FileStorageException;
 import com.future.office_inventory_system.exception.NotFoundException;
@@ -36,12 +36,12 @@ public class FileStorageService {
 
     public String storeFile(MultipartFile file) {
         String[] originalName = StringUtils.cleanPath(file.getOriginalFilename()).split("\\.");
-    
+
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
-    
+
         String dateString = format.format(new Date());
         String filename = dateString + (originalName.length - 1 == 0 ? "" : "." + originalName[originalName.length - 1]);
-        
+
         try {
             Path targetLocation = this.fileStorageLocation.resolve(filename);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
@@ -58,8 +58,7 @@ public class FileStorageService {
             Resource resource = new UrlResource(filePath.toUri());
             if (resource.exists()) {
                 return resource;
-            }
-            else {
+            } else {
                 throw new NotFoundException("File not found " + filename);
             }
         } catch (MalformedURLException e) {

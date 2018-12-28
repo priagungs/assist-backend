@@ -1,9 +1,9 @@
 package com.future.office_inventory_system.controller;
 
 import com.future.office_inventory_system.exception.UnauthorizedException;
-import com.future.office_inventory_system.model.Item;
-import com.future.office_inventory_system.service.ItemService;
-import com.future.office_inventory_system.value_object.LoggedinUserInfo;
+import com.future.office_inventory_system.model.entity_model.Item;
+import com.future.office_inventory_system.service.service_impl.LoggedinUserInfo;
+import com.future.office_inventory_system.service.service_interface.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,65 +17,63 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 public class ItemController {
-    
+
     @Autowired
     ItemService itemService;
-    
+
     @Autowired
     LoggedinUserInfo loggedinUserInfo;
-    
+
     @PostMapping("/items")
     public List<Item> createItem(@RequestBody List<Item> items) {
         if (!loggedinUserInfo.getUser().getIsAdmin()) {
             throw new UnauthorizedException("You are not an admin");
         }
-        
+
         List<Item> result = new ArrayList<>();
         for (Item item : items) {
             result.add(itemService.createItem(item));
         }
         return result;
     }
-    
+
     @GetMapping("/items")
     public Page<Item> readAllItems(@RequestParam("page") Integer page,
                                    @RequestParam("limit") Integer limit,
                                    @RequestParam(value = "keyword", required = false) String keyword,
                                    @RequestParam("sort") String sort,
                                    @RequestParam(value = "minqty", required = false) Integer minqty) {
-        
+
         if (loggedinUserInfo.getUser().getIsAdmin()) {
             if (keyword != null) {
                 if (minqty != null) {
                     return itemService.readAllItemsByKeywordAndAvailableGreaterThan(keyword, minqty,
-                        PageRequest.of(page, limit, Sort.Direction.ASC, sort));
+                            PageRequest.of(page, limit, Sort.Direction.ASC, sort));
                 } else {
                     return itemService.readAllItemsContaining(keyword,
-                        PageRequest.of(page, limit, Sort.Direction.ASC, sort));
+                            PageRequest.of(page, limit, Sort.Direction.ASC, sort));
                 }
-            }
-            else {
+            } else {
                 if (minqty != null) {
                     return itemService.readItemsByAvailableGreaterThan(minqty,
-                        PageRequest.of(page, limit, Sort.Direction.ASC, sort));
+                            PageRequest.of(page, limit, Sort.Direction.ASC, sort));
                 } else {
                     return itemService.readAllItems(
-                        PageRequest.of(page, limit, Sort.Direction.ASC, sort));
+                            PageRequest.of(page, limit, Sort.Direction.ASC, sort));
                 }
             }
         } else {
             if (keyword != null) {
                 return itemService.readAllItemsByKeywordAndAvailableGreaterThan(keyword, 0,
                         PageRequest.of(page, limit, Sort.Direction.ASC, sort));
-            }
-            else {
+            } else {
                 return itemService.readItemsByAvailableGreaterThan(0,
                         PageRequest.of(page, limit, Sort.Direction.ASC, sort));
             }
         }
     }
 
-    
+
     @GetMapping("/items/{idItem}")
     public Item readItemByIdItem(@PathVariable("idItem") Long idItem) {
         return itemService.readItemByIdItem(idItem);
@@ -97,7 +95,7 @@ public class ItemController {
         item.setIdItem(id);
         return itemService.updateItem(item);
     }
-    
+
     @DeleteMapping("/items")
     public ResponseEntity deleteItem(@RequestBody Item item) {
         if (!loggedinUserInfo.getUser().getIsAdmin()) {
@@ -105,5 +103,5 @@ public class ItemController {
         }
         return itemService.deleteItem(item.getIdItem());
     }
-    
+
 }

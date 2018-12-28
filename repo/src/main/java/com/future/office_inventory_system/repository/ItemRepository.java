@@ -1,6 +1,6 @@
 package com.future.office_inventory_system.repository;
 
-import com.future.office_inventory_system.model.Item;
+import com.future.office_inventory_system.model.entity_model.Item;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,12 +12,18 @@ import java.util.Optional;
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Long> {
 
-    Optional<Item> findByItemNameAndIsActive(String itemName, Boolean active);
+    Optional<Item> findByItemNameIgnoreCaseAndIsActive(String itemName, Boolean active);
+
     Page<Item> findAllByAvailableQtyGreaterThanAndIsActive(Integer min, Boolean active, Pageable pageable);
+
     Page<Item> findAllByIsActive(Boolean active, Pageable pageable);
+
     Optional<Item> findByIdItemAndIsActive(Long id, Boolean active);
+
     List<Item> findAllByIsActive(Boolean active);
+
     Page<Item> findByItemNameIgnoreCaseContainingAndIsActive(String name, Boolean active, Pageable pageable);
+
     Page<Item> findByItemNameIgnoreCaseContainingAndAvailableQtyGreaterThanAndIsActive(
             String keyword, Integer min, Boolean active, Pageable pageable);
 }

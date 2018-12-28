@@ -1,6 +1,6 @@
 package com.future.office_inventory_system.controller;
 
-import com.future.office_inventory_system.service.FileStorageService;
+import com.future.office_inventory_system.service.service_impl.FileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -48,7 +48,6 @@ public class FileController {
         if (contentType == null) {
             contentType = "application/octet-stream";
         }
-
 
 
         return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))

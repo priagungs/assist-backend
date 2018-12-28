@@ -1,6 +1,7 @@
-package com.future.office_inventory_system.model;
+package com.future.office_inventory_system.model.entity_model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.future.office_inventory_system.model.TableName;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -21,7 +22,7 @@ public class UserHasItem {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idItem", nullable = false)
-    @JsonIgnoreProperties({"owner","hibernateLazyInitializer", "handler"})
+    @JsonIgnoreProperties({"owner", "hibernateLazyInitializer", "handler"})
     private Item item;
 
     private Integer hasQty;

@@ -1,7 +1,8 @@
-package com.future.office_inventory_system.model;
+package com.future.office_inventory_system.model.entity_model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.future.office_inventory_system.model.TableName;
 import lombok.Data;
 
 import javax.persistence.*;

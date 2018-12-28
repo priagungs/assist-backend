@@ -2,13 +2,13 @@ package com.future.office_inventory_system.controller;
 
 import com.future.office_inventory_system.exception.InvalidValueException;
 import com.future.office_inventory_system.exception.UnauthorizedException;
-import com.future.office_inventory_system.model.Request;
 import com.future.office_inventory_system.model.RequestStatus;
-import com.future.office_inventory_system.service.RequestService;
-import com.future.office_inventory_system.service.UserService;
-import com.future.office_inventory_system.value_object.LoggedinUserInfo;
-import com.future.office_inventory_system.value_object.RequestCreate;
-import com.future.office_inventory_system.value_object.RequestUpdate;
+import com.future.office_inventory_system.model.entity_model.Request;
+import com.future.office_inventory_system.model.request_body_model.RequestCreate;
+import com.future.office_inventory_system.model.request_body_model.RequestUpdate;
+import com.future.office_inventory_system.service.service_impl.LoggedinUserInfo;
+import com.future.office_inventory_system.service.service_interface.RequestService;
+import com.future.office_inventory_system.service.service_interface.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -51,24 +51,19 @@ public class RequestController {
         }
         if (idUser != null && status != null) {
             return requestService.readAllRequestByUserAndStatus(PageRequest.of(page, limit, direction, sort),
-                userService.readUserByIdUser(idUser), status);
-        }
-        else if (idUser != null) {
+                    userService.readUserByIdUser(idUser), status);
+        } else if (idUser != null) {
             return requestService.readRequestByUser(PageRequest.of(page, limit, direction, sort), userService.readUserByIdUser(idUser));
-        }
-        else if (idSuperior != null && status != null) {
+        } else if (idSuperior != null && status != null) {
             return requestService.readAllRequestBySuperiorAndRequestStatus(PageRequest.of(page, limit, direction, sort),
                     userService.readUserByIdUser(idSuperior), status);
-        }
-        else if (idSuperior != null) {
+        } else if (idSuperior != null) {
             return requestService.readAllRequestBySuperior(PageRequest.of(page, limit, direction, sort),
                     userService.readUserByIdUser(idSuperior));
-        }
-        else if (status != null) {
+        } else if (status != null) {
             return requestService.readAllRequestByRequestStatus(PageRequest.of(page, limit, direction, sort), status);
-        }
-        else {
-            return requestService.readAllRequest(PageRequest.of(page ,limit, direction, sort));
+        } else {
+            return requestService.readAllRequest(PageRequest.of(page, limit, direction, sort));
         }
     }
 

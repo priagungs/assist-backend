@@ -1,100 +1,100 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.future.office_inventory_system</groupId>
-	<artifactId>future-office-inventory-system</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+    <groupId>com.future.office_inventory_system</groupId>
+    <artifactId>future-office-inventory-system</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
     <modules>
         <module>controller</module>
-		<module>service</module>
-		<module>repo</module>
-		<module>model</module>
+        <module>service</module>
+        <module>repo</module>
+        <module>model</module>
     </modules>
     <packaging>pom</packaging>
 
-	<name>future-office-inventory-system</name>
-	<description>Demo project for Spring Boot</description>
+    <name>future-office-inventory-system</name>
+    <description>Demo project for Spring Boot</description>
 
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.0.4.RELEASE</version>
-		<relativePath/> <!-- lookup parent from repository -->
-	</parent>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.0.4.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>1.8</java.version>
-	</properties>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+    </properties>
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>com.future.office_inventory_system</groupId>
-				<artifactId>model</artifactId>
-				<version>0.0.1-SNAPSHOT</version>
-			</dependency>
-			<dependency>
-				<groupId>com.future.office_inventory_system</groupId>
-				<artifactId>repo</artifactId>
-				<version>0.0.1-SNAPSHOT</version>
-			</dependency>
-			<dependency>
-				<groupId>com.future.office_inventory_system</groupId>
-				<artifactId>service</artifactId>
-				<version>0.0.1-SNAPSHOT</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-starter-data-jpa</artifactId>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.future.office_inventory_system</groupId>
+                <artifactId>model</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.future.office_inventory_system</groupId>
+                <artifactId>repo</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.future.office_inventory_system</groupId>
+                <artifactId>service</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-jpa</artifactId>
                 <version>2.0.4.RELEASE</version>
-			</dependency>
-			<dependency>
-				<groupId>org.projectlombok</groupId>
-				<artifactId>lombok</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
                 <version>1.16.22</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-starter-web</artifactId>
-				<version>2.0.4.RELEASE</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+                <version>2.0.4.RELEASE</version>
                 <scope>compile</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-starter-security</artifactId>
-			    <version>2.0.4.RELEASE</version>
             </dependency>
-			<dependency>
-				<groupId>org.springframework.session</groupId>
-				<artifactId>spring-session-core</artifactId>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-security</artifactId>
                 <version>2.0.4.RELEASE</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.session</groupId>
-				<artifactId>spring-session-jdbc</artifactId>
-			    <version>2.0.4.RELEASE</version>
             </dependency>
-			<dependency>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-starter-test</artifactId>
+            <dependency>
+                <groupId>org.springframework.session</groupId>
+                <artifactId>spring-session-core</artifactId>
                 <version>2.0.4.RELEASE</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>com.h2database</groupId>
-				<artifactId>h2</artifactId>
-				<scope>test</scope>
-				<version>1.4.196</version>
-			</dependency>
-			<dependency>
-				<groupId>org.hibernate.javax.persistence</groupId>
-				<artifactId>hibernate-jpa-2.1-api</artifactId>
-				<version>1.0.2.Final</version>
-			</dependency>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.session</groupId>
+                <artifactId>spring-session-jdbc</artifactId>
+                <version>2.0.4.RELEASE</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <version>2.0.4.RELEASE</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <scope>test</scope>
+                <version>1.4.196</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate.javax.persistence</groupId>
+                <artifactId>hibernate-jpa-2.1-api</artifactId>
+                <version>1.0.2.Final</version>
+            </dependency>
             <dependency>
                 <groupId>com.itextpdf</groupId>
                 <artifactId>itextpdf</artifactId>
@@ -115,6 +115,6 @@
                 <artifactId>spring-boot-test-autoconfigure</artifactId>
                 <version>2.0.6.RELEASE</version>
             </dependency>
-		</dependencies>
+        </dependencies>
     </dependencyManagement>
 </project>

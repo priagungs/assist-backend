@@ -7,7 +7,7 @@ import static org.springframework.boot.SpringApplication.run;
 @SpringBootApplication
 public class FutureOfficeInventorySystemApplication {
 
-	public static void main(String[] args) {
-		run(FutureOfficeInventorySystemApplication.class, args);
-	}
+    public static void main(String[] args) {
+        run(FutureOfficeInventorySystemApplication.class, args);
+    }
 }

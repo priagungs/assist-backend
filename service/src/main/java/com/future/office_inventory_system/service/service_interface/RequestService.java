@@ -1,11 +1,11 @@
-package com.future.office_inventory_system.service;
+package com.future.office_inventory_system.service.service_interface;
 
-import com.future.office_inventory_system.model.Item;
-import com.future.office_inventory_system.model.Request;
 import com.future.office_inventory_system.model.RequestStatus;
-import com.future.office_inventory_system.model.User;
-import com.future.office_inventory_system.value_object.RequestCreate;
-import com.future.office_inventory_system.value_object.RequestUpdate;
+import com.future.office_inventory_system.model.entity_model.Item;
+import com.future.office_inventory_system.model.entity_model.Request;
+import com.future.office_inventory_system.model.entity_model.User;
+import com.future.office_inventory_system.model.request_body_model.RequestCreate;
+import com.future.office_inventory_system.model.request_body_model.RequestUpdate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +35,7 @@ public interface RequestService {
 
     Page<Request> readAllRequestBySuperiorAndRequestStatus(
             Pageable pageable, User superior, RequestStatus requestStatus);
-    
+
     Page<Request> readAllRequestByUserAndStatus(Pageable pageable, User user, RequestStatus requestStatus);
 
     ResponseEntity deleteRequest(Request request);

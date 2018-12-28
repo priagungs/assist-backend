@@ -1,17 +1,21 @@
-package com.future.office_inventory_system.service;
+package com.future.office_inventory_system.service.service_impl;
 
 import com.future.office_inventory_system.exception.ForbiddenException;
 import com.future.office_inventory_system.exception.InvalidValueException;
 import com.future.office_inventory_system.exception.NotFoundException;
-import com.future.office_inventory_system.model.ItemTransaction;
-import com.future.office_inventory_system.model.Transaction;
-import com.future.office_inventory_system.model.User;
+import com.future.office_inventory_system.model.entity_model.ItemTransaction;
+import com.future.office_inventory_system.model.entity_model.Transaction;
+import com.future.office_inventory_system.model.entity_model.User;
 import com.future.office_inventory_system.repository.TransactionRepository;
+import com.future.office_inventory_system.service.service_interface.ItemTransactionService;
+import com.future.office_inventory_system.service.service_interface.TransactionService;
+import com.future.office_inventory_system.service.service_interface.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,6 +24,8 @@ import java.util.List;
 @Service
 public class TransactionServiceImpl implements TransactionService {
 
+    @Autowired
+    UserService userService;
 
     @Autowired
     private TransactionRepository repository;
@@ -27,9 +33,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Autowired
     private ItemTransactionService itemTransactionService;
 
-    @Autowired
-    UserService userService;
-
+    @Transactional
     public Transaction createTransaction(Transaction transaction) {
 
         User admin = userService.readUserByIdUser(transaction.getAdmin().getIdUser());
@@ -59,6 +63,7 @@ public class TransactionServiceImpl implements TransactionService {
         return repository.findById(id).orElseThrow(() -> new NotFoundException("transaction not found"));
     }
 
+    @Transactional
     public ResponseEntity deleteTransaction(Long id) {
         Transaction transaction = repository.findById(id)
                 .orElseThrow(() -> new NotFoundException("transaction not found"));

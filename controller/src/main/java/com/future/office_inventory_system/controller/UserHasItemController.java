@@ -1,9 +1,9 @@
 package com.future.office_inventory_system.controller;
 
 import com.future.office_inventory_system.exception.UnauthorizedException;
-import com.future.office_inventory_system.model.UserHasItem;
-import com.future.office_inventory_system.service.UserHasItemService;
-import com.future.office_inventory_system.value_object.LoggedinUserInfo;
+import com.future.office_inventory_system.model.entity_model.UserHasItem;
+import com.future.office_inventory_system.service.service_impl.LoggedinUserInfo;
+import com.future.office_inventory_system.service.service_interface.UserHasItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -36,11 +36,9 @@ public class UserHasItemController {
                                        @RequestParam("sort") String sort) {
         if (idUser != null) {
             return userHasItemService.readAllUserHasItemsByIdUser(idUser, PageRequest.of(page, limit, Sort.Direction.ASC, sort));
-        }
-        else if (idItem != null) {
+        } else if (idItem != null) {
             return userHasItemService.readAllUserHasItemsByIdItem(idItem, PageRequest.of(page, limit, Sort.Direction.ASC, sort));
-        }
-        else {
+        } else {
             return userHasItemService.readAllUserHasItems(PageRequest.of(page, limit, Sort.Direction.ASC, sort));
         }
     }

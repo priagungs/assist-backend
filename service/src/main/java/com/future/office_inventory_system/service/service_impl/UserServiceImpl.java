@@ -1,17 +1,21 @@
-package com.future.office_inventory_system.service;
+package com.future.office_inventory_system.service.service_impl;
 
 import com.future.office_inventory_system.exception.ConflictException;
 import com.future.office_inventory_system.exception.InvalidValueException;
 import com.future.office_inventory_system.exception.NotFoundException;
-import com.future.office_inventory_system.model.Request;
-import com.future.office_inventory_system.model.User;
-import com.future.office_inventory_system.model.UserHasItem;
+import com.future.office_inventory_system.model.entity_model.Request;
+import com.future.office_inventory_system.model.entity_model.User;
+import com.future.office_inventory_system.model.entity_model.UserHasItem;
 import com.future.office_inventory_system.repository.UserRepository;
+import com.future.office_inventory_system.service.service_interface.RequestService;
+import com.future.office_inventory_system.service.service_interface.UserHasItemService;
+import com.future.office_inventory_system.service.service_interface.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -25,6 +29,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private RequestService requestService;
 
+    @Transactional
     public User createUser(User user) {
         if (user.getSuperior() != null) {
             user.setSuperior(userRepository
@@ -38,13 +43,14 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
+    @Transactional
     public User updateUser(User user) {
         User updatedUser = userRepository
                 .findByIdUserAndIsActive(user.getIdUser(), true)
                 .orElseThrow(() -> new NotFoundException("user not found"));
 
         if (user.getSuperior() != null) {
-            for (User subordinate: updatedUser.getSubordinates()) {
+            for (User subordinate : updatedUser.getSubordinates()) {
                 if (user.getSuperior().getIdUser() == subordinate.getIdUser()) {
                     throw new InvalidValueException("Subordinates can't be superior");
                 }
@@ -52,11 +58,9 @@ public class UserServiceImpl implements UserService {
             updatedUser.setSuperior(userRepository
                     .findByIdUserAndIsActive(user.getSuperior().getIdUser(), true)
                     .orElseThrow(() -> new NotFoundException("superior not found")));
-        }
-        else {
+        } else {
             updatedUser.setSuperior(null);
         }
-
 
 
         updatedUser.setIsAdmin(user.getIsAdmin());
@@ -83,6 +87,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new NotFoundException("user not found"));
     }
 
+    @Transactional
     public Page<User> readAllUsersByIdSuperior(Long id, Pageable pageable) {
         return userRepository.findAllBySuperiorAndIsActive(userRepository.findByIdUserAndIsActive(id, true)
                 .orElseThrow(() -> new NotFoundException("superior not found")), true, pageable);
@@ -97,11 +102,12 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new NotFoundException("user not found"));
     }
 
+    @Transactional
     public ResponseEntity deleteUser(Long id) {
         User user = userRepository.findByIdUserAndIsActive(id, true)
                 .orElseThrow(() -> new NotFoundException("user not found"));
 
-        for (User subordinate: user.getSubordinates()) {
+        for (User subordinate : user.getSubordinates()) {
             subordinate.setSuperior(user.getSuperior());
         }
 

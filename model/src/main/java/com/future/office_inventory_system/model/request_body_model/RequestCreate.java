@@ -1,4 +1,4 @@
-package com.future.office_inventory_system.value_object;
+package com.future.office_inventory_system.model.request_body_model;
 
 import lombok.Data;
 
@@ -9,6 +9,6 @@ public class RequestCreate {
 
     private Long idUser;
 
-    private List<ItemRequest> items;
+    private List<RequestItem> items;
 
 }

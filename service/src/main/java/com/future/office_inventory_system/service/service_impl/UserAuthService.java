@@ -1,6 +1,7 @@
-package com.future.office_inventory_system.service;
+package com.future.office_inventory_system.service.service_impl;
 
-import com.future.office_inventory_system.model.User;
+import com.future.office_inventory_system.model.entity_model.User;
+import com.future.office_inventory_system.service.service_interface.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
