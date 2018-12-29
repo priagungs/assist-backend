@@ -6,23 +6,8 @@ import com.itextpdf.text.pdf.*;
 
 class HeaderFooter extends PdfPageEventHelper {
 
-    /**
-     * The header/footer text.
-     */
-
     String header;
-
-    /**
-     * The template with the total number of pages.
-     */
-
     PdfTemplate total;
-
-    /**
-     * Allows us to change the content of the header.
-     *
-     * @param header The new header String
-     */
 
     public void setHeader(String header) {
 
@@ -30,19 +15,11 @@ class HeaderFooter extends PdfPageEventHelper {
 
     }
 
-    /**
-     * Creates the PdfTemplate that will hold the total number of pages
-     */
-
     public void onOpenDocument(PdfWriter writer, Document document) {
 
         total = writer.getDirectContent().createTemplate(25, 16);
 
     }
-
-    /**
-     * Adds a header to every page
-     */
 
     public void onEndPage(PdfWriter writer, Document document) {
 
@@ -75,10 +52,6 @@ class HeaderFooter extends PdfPageEventHelper {
         }
 
     }
-
-    /**
-     * Fills out the total number of pages before the document is closed
-     */
 
     public void onCloseDocument(PdfWriter writer, Document document) {
 

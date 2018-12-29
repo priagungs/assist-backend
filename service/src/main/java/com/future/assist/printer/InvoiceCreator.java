@@ -6,10 +6,6 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 
-/**
- * This is to create a PDF file.
- */
-
 public class InvoiceCreator {
 
     public final static Font SMALL_BOLD = new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.BOLD);
@@ -73,11 +69,6 @@ public class InvoiceCreator {
         paragraph.add(table);
 
     }
-
-    /**
-     * Helper methods start here
-     **/
-
 
     public static void addEmptyLine(Paragraph paragraph, int number) {
 
