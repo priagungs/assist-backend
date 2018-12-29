@@ -1,11 +1,14 @@
 package com.future.office_inventory_system.controller;
 
 import com.future.office_inventory_system.exception.UnauthorizedException;
+import com.future.office_inventory_system.mapper.TransactionMapper;
 import com.future.office_inventory_system.model.entity_model.ItemTransaction;
 import com.future.office_inventory_system.model.entity_model.Transaction;
 import com.future.office_inventory_system.model.request_model.transaction.ItemTransactionRequest;
 import com.future.office_inventory_system.model.request_model.transaction.TransactionCreateRequest;
 import com.future.office_inventory_system.model.request_model.transaction.TransactionModelRequest;
+import com.future.office_inventory_system.model.response_model.PageResponse;
+import com.future.office_inventory_system.model.response_model.TransactionResponse;
 import com.future.office_inventory_system.printer.PrinterService;
 import com.future.office_inventory_system.service.service_impl.LoggedinUserInfo;
 import com.future.office_inventory_system.service.service_interface.ItemService;
@@ -40,51 +43,47 @@ public class TransactionController {
     @Autowired
     PrinterService printerService;
 
+    @Autowired
+    TransactionMapper transactionMapper;
+
     @PostMapping("/transactions")
-    Transaction createTransactions(@RequestBody TransactionCreateRequest transactionCreateRequest) {
+    TransactionResponse createTransactions(@RequestBody TransactionCreateRequest transactionCreateRequest) {
         if (!loggedinUserInfo.getUser().getIsAdmin() &&
                 transactionCreateRequest.getAdmin().getIdUser() != loggedinUserInfo.getUser().getIdUser()) {
             throw new UnauthorizedException("you are not permitted to create transaction");
         }
-        Transaction transaction = new Transaction();
-        transaction.setSupplier(transactionCreateRequest.getSupplier());
-        transaction.setAdmin(userService.readUserByIdUser(transactionCreateRequest.getAdmin().getIdUser()));
-        List<ItemTransaction> itemTransactions = new ArrayList<>();
-        for (ItemTransactionRequest itemTransactionRequest : transactionCreateRequest.getItemTransactions()) {
-            ItemTransaction itemTransaction = new ItemTransaction();
-            itemTransaction.setBoughtQty(itemTransactionRequest.getBoughtQty());
-            itemTransaction.setPrice(itemTransactionRequest.getPrice());
-            itemTransaction.setItem(itemService.readItemByIdItem(itemTransactionRequest.getItem().getIdItem()));
-            itemTransactions.add(itemTransaction);
-        }
-        transaction.setItemTransactions(itemTransactions);
 
-        Transaction createdTransaction = transactionService.createTransaction(transaction);
+
+        Transaction createdTransaction = transactionService.createTransaction(transactionMapper
+                .transactionRequestToEntity(transactionCreateRequest));
         printerService.printInvoice(transactionService.readTransactionByIdTransaction(createdTransaction.getIdTransaction()));
-        return createdTransaction;
+        return transactionMapper.transactionEntityToResponse(createdTransaction);
 
     }
 
     @GetMapping("/transactions")
-    Page<Transaction> readAllTransactions(@RequestParam("page") Integer page,
-                                          @RequestParam("limit") Integer limit,
-                                          @RequestParam("sort") String sort) {
+    PageResponse<TransactionResponse> readAllTransactions(@RequestParam("page") Integer page,
+                                                  @RequestParam("limit") Integer limit,
+                                                  @RequestParam("sort") String sort) {
         if (!loggedinUserInfo.getUser().getIsAdmin()) {
             throw new UnauthorizedException("you are not permitted to read transaction");
         }
         if (sort.equals("transactionDate")) {
-            return transactionService.readAllTransactions(PageRequest.of(page, limit, Sort.Direction.DESC, sort));
+            return transactionMapper.pageToPageResponse(transactionService
+                    .readAllTransactions(PageRequest.of(page, limit, Sort.Direction.DESC, sort)));
         } else {
-            return transactionService.readAllTransactions(PageRequest.of(page, limit, Sort.Direction.ASC, sort));
+            return transactionMapper.pageToPageResponse(transactionService
+                    .readAllTransactions(PageRequest.of(page, limit, Sort.Direction.ASC, sort)));
         }
     }
 
     @GetMapping("/transactions/{id}")
-    Transaction readTransactionById(@PathVariable("id") Long id) {
+    TransactionResponse readTransactionById(@PathVariable("id") Long id) {
         if (!loggedinUserInfo.getUser().getIsAdmin()) {
             throw new UnauthorizedException("you are not permitted to read transaction");
         }
-        return transactionService.readTransactionByIdTransaction(id);
+        return transactionMapper.transactionEntityToResponse(
+                transactionService.readTransactionByIdTransaction(id));
     }
 
     @DeleteMapping("/transactions")

@@ -3,7 +3,6 @@ package com.future.office_inventory_system.configuration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.future.office_inventory_system.mapper.UserMapper;
 import com.future.office_inventory_system.model.entity_model.User;
-import com.future.office_inventory_system.model.response_model.UserResponseModel;
 import com.future.office_inventory_system.service.service_impl.LoggedinUserInfo;
 import com.future.office_inventory_system.service.service_impl.UserAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +48,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                     httpServletResponse.setContentType("application/json;charset=UTF-8");
                     ObjectMapper mapper = new ObjectMapper();
                     String json = mapper.writeValueAsString(userMapper
-                            .entityToResponseModel(loggedinUserInfo.getUser()));
+                            .entityToResponse(loggedinUserInfo.getUser()));
                     httpServletResponse.getWriter().print(json);
                 })
                 .failureHandler((httpServletRequest, httpServletResponse, e) -> httpServletResponse

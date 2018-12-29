@@ -4,8 +4,8 @@ import com.future.office_inventory_system.model.entity_model.User;
 import com.future.office_inventory_system.model.request_model.user.UserCreateRequest;
 import com.future.office_inventory_system.model.request_model.user.UserUpdateRequest;
 import com.future.office_inventory_system.model.response_model.PageResponse;
-import com.future.office_inventory_system.model.response_model.SuperiorResponseModel;
-import com.future.office_inventory_system.model.response_model.UserResponseModel;
+import com.future.office_inventory_system.model.response_model.SuperiorResponse;
+import com.future.office_inventory_system.model.response_model.UserResponse;
 import com.future.office_inventory_system.service.service_interface.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,8 +33,8 @@ public class UserMapper {
         return user;
     }
 
-    public UserResponseModel entityToResponseModel(User user) {
-        UserResponseModel responseModel = new UserResponseModel();
+    public UserResponse entityToResponse(User user) {
+        UserResponse responseModel = new UserResponse();
         responseModel.setDivision(user.getDivision());
         responseModel.setIdUser(user.getIdUser());
         responseModel.setIsActive(user.getIsActive());
@@ -44,16 +44,16 @@ public class UserMapper {
         responseModel.setRole(user.getRole());
         responseModel.setUsername(user.getUsername());
         if (user.getSuperior() != null) {
-            SuperiorResponseModel superiorResponseModel = new SuperiorResponseModel();
-            superiorResponseModel.setDivision(user.getSuperior().getDivision());
-            superiorResponseModel.setIdUser(user.getSuperior().getIdUser());
-            superiorResponseModel.setIsActive(user.getSuperior().getIsActive());
-            superiorResponseModel.setIsAdmin(user.getSuperior().getIsAdmin());
-            superiorResponseModel.setName(user.getSuperior().getName());
-            superiorResponseModel.setPictureURL(user.getSuperior().getPictureURL());
-            superiorResponseModel.setRole(user.getSuperior().getRole());
-            superiorResponseModel.setUsername(user.getSuperior().getUsername());
-            responseModel.setSuperior(superiorResponseModel);
+            SuperiorResponse superiorResponse = new SuperiorResponse();
+            superiorResponse.setDivision(user.getSuperior().getDivision());
+            superiorResponse.setIdUser(user.getSuperior().getIdUser());
+            superiorResponse.setIsActive(user.getSuperior().getIsActive());
+            superiorResponse.setIsAdmin(user.getSuperior().getIsAdmin());
+            superiorResponse.setName(user.getSuperior().getName());
+            superiorResponse.setPictureURL(user.getSuperior().getPictureURL());
+            superiorResponse.setRole(user.getSuperior().getRole());
+            superiorResponse.setUsername(user.getSuperior().getUsername());
+            responseModel.setSuperior(superiorResponse);
         }
         return responseModel;
     }
@@ -72,11 +72,11 @@ public class UserMapper {
         return user;
     }
 
-    public PageResponse<UserResponseModel> pageToPageResponse(Page<User> users) {
-        PageResponse<UserResponseModel> pageResponse = new PageResponse<>();
-        List<UserResponseModel> content = new ArrayList<>();
+    public PageResponse<UserResponse> pageToPageResponse(Page<User> users) {
+        PageResponse<UserResponse> pageResponse = new PageResponse<>();
+        List<UserResponse> content = new ArrayList<>();
         for (User user : users.getContent()) {
-            content.add(entityToResponseModel(user));
+            content.add(entityToResponse(user));
         }
         pageResponse.setContent(content);
         pageResponse.setFirst(users.isFirst());

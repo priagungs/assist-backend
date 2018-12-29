@@ -3,7 +3,7 @@ package com.future.office_inventory_system.model.response_model;
 import lombok.Data;
 
 @Data
-public class SuperiorResponseModel {
+public class UserResponse {
 
     private Long idUser;
     private Boolean isAdmin;
@@ -13,5 +13,6 @@ public class SuperiorResponseModel {
     private String division;
     private String pictureURL;
     private Boolean isActive;
+    private SuperiorResponse superior;
 
 }

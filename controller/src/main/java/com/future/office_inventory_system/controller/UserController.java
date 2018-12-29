@@ -8,12 +8,10 @@ import com.future.office_inventory_system.model.request_model.user.UserCreateReq
 import com.future.office_inventory_system.model.request_model.user.UserModelRequest;
 import com.future.office_inventory_system.model.request_model.user.UserUpdateRequest;
 import com.future.office_inventory_system.model.response_model.PageResponse;
-import com.future.office_inventory_system.model.response_model.SuperiorResponseModel;
-import com.future.office_inventory_system.model.response_model.UserResponseModel;
+import com.future.office_inventory_system.model.response_model.UserResponse;
 import com.future.office_inventory_system.service.service_impl.LoggedinUserInfo;
 import com.future.office_inventory_system.service.service_interface.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +35,7 @@ public class UserController {
     UserMapper userMapper;
 
     @PostMapping("/users")
-    public List<UserResponseModel> createUser(@RequestBody List<UserCreateRequest> userRequests) {
+    public List<UserResponse> createUser(@RequestBody List<UserCreateRequest> userRequests) {
         if (!loggedinUserInfo.getUser().getIsAdmin()) {
             throw new UnauthorizedException("you are not an admin");
         }
@@ -47,19 +45,19 @@ public class UserController {
             users.add(userMapper.createRequestToEntity(userRequest));
         }
 
-        List<UserResponseModel> result = new ArrayList<>();
+        List<UserResponse> result = new ArrayList<>();
         for (User user : users) {
             User createdUser = userService.createUser(user);
-            result.add(userMapper.entityToResponseModel(createdUser));
+            result.add(userMapper.entityToResponse(createdUser));
         }
         return result;
     }
 
     @GetMapping("/users")
-    public PageResponse<UserResponseModel> readAllUsers(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit,
-                                           @RequestParam(value = "idSuperior", required = false) Long idSuperior,
-                                           @RequestParam(value = "keyword", required = false) String keyword,
-                                           @RequestParam("sort") String sort) {
+    public PageResponse<UserResponse> readAllUsers(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit,
+                                                   @RequestParam(value = "idSuperior", required = false) Long idSuperior,
+                                                   @RequestParam(value = "keyword", required = false) String keyword,
+                                                   @RequestParam("sort") String sort) {
         if (idSuperior != null) {
             return userMapper.pageToPageResponse(userService.readAllUsersByIdSuperior(idSuperior,
                     PageRequest.of(page, limit, Sort.Direction.ASC, sort)));
@@ -73,26 +71,26 @@ public class UserController {
     }
 
     @GetMapping("/user/{idUser}")
-    public UserResponseModel readUserByIdUser(@PathVariable("idUser") Long idUser) {
+    public UserResponse readUserByIdUser(@PathVariable("idUser") Long idUser) {
 
-        return userMapper.entityToResponseModel(userService.readUserByIdUser(idUser));
+        return userMapper.entityToResponse(userService.readUserByIdUser(idUser));
 
     }
 
     @GetMapping("/user")
-    public UserResponseModel readUserByUsername(@RequestParam("username") String username) {
-        return userMapper.entityToResponseModel(userService.readUserByUsername(username));
+    public UserResponse readUserByUsername(@RequestParam("username") String username) {
+        return userMapper.entityToResponse(userService.readUserByUsername(username));
     }
 
     @PutMapping("/user")
-    public UserResponseModel updateUser(@RequestBody UserUpdateRequest userRequest, HttpSession session) {
+    public UserResponse updateUser(@RequestBody UserUpdateRequest userRequest, HttpSession session) {
         if (!loggedinUserInfo.getUser().getIsAdmin() && loggedinUserInfo.getUser().getIdUser() != userRequest.getIdUser()) {
             throw new UnauthorizedException("You are not permitted to update this user");
         }
         if (loggedinUserInfo.getUser().getIdUser() == userRequest.getIdUser()) {
             session.invalidate();
         }
-        return userMapper.entityToResponseModel(
+        return userMapper.entityToResponse(
                 userService.updateUser(userMapper.updateRequestToEntity(userRequest)));
     }
 
