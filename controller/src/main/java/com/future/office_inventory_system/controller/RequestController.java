@@ -2,11 +2,14 @@ package com.future.office_inventory_system.controller;
 
 import com.future.office_inventory_system.exception.InvalidValueException;
 import com.future.office_inventory_system.exception.UnauthorizedException;
+import com.future.office_inventory_system.mapper.ReqMapper;
 import com.future.office_inventory_system.model.RequestStatus;
 import com.future.office_inventory_system.model.entity_model.Request;
 import com.future.office_inventory_system.model.request_model.request.ReqCreateRequest;
 import com.future.office_inventory_system.model.request_model.request.ReqModelRequest;
 import com.future.office_inventory_system.model.request_model.request.ReqUpdateRequest;
+import com.future.office_inventory_system.model.response_model.PageResponse;
+import com.future.office_inventory_system.model.response_model.ReqResponse;
 import com.future.office_inventory_system.service.service_impl.LoggedinUserInfo;
 import com.future.office_inventory_system.service.service_interface.RequestService;
 import com.future.office_inventory_system.service.service_interface.UserService;
@@ -33,43 +36,54 @@ public class RequestController {
     @Autowired
     LoggedinUserInfo userInfo;
 
+    @Autowired
+    ReqMapper reqMapper;
+
     @PostMapping("/requests")
-    List<Request> createRequests(@RequestBody ReqCreateRequest requestBody) {
-        return requestService.createRequest(requestBody);
+    List<ReqResponse> createRequests(@RequestBody ReqCreateRequest requestBody) {
+        List<Request> requests = requestService.createRequest(requestBody);
+        List<ReqResponse> reqResponses = new ArrayList<>();
+        for (Request request : requests) {
+            reqResponses.add(reqMapper.entityToResponse(request));
+        }
+        return reqResponses;
     }
 
     @GetMapping("/requests")
-    Page<Request> readRequests(@RequestParam("page") Integer page,
-                               @RequestParam("limit") Integer limit,
-                               @RequestParam(required = false, name = "idUser") Long idUser,
-                               @RequestParam(required = false, name = "idSuperior") Long idSuperior,
-                               @RequestParam(required = false, name = "status") RequestStatus status,
-                               @RequestParam("sort") String sort) {
+    PageResponse<ReqResponse> readRequests(@RequestParam("page") Integer page,
+                                       @RequestParam("limit") Integer limit,
+                                       @RequestParam(required = false, name = "idUser") Long idUser,
+                                       @RequestParam(required = false, name = "idSuperior") Long idSuperior,
+                                       @RequestParam(required = false, name = "status") RequestStatus status,
+                                       @RequestParam("sort") String sort) {
         Sort.Direction direction = Sort.Direction.ASC;
         if (sort.equals("requestDate") || sort.equals("rejectedDate") || sort.equals("handedOverDate") ||
                 sort.equals("returnedDate")) {
             direction = Sort.Direction.DESC;
         }
         if (idUser != null && status != null) {
-            return requestService.readAllRequestByUserAndStatus(PageRequest.of(page, limit, direction, sort),
-                    userService.readUserByIdUser(idUser), status);
+            return reqMapper.pageToPageResponse(requestService.readAllRequestByUserAndStatus(
+                    PageRequest.of(page, limit, direction, sort), userService.readUserByIdUser(idUser), status));
         } else if (idUser != null) {
-            return requestService.readRequestByUser(PageRequest.of(page, limit, direction, sort), userService.readUserByIdUser(idUser));
+            return reqMapper.pageToPageResponse(requestService.readRequestByUser(
+                    PageRequest.of(page, limit, direction, sort), userService.readUserByIdUser(idUser)));
         } else if (idSuperior != null && status != null) {
-            return requestService.readAllRequestBySuperiorAndRequestStatus(PageRequest.of(page, limit, direction, sort),
-                    userService.readUserByIdUser(idSuperior), status);
+            return reqMapper.pageToPageResponse(requestService.readAllRequestBySuperiorAndRequestStatus(
+                    PageRequest.of(page, limit, direction, sort), userService.readUserByIdUser(idSuperior), status));
         } else if (idSuperior != null) {
-            return requestService.readAllRequestBySuperior(PageRequest.of(page, limit, direction, sort),
-                    userService.readUserByIdUser(idSuperior));
+            return reqMapper.pageToPageResponse(requestService.readAllRequestBySuperior(
+                    PageRequest.of(page, limit, direction, sort), userService.readUserByIdUser(idSuperior)));
         } else if (status != null) {
-            return requestService.readAllRequestByRequestStatus(PageRequest.of(page, limit, direction, sort), status);
+            return reqMapper.pageToPageResponse(requestService.readAllRequestByRequestStatus(
+                    PageRequest.of(page, limit, direction, sort), status));
         } else {
-            return requestService.readAllRequest(PageRequest.of(page, limit, direction, sort));
+            return reqMapper.pageToPageResponse(requestService.readAllRequest(
+                    PageRequest.of(page, limit, direction, sort)));
         }
     }
 
     @PutMapping("/requests")
-    List<Request> updateRequest(@RequestBody List<ReqUpdateRequest> requestBodies) {
+    List<ReqResponse> updateRequest(@RequestBody List<ReqUpdateRequest> requestBodies) {
         List<Request> result = new ArrayList<>();
         for (ReqUpdateRequest requestBody : requestBodies) {
             if (requestBody.getRequestStatus() == RequestStatus.APPROVED ||
@@ -88,7 +102,12 @@ public class RequestController {
                 throw new InvalidValueException("Invalid request body");
             }
         }
-        return result;
+
+        List<ReqResponse> responses = new ArrayList<>();
+        for (Request request : result) {
+            responses.add(reqMapper.entityToResponse(request));
+        }
+        return responses;
     }
 
     @DeleteMapping("/requests")
