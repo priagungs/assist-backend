@@ -34,7 +34,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.sessionManagement().maximumSessions(1);
         http.exceptionHandling().authenticationEntryPoint((httpServletRequest, httpServletResponse, e) ->
                 httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED));
         http
