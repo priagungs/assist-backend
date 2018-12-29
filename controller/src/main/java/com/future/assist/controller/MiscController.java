@@ -1,7 +1,8 @@
 package com.future.assist.controller;
 
 import com.future.assist.exception.UnauthorizedException;
-import com.future.assist.model.entity_model.User;
+import com.future.assist.mapper.UserMapper;
+import com.future.assist.model.response_model.UserResponse;
 import com.future.assist.printer.PrinterService;
 import com.future.assist.service.service_impl.BackupRestoreService;
 import com.future.assist.service.service_impl.FileStorageService;
@@ -33,22 +34,25 @@ public class MiscController {
     TransactionService transactionService;
 
     @Autowired
-    PrinterService p;
+    PrinterService printerService;
 
     @Autowired
     ItemService itemService;
 
     @Autowired
+    UserMapper mapper;
+
+    @Autowired
     BackupRestoreService backupRestoreService;
 
     @GetMapping("/login-detail")
-    public User getLoginDetail() {
-        return loggedinUserInfo.getUser();
+    public UserResponse getLoginDetail() {
+        return mapper.entityToResponse(loggedinUserInfo.getUser());
     }
 
     @GetMapping("/item-detail/{id}")
     public ResponseEntity generateItemDetail(@PathVariable Long id, HttpServletRequest request) {
-        p.printItem(itemService.readItemByIdItem(id));
+        printerService.printItem(itemService.readItemByIdItem(id));
         String filename = "item_" + id.toString() + ".pdf";
         Resource resource = storageService.loadFileAsResource(filename);
 
@@ -62,7 +66,7 @@ public class MiscController {
     @GetMapping("/invoice/{id}")
     public ResponseEntity generateInvoice(@PathVariable Long id, HttpServletRequest request) {
 
-        p.printInvoice(transactionService.readTransactionByIdTransaction(id));
+        printerService.printInvoice(transactionService.readTransactionByIdTransaction(id));
         String filename = "Invoice_" + id.toString() + ".pdf";
         Resource resource = storageService.loadFileAsResource(filename);
 
