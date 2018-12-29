@@ -1,6 +1,5 @@
 package com.future.assist.model.entity_model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.future.assist.model.RequestStatus;
 import com.future.assist.model.TableName;
 import lombok.Data;
@@ -18,12 +17,10 @@ public class Request {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "idUser", nullable = false)
-    @JsonIgnoreProperties({"request"})
     private User requestBy;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "idItem", nullable = false)
-    @JsonIgnoreProperties({"request"})
     private Item item;
 
     private Date requestDate;

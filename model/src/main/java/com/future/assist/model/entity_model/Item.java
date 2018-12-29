@@ -1,6 +1,5 @@
 package com.future.assist.model.entity_model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.future.assist.model.TableName;
 import lombok.Data;
 
@@ -30,15 +29,12 @@ public class Item {
     private String description;
 
     @OneToMany(mappedBy = "item")
-    @JsonIgnore
     private List<Request> requests;
 
     @OneToMany(mappedBy = "item")
-    @JsonIgnore
     private List<UserHasItem> owners;
 
     @OneToMany(mappedBy = "item")
-    @JsonIgnore
     private List<ItemTransaction> itemTransactions;
 
     private Boolean isActive = true;
