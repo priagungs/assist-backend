@@ -2,10 +2,14 @@ package com.future.office_inventory_system.controller;
 
 import com.future.office_inventory_system.exception.ForbiddenException;
 import com.future.office_inventory_system.exception.UnauthorizedException;
+import com.future.office_inventory_system.mapper.UserMapper;
 import com.future.office_inventory_system.model.entity_model.User;
-import com.future.office_inventory_system.model.request_body_model.user.UserCreateRequest;
-import com.future.office_inventory_system.model.request_body_model.user.UserModelRequest;
-import com.future.office_inventory_system.model.request_body_model.user.UserUpdateRequest;
+import com.future.office_inventory_system.model.request_model.user.UserCreateRequest;
+import com.future.office_inventory_system.model.request_model.user.UserModelRequest;
+import com.future.office_inventory_system.model.request_model.user.UserUpdateRequest;
+import com.future.office_inventory_system.model.response_model.PageResponse;
+import com.future.office_inventory_system.model.response_model.SuperiorResponseModel;
+import com.future.office_inventory_system.model.response_model.UserResponseModel;
 import com.future.office_inventory_system.service.service_impl.LoggedinUserInfo;
 import com.future.office_inventory_system.service.service_interface.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,78 +33,67 @@ public class UserController {
     @Autowired
     LoggedinUserInfo loggedinUserInfo;
 
+    @Autowired
+    UserMapper userMapper;
+
     @PostMapping("/users")
-    public List<User> createUser(@RequestBody List<UserCreateRequest> userRequests) {
+    public List<UserResponseModel> createUser(@RequestBody List<UserCreateRequest> userRequests) {
         if (!loggedinUserInfo.getUser().getIsAdmin()) {
             throw new UnauthorizedException("you are not an admin");
         }
 
         List<User> users = new ArrayList<>();
         for (UserCreateRequest userRequest : userRequests) {
-            User user = new User();
-            user.setIsAdmin(userRequest.getIsAdmin());
-            user.setName(userRequest.getName());
-            user.setUsername(userRequest.getUsername());
-            user.setPassword(userRequest.getPassword());
-            user.setPictureURL(userRequest.getPictureURL());
-            user.setDivision(userRequest.getDivision());
-            user.setRole(userRequest.getRole());
-            user.setSuperior(userService.readUserByIdUser(userRequest.getSuperior().getIdUser()));
-            users.add(user);
+            users.add(userMapper.createRequestToEntity(userRequest));
         }
 
-        List<User> result = new ArrayList<>();
+        List<UserResponseModel> result = new ArrayList<>();
         for (User user : users) {
-            result.add(userService.createUser(user));
+            User createdUser = userService.createUser(user);
+            result.add(userMapper.entityToResponseModel(createdUser));
         }
         return result;
     }
 
     @GetMapping("/users")
-    public Page<User> readAllUsers(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit,
-                                   @RequestParam(value = "idSuperior", required = false) Long idSuperior,
-                                   @RequestParam(value = "keyword", required = false) String keyword,
-                                   @RequestParam("sort") String sort) {
+    public PageResponse<UserResponseModel> readAllUsers(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit,
+                                           @RequestParam(value = "idSuperior", required = false) Long idSuperior,
+                                           @RequestParam(value = "keyword", required = false) String keyword,
+                                           @RequestParam("sort") String sort) {
         if (idSuperior != null) {
-            return userService.readAllUsersByIdSuperior(idSuperior,
-                    PageRequest.of(page, limit, Sort.Direction.ASC, sort));
+            return userMapper.pageToPageResponse(userService.readAllUsersByIdSuperior(idSuperior,
+                    PageRequest.of(page, limit, Sort.Direction.ASC, sort)));
         } else if (keyword != null) {
-            return userService.readAllUsersContaining(keyword,
-                    PageRequest.of(page, limit, Sort.Direction.ASC, sort));
+            return userMapper.pageToPageResponse(userService.readAllUsersContaining(keyword,
+                    PageRequest.of(page, limit, Sort.Direction.ASC, sort)));
         } else {
-            return userService.readAllUsers(PageRequest.of(page, limit, Sort.Direction.ASC, sort));
+            return userMapper.pageToPageResponse(userService.readAllUsers(
+                    PageRequest.of(page, limit, Sort.Direction.ASC, sort)));
         }
     }
 
     @GetMapping("/user/{idUser}")
-    public User readUserByIdUser(@PathVariable("idUser") Long idUser) {
-        return userService.readUserByIdUser(idUser);
+    public UserResponseModel readUserByIdUser(@PathVariable("idUser") Long idUser) {
+
+        return userMapper.entityToResponseModel(userService.readUserByIdUser(idUser));
+
     }
 
     @GetMapping("/user")
-    public User readUserByUsername(@RequestParam("username") String username) {
-        return userService.readUserByUsername(username);
+    public UserResponseModel readUserByUsername(@RequestParam("username") String username) {
+        return userMapper.entityToResponseModel(userService.readUserByUsername(username));
     }
 
     @PutMapping("/user")
-    public User updateUser(@RequestBody UserUpdateRequest userRequest, HttpSession session) {
+    public UserResponseModel updateUser(@RequestBody UserUpdateRequest userRequest, HttpSession session) {
         if (!loggedinUserInfo.getUser().getIsAdmin() && loggedinUserInfo.getUser().getIdUser() != userRequest.getIdUser()) {
             throw new UnauthorizedException("You are not permitted to update this user");
         }
         if (loggedinUserInfo.getUser().getIdUser() == userRequest.getIdUser()) {
             session.invalidate();
         }
-        User user = new User();
-        user.setIsAdmin(userRequest.getIsAdmin());
-        user.setName(userRequest.getName());
-        user.setUsername(userRequest.getUsername());
-        user.setPassword(userRequest.getPassword());
-        user.setPictureURL(userRequest.getPictureURL());
-        user.setDivision(userRequest.getDivision());
-        user.setRole(userRequest.getRole());
-        user.setSuperior(userService.readUserByIdUser(userRequest.getSuperior().getIdUser()));
-        user.setIdUser(userRequest.getIdUser());
-        return userService.updateUser(user);
+        return userMapper.entityToResponseModel(
+                userService.updateUser(userMapper.updateRequestToEntity(userRequest)));
     }
 
     @DeleteMapping("/user")

@@ -1,4 +1,4 @@
-package com.future.office_inventory_system.model.request_body_model.request;
+package com.future.office_inventory_system.model.request_model.request;
 
 import lombok.Data;
 

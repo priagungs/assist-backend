@@ -2,8 +2,8 @@ package com.future.office_inventory_system.controller;
 
 import com.future.office_inventory_system.exception.UnauthorizedException;
 import com.future.office_inventory_system.model.entity_model.Item;
-import com.future.office_inventory_system.model.request_body_model.item.ItemCreateUpdateRequest;
-import com.future.office_inventory_system.model.request_body_model.item.ItemModelRequest;
+import com.future.office_inventory_system.model.request_model.item.ItemCreateUpdateRequest;
+import com.future.office_inventory_system.model.request_model.item.ItemModelRequest;
 import com.future.office_inventory_system.service.service_impl.LoggedinUserInfo;
 import com.future.office_inventory_system.service.service_interface.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;

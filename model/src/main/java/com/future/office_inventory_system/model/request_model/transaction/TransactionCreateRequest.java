@@ -1,6 +1,6 @@
-package com.future.office_inventory_system.model.request_body_model.transaction;
+package com.future.office_inventory_system.model.request_model.transaction;
 
-import com.future.office_inventory_system.model.request_body_model.user.UserModelRequest;
+import com.future.office_inventory_system.model.request_model.user.UserModelRequest;
 import lombok.Data;
 
 import java.util.List;
