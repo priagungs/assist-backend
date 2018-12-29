@@ -1,9 +1,9 @@
 package com.future.office_inventory_system.repository;
 
-import com.future.office_inventory_system.model.Item;
-import com.future.office_inventory_system.model.ItemTransaction;
-import com.future.office_inventory_system.model.Transaction;
-import com.future.office_inventory_system.model.User;
+import com.future.office_inventory_system.model.entity_model.Item;
+import com.future.office_inventory_system.model.entity_model.ItemTransaction;
+import com.future.office_inventory_system.model.entity_model.Transaction;
+import com.future.office_inventory_system.model.entity_model.User;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,10 +22,8 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-//@RunWith(SpringRunner.class)
+@RunWith(SpringRunner.class)
 @DataJpaTest
-@SpringBootTest
-//@EnableJpaRepositories("com.future.office_inventory_system.repository")
 public class ItemTransactionRepositoryTest {
 
     @Autowired
