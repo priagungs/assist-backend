@@ -39,5 +39,4 @@ public class Item {
 
     private Boolean isActive = true;
 
-
 }
