@@ -1,6 +1,7 @@
 package com.future.assist.service.service_impl;
 
 import com.future.assist.repository.UserRepository;
+import com.future.assist.service.service_interface.UserHasItemService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,8 +29,11 @@ public class UserServiceImplTest {
     @MockBean
     private UserRepository userRepository;
 
+    @MockBean
+    private UserHasItemService userHasItemService;
+
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
     }
 
     @Test
