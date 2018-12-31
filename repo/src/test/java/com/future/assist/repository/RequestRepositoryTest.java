@@ -38,7 +38,7 @@ public class RequestRepositoryTest {
 
 
     @Before
-    public void initRequestRepoTest() {
+    public void setUp() throws Exception {
         user1 = new User();
         user1.setUsername("shintaayuck");
         user1.setPassword("hashedpassword");

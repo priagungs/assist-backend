@@ -32,7 +32,7 @@ public class ItemRepositoryTest {
     private Item item2;
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
 
         item = new Item();
         item.setItemName("indomie");
