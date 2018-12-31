@@ -6,6 +6,7 @@ import com.future.assist.exception.NotFoundException;
 import com.future.assist.model.entity_model.Item;
 import com.future.assist.repository.ItemRepository;
 import com.future.assist.service.service_interface.ItemService;
+import org.aspectj.weaver.ast.Not;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -98,6 +99,25 @@ public class ItemServiceImplTest {
         itemService.updateItem(item2);
     }
     
+//    @Test(expected = ConflictException.class)
+//    public void updateItemConflictException() {
+//        Item newItem = item1;
+//        newItem.setItemName("false name");
+//        Mockito.when(itemRepository.findByIdItemAndIsActive(item1.getIdItem(), true))
+//            .thenReturn(Optional.of(newItem));
+//        Mockito.when(itemRepository.findByItemNameIgnoreCaseAndIsActive(item1.getItemName(), true))
+//            .thenReturn(Optional.of(item1));
+//        itemService.updateItem(item1);
+//    }
+    
+    @Test(expected = InvalidValueException.class)
+    public void updateItemInvalidValueTest2() {
+        item1.setAvailableQty(-2);
+        Mockito.when(itemRepository.findByIdItemAndIsActive(item1.getIdItem(), true))
+            .thenReturn(Optional.of(item1));
+        itemService.updateItem(item1);
+    }
+    
     @Test
     public void updateItemSuccessTest() {
         Mockito.when(itemRepository.save(item1)).thenReturn(item1);
@@ -147,6 +167,47 @@ public class ItemServiceImplTest {
             .thenReturn(itemPage);
         
         Assert.assertEquals(itemPage, itemService.readItemsByAvailableGreaterThan(0, PageRequest.of(0, Integer.MAX_VALUE)));
+    }
+    
+    @Test
+    public void readAllItemsContainingSuccessTest() {
+        List<Item> items = new ArrayList<>();
+        items.add(item1);
+        Page<Item> contents = new PageImpl(items);
+    
+        Mockito.when(itemRepository.findByItemNameIgnoreCaseContainingAndIsActive(
+            "a", true, PageRequest.of(0,2)))
+            .thenReturn(contents);
+        Assert.assertEquals(contents, itemService.readAllItemsContaining("a", PageRequest.of(0,2)));
+    }
+    
+    @Test
+    public void readAllItemsByKeywordAndAvailableGreaterThanSuccessTest() {
+        List<Item> items = new ArrayList<>();
+        items.add(item1);
+        PageImpl contents = new PageImpl(items);
+    
+        Mockito.when(itemRepository
+            .findByItemNameIgnoreCaseContainingAndAvailableQtyGreaterThanAndIsActive(
+                item1.getItemName(), 0, true, PageRequest.of(0,2)))
+            .thenReturn(contents);
+        Assert.assertEquals(contents, itemService
+            .readAllItemsByKeywordAndAvailableGreaterThan(
+                item1.getItemName(), 0, PageRequest.of(0,2)));
+    }
+    
+    @Test(expected = NotFoundException.class)
+    public void readItemByItemNameNotFoundTest() {
+        Mockito.when(itemRepository.findByItemNameIgnoreCaseAndIsActive(item1.getItemName(), true))
+            .thenReturn(Optional.empty());
+        itemService.readItemByItemName(item1.getItemName());
+    }
+    
+    @Test
+    public void readItemByItemNameSuccessTest() {
+        Mockito.when(itemRepository.findByItemNameIgnoreCaseAndIsActive(item1.getItemName(), true))
+            .thenReturn(Optional.of(item1));
+        Assert.assertEquals(item1, itemService.readItemByItemName(item1.getItemName()));
     }
     
     @Test(expected = NotFoundException.class)

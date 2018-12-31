@@ -1,6 +1,5 @@
 package com.future.assist.service.service_impl;
 
-import com.future.assist.exception.ConflictException;
 import com.future.assist.exception.InvalidValueException;
 import com.future.assist.exception.NotFoundException;
 import com.future.assist.model.entity_model.Item;
