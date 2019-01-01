@@ -15,9 +15,11 @@ import com.future.assist.service.service_interface.ItemService;
 import com.future.assist.service.service_interface.RequestService;
 import com.future.assist.service.service_interface.UserHasItemService;
 import com.future.assist.service.service_interface.UserService;
+import javafx.beans.binding.When;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -403,29 +405,142 @@ public class RequestServiceImplTest {
 
     @Test
     public void readRequestByUser() {
+        List<Request> returnList = new ArrayList<>();
+        returnList.add(request);
+        returnList.add(request2);
+
+
+        PageImpl requests = new PageImpl(returnList);
+
+        Mockito.when(requestRepository.findAllRequestsByRequestBy(user, PageRequest.of(0, Integer.MAX_VALUE)))
+                .thenReturn(new PageImpl(returnList));
+
+        assertEquals(returnList.size(), requestService.readRequestByUser(PageRequest.of(0, Integer.MAX_VALUE), user).getContent().size());
     }
 
     @Test
     public void readAllRequestBySuperior() {
+        List<User> users = new ArrayList<>();
+        users.add(user);
+        Mockito.when(userService.readAllUsersByIdSuperior(
+                user2.getIdUser(),
+                PageRequest.of(0,Integer.MAX_VALUE)
+                ))
+                .thenReturn(new PageImpl(users));
+
+        List<Request> returnList = new ArrayList<>();
+        returnList.add(request);
+        returnList.add(request2);
+
+        Mockito.when(requestRepository.findAllRequestsByRequestBy(
+                user,PageRequest.of(0,Integer.MAX_VALUE))
+                ).thenReturn(new PageImpl(returnList));
+
+        assertEquals(
+                returnList.size(),
+                requestService.readAllRequestBySuperior(
+                    PageRequest.of(0,Integer.MAX_VALUE),
+                    user2).getContent().size()
+                );
+
     }
 
     @Test
     public void readAllRequestByRequestStatus() {
+        List<Request> returnList = new ArrayList<>();
+        returnList.add(request);
+        returnList.add(request2);
+
+        Mockito.when(requestRepository.findAllRequestsByRequestStatus(
+                RequestStatus.REQUESTED,PageRequest.of(0,Integer.MAX_VALUE))
+        ).thenReturn(new PageImpl(returnList));
+
+        assertEquals(returnList.size(), requestService.readAllRequestByRequestStatus(
+                    PageRequest.of(0,Integer.MAX_VALUE),
+                    RequestStatus.REQUESTED).getContent().size()
+        );
     }
 
     @Test
     public void readAllRequestBySuperiorAndRequestStatus() {
+        List<Request> returnList = new ArrayList<>();
+        returnList.add(request);
+        returnList.add(request2);
+
+        List<User> users = new ArrayList<>();
+        users.add(user);
+        Mockito.when(userService.readAllUsersByIdSuperior(
+                user2.getIdUser(),
+                PageRequest.of(0,Integer.MAX_VALUE)
+        ))
+                .thenReturn(new PageImpl(users));
+
+        Mockito.when(requestRepository.findAllRequestsByRequestBy(
+                user,PageRequest.of(0,Integer.MAX_VALUE))
+        ).thenReturn(new PageImpl(returnList));
+
+        assertEquals(returnList.size(),requestService.readAllRequestBySuperiorAndRequestStatus(
+                PageRequest.of(0,Integer.MAX_VALUE),
+                user2,
+                RequestStatus.REQUESTED
+                ).getContent().size()
+        );
     }
 
     @Test
     public void readAllRequestByUserAndStatus() {
+        List<Request> returnList = new ArrayList<>();
+        returnList.add(request);
+        returnList.add(request2);
+
+        Mockito.when(requestRepository.findAllByRequestByAndRequestStatus(user,RequestStatus.REQUESTED,PageRequest.of(0,Integer.MAX_VALUE)))
+                .thenReturn(new PageImpl(returnList));
+
+        assertEquals(returnList.size(),requestService.readAllRequestByUserAndStatus(
+                PageRequest.of(0,Integer.MAX_VALUE),
+                user,
+                RequestStatus.REQUESTED
+                ).getContent().size()
+        );
+    }
+
+    @Test (expected = NotFoundException.class)
+    public void deleteRequestNotFoundTest() {
+        Mockito.when(requestRepository.findById(request.getIdRequest()))
+                .thenReturn(Optional.empty());
+
+        requestService.deleteRequest(request);
     }
 
     @Test
-    public void deleteRequest() {
+    public void deleteRequestTest() {
+        Mockito.when(requestRepository.findById(request.getIdRequest()))
+                .thenReturn(Optional.of(request));
+        Mockito.when(itemService.readItemByIdItem(request.getItem().getIdItem()))
+                .thenReturn(item1);
+
+        requestService.deleteRequest(request);
+
+        if(item1.getAvailableQty() != 7) {
+            assertTrue(false);
+        }
+    }
+
+    @Test (expected = NotFoundException.class)
+    public void readRequestByIdRequestNotFoundTest() {
+        Mockito.when(requestRepository.findById(request.getIdRequest()))
+                .thenReturn(Optional.empty());
+
+        Request result = requestService.readRequestByIdRequest(request.getIdRequest());
     }
 
     @Test
-    public void readRequestByIdRequest() {
+    public void readRequestByIdRequestSuccessTest() {
+        Mockito.when(requestRepository.findById(request.getIdRequest()))
+                .thenReturn(Optional.of(request));
+
+        Request result = requestService.readRequestByIdRequest(request.getIdRequest());
+
+        assertEquals(request,result);
     }
 }
