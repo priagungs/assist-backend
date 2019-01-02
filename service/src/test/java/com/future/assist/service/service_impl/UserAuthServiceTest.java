@@ -18,13 +18,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 public class UserAuthServiceTest {
     @Autowired
-    UserAuthService authService;
+    private UserAuthService authService;
 
     @Autowired
-    LoggedinUserInfo loggedinUserInfo;
+    private LoggedinUserInfo loggedinUserInfo;
 
     @MockBean
-    UserService userService;
+    private UserService userService;
 
     private User user;
 

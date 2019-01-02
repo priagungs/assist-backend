@@ -40,7 +40,7 @@ public interface RequestService {
 
     ResponseEntity deleteRequest(Request request);
 
-    public Request readRequestByIdRequest(Long id);
+    Request readRequestByIdRequest(Long id);
 
-    public Request updateRequestStatusToReturned(Request request);
+    Request updateRequestStatusToReturned(Request request);
 }

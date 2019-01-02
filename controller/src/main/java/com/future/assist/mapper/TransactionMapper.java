@@ -20,16 +20,16 @@ import java.util.List;
 public class TransactionMapper {
 
     @Autowired
-    UserMapper userMapper;
+    private UserMapper userMapper;
 
     @Autowired
-    ItemMapper itemMapper;
+    private ItemMapper itemMapper;
 
     @Autowired
-    ItemService itemService;
+    private ItemService itemService;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     public ItemTransactionResponse itemTransactionEntityToResponse(ItemTransaction itemTransaction) {
         ItemTransactionResponse response = new ItemTransactionResponse();

@@ -36,20 +36,20 @@ public class UserHasItemServiceImplTest {
 
     @Autowired
     @MockBean
-    UserHasItemService userHasItemService;
+    private UserHasItemService userHasItemService;
 
     @MockBean
-    UserHasItemRepository userHasItemRepository;
+    private UserHasItemRepository userHasItemRepository;
 
     @MockBean
-    ItemService itemService;
+    private ItemService itemService;
 
     @MockBean
-    UserService userService;
+    private UserService userService;
 
-    User user;
-    Item item;
-    UserHasItem userHasItem;
+    private User user;
+    private Item item;
+    private UserHasItem userHasItem;
 
     @Before
     public void setUp() {

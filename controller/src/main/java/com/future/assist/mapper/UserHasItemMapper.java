@@ -14,10 +14,10 @@ import java.util.List;
 public class UserHasItemMapper {
 
     @Autowired
-    UserMapper userMapper;
+    private UserMapper userMapper;
 
     @Autowired
-    ItemMapper itemMapper;
+    private ItemMapper itemMapper;
 
     public UserHasItemResponse entityToResponse(UserHasItem userHasItem) {
         UserHasItemResponse response = new UserHasItemResponse();

@@ -18,7 +18,7 @@ import java.util.List;
 public class UserMapper {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     public User createRequestToEntity(UserCreateRequest userRequest) {
         User user = new User();

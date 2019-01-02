@@ -27,17 +27,18 @@ import java.util.Optional;
 @SpringBootTest
 public class ItemServiceImplTest {
 
-    @Autowired
-    ItemService itemService;
+    private ItemService itemService;
 
     @MockBean
-    ItemRepository itemRepository;
+    private ItemRepository itemRepository;
 
     private Item item1;
     private Item item2;
 
     @Before
     public void setUp() {
+        itemService = new ItemServiceImpl();
+
         item1 = new Item();
         item1.setItemName("indomie");
         item1.setPictureURL("www.link.foto");

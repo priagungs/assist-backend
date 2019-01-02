@@ -26,19 +26,19 @@ import java.util.List;
 public class UserHasItemServiceImpl implements UserHasItemService {
 
     @Autowired
-    UserHasItemRepository repository;
+    private UserHasItemRepository repository;
 
     @Autowired
-    ItemService itemService;
+    private ItemService itemService;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    RequestService requestService;
+    private RequestService requestService;
 
     @Autowired
-    LoggedinUserInfo loggedinUserInfo;
+    private LoggedinUserInfo loggedinUserInfo;
 
     @Transactional
     public UserHasItem createUserHasItem(UserHasItem userHasItem) {

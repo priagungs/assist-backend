@@ -26,12 +26,6 @@ public class TransactionController {
     private TransactionService transactionService;
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
-    private ItemService itemService;
-
-    @Autowired
     private LoggedinUserInfo loggedinUserInfo;
 
     @Autowired
