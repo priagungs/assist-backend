@@ -5,12 +5,8 @@ import lombok.Data;
 
 @Data
 public class ReqUpdateRequest {
-
     private Long idRequest;
-
     private Long idSuperior;
-
     private Long idAdmin;
-
     private RequestStatus requestStatus;
 }

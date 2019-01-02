@@ -9,7 +9,6 @@ import javax.persistence.*;
 @Data
 @Table(name = TableName.ITEMTRANSACTION)
 public class ItemTransaction {
-
     @Id
     @GeneratedValue
     private Long idItemTransaction;
@@ -24,5 +23,4 @@ public class ItemTransaction {
 
     private Integer boughtQty;
     private Long price;
-
 }

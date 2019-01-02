@@ -12,7 +12,6 @@ import java.util.List;
 
 @Component
 public class ItemMapper {
-
     public Item requestToEntity(ItemCreateUpdateRequest itemRequest) {
         Item item = new Item();
         item.setItemName(itemRequest.getItemName());

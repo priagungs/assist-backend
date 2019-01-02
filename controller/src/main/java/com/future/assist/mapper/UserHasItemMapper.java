@@ -12,7 +12,6 @@ import java.util.List;
 
 @Component
 public class UserHasItemMapper {
-
     @Autowired
     private UserMapper userMapper;
 
@@ -44,5 +43,4 @@ public class UserHasItemMapper {
         response.setContent(content);
         return response;
     }
-
 }

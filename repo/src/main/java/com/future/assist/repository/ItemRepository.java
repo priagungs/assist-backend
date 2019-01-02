@@ -10,7 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Long> {
-
     public Optional<Item> findByItemNameIgnoreCaseAndIsActive(String itemName, Boolean active);
 
     public Page<Item> findAllByAvailableQtyGreaterThanAndIsActive(Integer min, Boolean active, Pageable pageable);

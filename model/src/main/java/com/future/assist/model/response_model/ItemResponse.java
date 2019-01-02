@@ -4,7 +4,6 @@ import lombok.Data;
 
 @Data
 public class ItemResponse {
-
     private Long idItem;
     private String itemName;
     private String pictureURL;
@@ -13,5 +12,4 @@ public class ItemResponse {
     private Integer availableQty;
     private String description;
     private Boolean isActive;
-
 }

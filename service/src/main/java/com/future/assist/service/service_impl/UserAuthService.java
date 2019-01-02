@@ -10,13 +10,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserAuthService implements UserDetailsService {
-
     @Autowired
     private UserService userService;
 
     @Override
     public UserDetails loadUserByUsername(String s) {
-
         User user = userService.readUserByUsername(s);
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),

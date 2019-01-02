@@ -6,9 +6,6 @@ import java.util.List;
 
 @Data
 public class ReqCreateRequest {
-
     private Long idUser;
-
     private List<ReqItemCreateRequest> items;
-
 }

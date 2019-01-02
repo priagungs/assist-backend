@@ -22,7 +22,6 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(SpringRunner.class)
 @DataJpaTest
 public class UserHasItemRepositoryTest {
-
     @Autowired
     private TestEntityManager entityManager;
 
@@ -80,12 +79,10 @@ public class UserHasItemRepositoryTest {
 
         entityManager.persistAndFlush(userHasItemSatu);
         entityManager.persistAndFlush(userHasItemDua);
-
     }
 
     @Test
     public void findAllByUser() {
-
         Pageable page = PageRequest.of(0, 2);
 
         List<UserHasItem> userHasItems = userHasItemRepository
@@ -95,12 +92,10 @@ public class UserHasItemRepositoryTest {
         assertNotNull(userHasItems);
         assertEquals(2, userHasItems.size());
         assertEquals(userHasItemSatu, userHasItems.get(0));
-
     }
 
     @Test
     public void findAllByItem() {
-
         Pageable page = PageRequest.of(0, 2);
 
         List<UserHasItem> userHasItems = userHasItemRepository
@@ -110,12 +105,10 @@ public class UserHasItemRepositoryTest {
         assertNotNull(userHasItems);
         assertEquals(1, userHasItems.size());
         assertEquals(userHasItemSatu, userHasItems.get(0));
-
     }
 
     @Test
     public void findAllByUserAndItem() {
-
         List<UserHasItem> userHasItems1 = userHasItemRepository
                 .findAllByUserAndItem(user, itemSatu);
         List<UserHasItem> userHasItems2 = userHasItemRepository
@@ -125,8 +118,6 @@ public class UserHasItemRepositoryTest {
         assertEquals(userHasItemSatu, userHasItems1.get(0));
         assertEquals(1, userHasItems2.size());
         assertEquals(userHasItemDua, userHasItems2.get(0));
-
-
     }
 
     @Test
@@ -141,7 +132,6 @@ public class UserHasItemRepositoryTest {
         );
         assertFalse(userHasItemRepository.findById(Long.valueOf(111111)).isPresent());
         assertEquals(userHasItemSatu, userHasItemRepository.findById(userHasItemSatu.getIdUserHasItem()).get());
-
     }
 
     @Test
@@ -155,12 +145,10 @@ public class UserHasItemRepositoryTest {
         assertEquals(2, userHasItems.size());
         assertEquals(userHasItemSatu, userHasItems.get(0));
         assertEquals(userHasItemDua, userHasItems.get(1));
-
     }
 
     @Test
     public void deleteUserHasItem() {
-
         assertNotNull(userHasItemRepository.findAll());
 
         userHasItemRepository.delete(userHasItemSatu);
@@ -168,6 +156,5 @@ public class UserHasItemRepositoryTest {
 
         userHasItemRepository.delete(userHasItemDua);
         assertEquals(0, userHasItemRepository.findAll().size());
-
     }
 }

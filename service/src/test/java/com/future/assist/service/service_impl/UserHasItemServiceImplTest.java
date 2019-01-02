@@ -12,12 +12,10 @@ import com.future.assist.service.service_interface.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -122,7 +120,7 @@ public class UserHasItemServiceImplTest {
 
         listUHI.add(userHasItem);
 
-        Mockito.when(userHasItemRepository.findAllByUserAndItem(userHasItem.getUser(),userHasItem.getItem()))
+        Mockito.when(userHasItemRepository.findAllByUserAndItem(userHasItem.getUser(), userHasItem.getItem()))
                 .thenReturn(listUHI);
 
         Mockito.when(userHasItemRepository.save(userHasItem))
@@ -135,9 +133,8 @@ public class UserHasItemServiceImplTest {
 
         System.out.println(userHasItem.getUser().getIdUser());
         System.out.println(result.getUser().getIdUser());
-        assertEquals(userHasItem.getUser().getIdUser(),result.getUser().getIdUser());
+        assertEquals(userHasItem.getUser().getIdUser(), result.getUser().getIdUser());
     }
-
 
 
     @Test(expected = NotFoundException.class)

@@ -19,9 +19,7 @@ import java.util.Date;
 
 @Service
 public class FileStorageService {
-
     private static final String uploadDir = "./static";
-
     private Path fileStorageLocation;
 
     public FileStorageService() {
@@ -65,5 +63,4 @@ public class FileStorageService {
             throw new NotFoundException("File not found " + filename, e);
         }
     }
-
 }

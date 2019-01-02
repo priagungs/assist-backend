@@ -12,12 +12,9 @@ import java.util.List;
 
 @Repository
 public interface UserHasItemRepository extends JpaRepository<UserHasItem, Long> {
-
     public Page<UserHasItem> findAllByUser(User user, Pageable pageable);
 
     public Page<UserHasItem> findAllByItem(Item item, Pageable pageable);
 
     public List<UserHasItem> findAllByUserAndItem(User user, Item item);
-
-
 }

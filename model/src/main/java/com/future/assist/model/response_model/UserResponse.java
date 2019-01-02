@@ -4,7 +4,6 @@ import lombok.Data;
 
 @Data
 public class UserResponse {
-
     private Long idUser;
     private Boolean isAdmin;
     private String username;
@@ -14,5 +13,4 @@ public class UserResponse {
     private String pictureURL;
     private Boolean isActive;
     private SuperiorResponse superior;
-
 }

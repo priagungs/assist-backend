@@ -1,4 +1,4 @@
-package com.future.assist;
+package com.future.assist.controller;
 
 import com.future.assist.exception.UnauthorizedException;
 import com.future.assist.mapper.UserMapper;
@@ -23,7 +23,6 @@ import javax.servlet.http.HttpSession;
 @RestController
 @RequestMapping("/api")
 public class MiscController {
-
     @Autowired
     private FileStorageService storageService;
 
@@ -65,7 +64,6 @@ public class MiscController {
 
     @GetMapping("/invoice/{id}")
     public ResponseEntity generateInvoice(@PathVariable Long id, HttpServletRequest request) {
-
         printerService.printInvoice(transactionService.readTransactionByIdTransaction(id));
         String filename = "Invoice_" + id.toString() + ".pdf";
         Resource resource = storageService.loadFileAsResource(filename);
@@ -95,6 +93,5 @@ public class MiscController {
         } else {
             throw new UnauthorizedException("you are not admin");
         }
-
     }
 }

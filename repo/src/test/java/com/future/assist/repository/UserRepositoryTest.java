@@ -19,7 +19,6 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @DataJpaTest
 public class UserRepositoryTest {
-
     @Autowired
     private TestEntityManager entityManager;
 
@@ -95,7 +94,6 @@ public class UserRepositoryTest {
 
     @Test
     public void findByUsernameAndIsActive() {
-
         assertEquals(Optional.empty(), userRepository.findByUsernameAndIsActive("abcdef", true));
         assertEquals(Optional.empty(), userRepository.findByUsernameAndIsActive(user4.getUsername(), true));
         assertEquals(Optional.empty(), userRepository.findByUsernameAndIsActive(user1.getUsername(), false));
@@ -103,7 +101,6 @@ public class UserRepositoryTest {
 
         assertEquals(Optional.of(user1), userRepository.findByUsernameAndIsActive("shintaayuck", true));
         assertEquals(Optional.of(user4), userRepository.findByUsernameAndIsActive(user4.getUsername(), user4.getIsActive()));
-
     }
 
     @Test
@@ -124,17 +121,14 @@ public class UserRepositoryTest {
 
     @Test
     public void findByIdUserAndIsActive() {
-
         assertEquals(false, userRepository.findByIdUserAndIsActive(new Long(1111111), true).isPresent());
         assertEquals(user1, userRepository.findByIdUserAndIsActive(user1.getIdUser(), true).get());
         assertEquals(user2, userRepository.findByIdUserAndIsActive(user2.getIdUser(), true).get());
         assertNotEquals(Optional.empty(), userRepository.findByIdUserAndIsActive(user1.getIdUser(), true).get());
-
     }
 
     @Test
     public void findAllByIsActive() {
-
         List<User> users = new ArrayList<>();
         users.add(user1);
         users.add(user2);
@@ -143,12 +137,10 @@ public class UserRepositoryTest {
         assertNotNull(userRepository.findAllByIsActive(true, PageRequest.of(0, 100)));
         assertEquals(user4, userRepository.findAllByIsActive(false, PageRequest.of(0, 1)).getContent().get(0));
         assertEquals(users, userRepository.findAllByIsActive(true, PageRequest.of(0, 3)).getContent());
-
     }
 
     @Test
     public void findByNameIgnoreCaseContainingAndIsActive() {
-
         List<User> users = new ArrayList<>();
         users.add(user1);
         users.add(user3);
@@ -162,12 +154,10 @@ public class UserRepositoryTest {
             assertEquals(users.get(i), userRepository.findByNameIgnoreCaseContainingAndIsActive("A", true, PageRequest.of(0, 8))
                     .getContent().get(i));
         }
-
     }
 
     @Test
     public void saveUser() {
-
         assertEquals("Shinta Ayu C K", userRepository.findByIdUserAndIsActive(user1.getIdUser(), true).get().getName());
 
         user1.setName("Shinta");
@@ -179,7 +169,6 @@ public class UserRepositoryTest {
 
     @Test
     public void deleteUser() {
-
         int count = userRepository.findAll().size();
         assertNotNull(userRepository.findAll());
 
@@ -190,8 +179,6 @@ public class UserRepositoryTest {
         userRepository.save(user4);
         userRepository.delete(user1);
         assertEquals(count - 1, userRepository.findAll().size());
-
     }
-
 }
 

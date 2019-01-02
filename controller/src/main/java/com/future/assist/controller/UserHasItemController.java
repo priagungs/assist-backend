@@ -1,4 +1,4 @@
-package com.future.assist;
+package com.future.assist.controller;
 
 import com.future.assist.exception.UnauthorizedException;
 import com.future.assist.mapper.UserHasItemMapper;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api")
 public class UserHasItemController {
-
     @Autowired
     private UserHasItemService userHasItemService;
 
@@ -28,9 +27,9 @@ public class UserHasItemController {
 
     @GetMapping("/user-items")
     public PageResponse<UserHasItemResponse> readUserHasItems(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit,
-                                                       @RequestParam(value = "idUser", required = false) Long idUser,
-                                                       @RequestParam(value = "idItem", required = false) Long idItem,
-                                                       @RequestParam("sort") String sort) {
+                                                              @RequestParam(value = "idUser", required = false) Long idUser,
+                                                              @RequestParam(value = "idItem", required = false) Long idItem,
+                                                              @RequestParam("sort") String sort) {
         if (idUser != null) {
             return mapper.pageToPageResponse(userHasItemService.readAllUserHasItemsByIdUser(idUser,
                     PageRequest.of(page, limit, Sort.Direction.ASC, sort)));

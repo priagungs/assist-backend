@@ -16,7 +16,6 @@ import java.util.List;
 
 @Service
 public interface RequestService {
-
     List<Request> createRequest(ReqCreateRequest requestBody);
 
     Request updateRequest(ReqUpdateRequest requestBody);

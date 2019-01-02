@@ -5,8 +5,6 @@ import lombok.Data;
 
 @Data
 public class ReqItemCreateRequest {
-
     private Item item;
     private Integer requestQty;
-
 }

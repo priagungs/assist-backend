@@ -1,7 +1,6 @@
 package com.future.assist.controller;
 
 import com.future.assist.Assist;
-import com.future.assist.FileController;
 import com.future.assist.configuration.WebSecurityTestConfiguration;
 import com.future.assist.service.service_impl.FileStorageService;
 import org.junit.Test;
@@ -28,13 +27,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(WebSecurityTestConfiguration.class)
 @ContextConfiguration(classes = Assist.class)
 public class FileControllerTest {
-
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
     private FileStorageService storageService;
-
 
     @Test
     public void uploadFile() throws Exception {
@@ -56,5 +53,4 @@ public class FileControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk());
     }
-
 }

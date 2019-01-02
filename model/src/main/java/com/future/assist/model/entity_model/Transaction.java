@@ -12,7 +12,6 @@ import java.util.List;
 @Data
 @Table(name = TableName.TRANSACTION)
 public class Transaction {
-
     @Id
     @GeneratedValue
     private Long idTransaction;
@@ -27,5 +26,4 @@ public class Transaction {
 
     @OneToMany(mappedBy = "transaction")
     private List<ItemTransaction> itemTransactions;
-
 }

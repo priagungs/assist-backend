@@ -10,8 +10,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ItemTransactionRepository extends JpaRepository<ItemTransaction, Long> {
-
     public Page<ItemTransaction> findAllByTransaction(Transaction transaction, Pageable pageable);
-
 }
 

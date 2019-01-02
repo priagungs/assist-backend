@@ -5,9 +5,7 @@ import lombok.Data;
 
 @Data
 public class ItemTransactionRequest {
-
     private ItemModelRequest item;
     private Integer boughtQty;
     private Long price;
-
 }

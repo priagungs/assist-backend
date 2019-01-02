@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ItemTransactionServiceImpl implements ItemTransactionService {
-
     @Autowired
     private ItemTransactionRepository repository;
 
@@ -45,7 +44,6 @@ public class ItemTransactionServiceImpl implements ItemTransactionService {
         itemTransaction.setItem(item);
 
         return repository.save(itemTransaction);
-
     }
 
     @Transactional
@@ -69,7 +67,6 @@ public class ItemTransactionServiceImpl implements ItemTransactionService {
     }
 
     public Page<ItemTransaction> readAllItemTransactions(Pageable pageable) {
-
         return repository.findAll(pageable);
     }
 

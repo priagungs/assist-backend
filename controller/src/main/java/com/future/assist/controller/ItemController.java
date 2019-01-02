@@ -1,4 +1,4 @@
-package com.future.assist;
+package com.future.assist.controller;
 
 import com.future.assist.exception.UnauthorizedException;
 import com.future.assist.mapper.ItemMapper;
@@ -21,7 +21,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 public class ItemController {
-
     @Autowired
     private ItemService itemService;
 
@@ -55,7 +54,6 @@ public class ItemController {
                                                    @RequestParam(value = "keyword", required = false) String keyword,
                                                    @RequestParam("sort") String sort,
                                                    @RequestParam(value = "minqty", required = false) Integer minqty) {
-
         if (loggedinUserInfo.getUser().getIsAdmin()) {
             if (keyword != null) {
                 if (minqty != null) {
@@ -84,7 +82,6 @@ public class ItemController {
             }
         }
     }
-
 
     @GetMapping("/items/{idItem}")
     public ItemResponse readItemByIdItem(@PathVariable("idItem") Long idItem) {
@@ -115,5 +112,4 @@ public class ItemController {
         }
         return itemService.deleteItem(item.getIdItem());
     }
-
 }

@@ -7,9 +7,7 @@ import java.util.List;
 
 @Data
 public class TransactionCreateRequest {
-
     private String supplier;
     private UserModelRequest admin;
     private List<ItemTransactionRequest> itemTransactions;
-
 }

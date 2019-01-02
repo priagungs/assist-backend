@@ -1,10 +1,7 @@
 package com.future.assist.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.future.assist.Assist;
-import com.future.assist.ItemController;
-import com.future.assist.UserHasItemController;
 import com.future.assist.configuration.WebSecurityTestConfiguration;
 import com.future.assist.mapper.UserHasItemMapper;
 import com.future.assist.model.entity_model.Item;
@@ -17,15 +14,12 @@ import com.future.assist.model.response_model.UserHasItemResponse;
 import com.future.assist.model.response_model.UserResponse;
 import com.future.assist.service.service_impl.LoggedinUserInfo;
 import com.future.assist.service.service_interface.UserHasItemService;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -38,7 +32,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Arrays;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -52,7 +45,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(WebSecurityTestConfiguration.class)
 @ContextConfiguration(classes = Assist.class)
 public class UserHasItemControllerTest {
-
     @MockBean
     private UserHasItemService userHasItemService;
 
@@ -78,7 +70,6 @@ public class UserHasItemControllerTest {
     private PageResponse<UserHasItemResponse> pageResponse;
     private ItemResponse itemResponse;
     private UserResponse userResponse;
-
 
     @Before
     public void setUp() throws Exception {
@@ -126,7 +117,6 @@ public class UserHasItemControllerTest {
         pageResponse = new PageResponse<>();
         pageResponse.setContent(Arrays.asList(response));
         pageResponse.setSize(1);
-
     }
 
     @Test

@@ -18,7 +18,6 @@ import java.util.List;
 
 @Component
 public class TransactionMapper {
-
     @Autowired
     private UserMapper userMapper;
 
@@ -90,5 +89,4 @@ public class TransactionMapper {
         response.setNumber(transactions.getNumber());
         return response;
     }
-
 }

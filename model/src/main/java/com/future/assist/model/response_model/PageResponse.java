@@ -6,7 +6,6 @@ import java.util.List;
 
 @Data
 public class PageResponse<T> {
-
     private List<T> content;
     private Integer totalPages;
     private Long totalElements;
@@ -15,5 +14,4 @@ public class PageResponse<T> {
     private Boolean first;
     private Integer size;
     private Integer number;
-
 }

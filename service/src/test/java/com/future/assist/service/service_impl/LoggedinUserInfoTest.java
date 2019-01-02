@@ -17,9 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
@@ -59,6 +57,6 @@ public class LoggedinUserInfoTest {
         when(userService.readUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName()))
                 .thenReturn(user1);
 
-        assertEquals(user1.getUsername(),loggedinUserInfo.getUser().getUsername());
+        assertEquals(user1.getUsername(), loggedinUserInfo.getUser().getUsername());
     }
 }

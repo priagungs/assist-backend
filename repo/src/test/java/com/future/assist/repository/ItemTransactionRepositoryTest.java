@@ -22,7 +22,6 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(SpringRunner.class)
 @DataJpaTest
 public class ItemTransactionRepositoryTest {
-
     @Autowired
     private TestEntityManager entityManager;
 
@@ -39,7 +38,6 @@ public class ItemTransactionRepositoryTest {
 
     @Before
     public void setUp() throws Exception {
-
         user = new User();
         entityManager.persistAndFlush(user);
 
@@ -68,8 +66,6 @@ public class ItemTransactionRepositoryTest {
         list.add(itemTransaction1);
         list.add(itemTransaction2);
         transaction.setItemTransactions(list);
-
-
     }
 
     @Test
@@ -82,7 +78,6 @@ public class ItemTransactionRepositoryTest {
                 itemTransactionRepository.findById(
                         itemTransaction2.getIdItemTransaction()
                 ).get());
-
     }
 
     @Test
@@ -112,7 +107,6 @@ public class ItemTransactionRepositoryTest {
 
     @Test
     public void deleteItemTransaction() {
-
         assertNotNull(itemTransactionRepository.findAll());
         assertEquals(2, itemTransactionRepository.findAll().size());
 
@@ -121,6 +115,5 @@ public class ItemTransactionRepositoryTest {
 
         itemTransactionRepository.delete(itemTransaction2);
         assertEquals(0, itemTransactionRepository.findAll().size());
-
     }
 }

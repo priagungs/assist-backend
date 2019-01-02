@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface ItemService {
-
     Item createItem(Item item);
 
     Item updateItem(Item item);
@@ -27,5 +26,4 @@ public interface ItemService {
     Page<Item> readAllItemsByKeywordAndAvailableGreaterThan(String keyword, Integer min, Pageable pageable);
 
     ResponseEntity deleteItem(Long id);
-
 }

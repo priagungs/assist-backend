@@ -9,7 +9,6 @@ import javax.persistence.*;
 @Data
 @Table(name = TableName.USERHASITEM)
 public class UserHasItem {
-
     @Id
     @GeneratedValue
     private Long idUserHasItem;
@@ -23,5 +22,4 @@ public class UserHasItem {
     private Item item;
 
     private Integer hasQty;
-
 }

@@ -18,7 +18,6 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(SpringRunner.class)
 @DataJpaTest
 public class TransactionRepositoryTest {
-
     @Autowired
     private TestEntityManager entityManager;
 
@@ -58,7 +57,6 @@ public class TransactionRepositoryTest {
         entityManager.persist(transaction1);
         entityManager.persist(transaction2);
         entityManager.persist(transaction3);
-
     }
 
     @Test
@@ -78,12 +76,10 @@ public class TransactionRepositoryTest {
         assertEquals(transaction1, transactionRepository.findAll().get(0));
         assertEquals(transaction2, transactionRepository.findAll().get(1));
         assertEquals(transaction3, transactionRepository.findAll().get(2));
-
     }
 
     @Test
     public void deleteTransaction() {
-
         assertNotNull(transactionRepository.findAll());
 
         transactionRepository.delete(transaction1);
@@ -94,6 +90,5 @@ public class TransactionRepositoryTest {
 
         transactionRepository.delete(transaction3);
         assertEquals(0, transactionRepository.findAll().size());
-
     }
 }

@@ -24,7 +24,6 @@ import java.util.List;
 
 @Service
 public class UserHasItemServiceImpl implements UserHasItemService {
-
     @Autowired
     private UserHasItemRepository repository;
 
@@ -102,7 +101,6 @@ public class UserHasItemServiceImpl implements UserHasItemService {
 
         repository.delete(hasItem);
         return ResponseEntity.ok().build();
-
     }
 
     @Transactional

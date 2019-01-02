@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface UserHasItemService {
-
     UserHasItem createUserHasItem(UserHasItem userHasItem);
 
     UserHasItem readUserHasItemById(Long id);
@@ -26,5 +25,4 @@ public interface UserHasItemService {
     UserHasItem createUserHasItemFromRequest(UserHasItem userHasItem);
 
     UserHasItem updateUserHasItemFromRequest(UserHasItem userHasItem);
-
 }

@@ -4,11 +4,9 @@ import lombok.Data;
 
 @Data
 public class ItemCreateUpdateRequest {
-
     private String itemName;
     private String description;
     private String pictureURL;
     private Long price;
     private Integer totalQty;
-
 }

@@ -12,12 +12,11 @@ import java.util.List;
 
 @Component
 public class ReqMapper {
-
     @Autowired
     private ItemMapper itemMapper;
 
     @Autowired
-    private  UserMapper userMapper;
+    private UserMapper userMapper;
 
     public ReqResponse entityToResponse(Request request) {
         ReqResponse response = new ReqResponse();
@@ -54,5 +53,4 @@ public class ReqMapper {
         response.setContent(content);
         return response;
     }
-
 }

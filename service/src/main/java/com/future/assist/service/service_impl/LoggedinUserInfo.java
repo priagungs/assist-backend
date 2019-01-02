@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class LoggedinUserInfo {
-
     @Autowired
     private UserService userService;
 

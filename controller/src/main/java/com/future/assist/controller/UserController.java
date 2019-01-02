@@ -1,4 +1,4 @@
-package com.future.assist;
+package com.future.assist.controller;
 
 import com.future.assist.exception.ForbiddenException;
 import com.future.assist.exception.UnauthorizedException;
@@ -24,7 +24,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 public class UserController {
-
     @Autowired
     private UserService userService;
 
@@ -72,9 +71,7 @@ public class UserController {
 
     @GetMapping("/user/{idUser}")
     public UserResponse readUserByIdUser(@PathVariable("idUser") Long idUser) {
-
         return userMapper.entityToResponse(userService.readUserByIdUser(idUser));
-
     }
 
     @GetMapping("/user")

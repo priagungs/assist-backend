@@ -19,7 +19,6 @@ import static org.junit.Assert.*;
 @DataJpaTest
 @RunWith(SpringRunner.class)
 public class ItemRepositoryTest {
-
     @Autowired
     private TestEntityManager entityManager;
 
@@ -31,7 +30,6 @@ public class ItemRepositoryTest {
 
     @Before
     public void setUp() throws Exception {
-
         item = new Item();
         item.setItemName("indomie");
         item.setPictureURL("image.jpg");
@@ -55,7 +53,6 @@ public class ItemRepositoryTest {
     public void testFindByItemNameIgnoreCaseAndIsActive() {
         entityManager.persist(item);
 
-
         Optional<Item> itemFounded = itemRepository.findByItemNameIgnoreCaseAndIsActive("Indomie", false);
 
         assertFalse(itemFounded.isPresent());
@@ -67,8 +64,6 @@ public class ItemRepositoryTest {
 
         assertEquals(itemFounded.get().getItemName(), "indomie");
         assertEquals(itemFounded.get().getIsActive(), true);
-
-
     }
 
     @Test
@@ -93,12 +88,10 @@ public class ItemRepositoryTest {
                 5, true, PageRequest.of(0, 2)).getContent();
 
         assertEquals(0, itemsFounded.size());
-
     }
 
     @Test
     public void testFindAllByIsActive() {
-
         List<Item> itemsFounded = itemRepository.findAllByIsActive(true, PageRequest.of(0, 2)).getContent();
 
         assertTrue(itemsFounded.size() == 0);
@@ -110,7 +103,6 @@ public class ItemRepositoryTest {
 
         System.out.println(itemsFounded.size());
         assertTrue(itemsFounded.size() == 2);
-
     }
 
     @Test
@@ -125,12 +117,10 @@ public class ItemRepositoryTest {
 
         assertTrue(itemsFounded.isPresent());
         assertEquals(itemsFounded.get().getIdItem(), item.getIdItem());
-
     }
 
     @Test
     public void testFindByItemNameIgnoreCaseContainingAndIsActive() {
-
         List<Item> itemsFounded = itemRepository.findByItemNameIgnoreCaseContainingAndIsActive(
                 "mie", true, PageRequest.of(0, 2)
         ).getContent();
@@ -146,7 +136,6 @@ public class ItemRepositoryTest {
 
         assertNotNull(itemsFounded);
         assertEquals(itemsFounded.size(), 2);
-
     }
 
     @Test
@@ -173,7 +162,6 @@ public class ItemRepositoryTest {
 
     @Test
     public void testSaveItem() {
-
         itemRepository.save(item);
 
         List<Item> items = itemRepository.findAllByIsActive(
@@ -182,12 +170,10 @@ public class ItemRepositoryTest {
         assertNotNull(items);
         assertEquals(1, items.size());
         assertEquals(item, items.get(0));
-
     }
 
     @Test
     public void testDeleteItem() {
-
         entityManager.persist(item);
         entityManager.flush();
 
@@ -204,6 +190,5 @@ public class ItemRepositoryTest {
                 true, PageRequest.of(0, 2))
                 .getContent()
                 .size());
-
     }
 }

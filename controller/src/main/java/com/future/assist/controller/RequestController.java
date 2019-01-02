@@ -1,4 +1,4 @@
-package com.future.assist;
+package com.future.assist.controller;
 
 import com.future.assist.exception.InvalidValueException;
 import com.future.assist.exception.UnauthorizedException;
@@ -25,7 +25,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 public class RequestController {
-
     @Autowired
     private RequestService requestService;
 
@@ -50,11 +49,11 @@ public class RequestController {
 
     @GetMapping("/requests")
     public PageResponse<ReqResponse> readRequests(@RequestParam("page") Integer page,
-                                           @RequestParam("limit") Integer limit,
-                                           @RequestParam(required = false, name = "idUser") Long idUser,
-                                           @RequestParam(required = false, name = "idSuperior") Long idSuperior,
-                                           @RequestParam(required = false, name = "status") RequestStatus status,
-                                           @RequestParam("sort") String sort) {
+                                                  @RequestParam("limit") Integer limit,
+                                                  @RequestParam(required = false, name = "idUser") Long idUser,
+                                                  @RequestParam(required = false, name = "idSuperior") Long idSuperior,
+                                                  @RequestParam(required = false, name = "status") RequestStatus status,
+                                                  @RequestParam("sort") String sort) {
         Sort.Direction direction = Sort.Direction.ASC;
         if (sort.equals("requestDate") || sort.equals("rejectedDate") || sort.equals("handedOverDate") ||
                 sort.equals("returnedDate")) {

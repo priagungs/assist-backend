@@ -18,7 +18,6 @@ import java.util.Date;
 @Component
 @PropertySource("classpath:service.properties")
 public class BackupRestoreService {
-
     @Autowired
     private FileStorageService fileStorageService;
 
@@ -97,9 +96,6 @@ public class BackupRestoreService {
             e.printStackTrace();
         }
 
-
         return ResponseEntity.ok().build();
-
     }
-
 }

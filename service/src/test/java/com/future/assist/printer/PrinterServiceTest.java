@@ -15,13 +15,13 @@ import java.util.List;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class PrinterServiceTest {
-    
+
     private Transaction transaction;
     private Item item;
     private User user;
     private ItemTransaction itemTransaction;
     private UserHasItem userHasItem;
-    
+
     @Before
     public void setUp() {
         item = new Item();
@@ -35,7 +35,7 @@ public class PrinterServiceTest {
         item.setRequests(new ArrayList<>());
         item.setOwners(new ArrayList<>());
         item.setIsActive(true);
-        
+
         user = new User();
         user.setUsername("bambang");
         user.setName("Bambang Nugroho");
@@ -47,7 +47,7 @@ public class PrinterServiceTest {
         user.setPassword("asdfasdf");
         user.setDivision("Engineering");
         user.setRole("Software Engineer");
-        
+
         userHasItem = new UserHasItem();
         userHasItem.setItem(item);
         userHasItem.setUser(user);
@@ -56,7 +56,7 @@ public class PrinterServiceTest {
         List<UserHasItem> userHasItems = new ArrayList<>();
         userHasItems.add(userHasItem);
         item.setOwners(userHasItems);
-    
+
         itemTransaction = new ItemTransaction();
         itemTransaction.setIdItemTransaction(2L);
         itemTransaction.setItem(item);
@@ -64,7 +64,7 @@ public class PrinterServiceTest {
         itemTransaction.setPrice(item.getPrice());
         List<ItemTransaction> itemTransactions = new ArrayList<>();
         itemTransactions.add(itemTransaction);
-    
+
         transaction = new Transaction();
         transaction.setAdmin(user);
         transaction.setItemTransactions(itemTransactions);
@@ -72,16 +72,18 @@ public class PrinterServiceTest {
         transaction.setSupplier("Indofood");
         transaction.setTransactionDate(new Date());
     }
-    
+
     @Test
     public void printInvoice() {
-        PrinterService.printInvoice(transaction);
+        PrinterService printerService = new PrinterService();
+        printerService.printInvoice(transaction);
         Assert.assertEquals(transaction, transaction);
     }
-    
+
     @Test
     public void printItem() {
-        PrinterService.printItem(item);
+        PrinterService printerService = new PrinterService();
+        printerService.printItem(item);
         Assert.assertEquals(item, item);
     }
 }

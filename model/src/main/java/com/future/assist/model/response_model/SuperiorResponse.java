@@ -4,7 +4,6 @@ import lombok.Data;
 
 @Data
 public class SuperiorResponse {
-
     private Long idUser;
     private Boolean isAdmin;
     private String username;
@@ -13,5 +12,4 @@ public class SuperiorResponse {
     private String division;
     private String pictureURL;
     private Boolean isActive;
-
 }

@@ -22,7 +22,6 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @DataJpaTest
 public class RequestRepositoryTest {
-
     @Autowired
     private TestEntityManager entityManager;
 
@@ -35,7 +34,6 @@ public class RequestRepositoryTest {
     private User user3;
     private Request request;
     private Request request1;
-
 
     @Before
     public void setUp() throws Exception {
@@ -101,7 +99,6 @@ public class RequestRepositoryTest {
         entityManager.flush();
     }
 
-
     @Test
     public void findRequestByIdRequest() {
         Long idReq = new Long(request.getIdRequest());
@@ -124,7 +121,6 @@ public class RequestRepositoryTest {
         listRequest = requestRepository
                 .findAllRequestsByRequestBy(user3, PageRequest.of(0, 3)).getContent();
         assertEquals(2, listRequest.size());
-
     }
 
     @Test
@@ -141,7 +137,6 @@ public class RequestRepositoryTest {
                 .getContent();
 
         assertEquals(0, listRequest.size());
-
     }
 
     @Test
@@ -163,40 +158,32 @@ public class RequestRepositoryTest {
                 .getContent();
 
         assertEquals(0, listRequest.size());
-
     }
 
     @Test
     public void findAllRequestsByItem() {
         List<Request> listRequest = requestRepository.findAllRequestsByItem(item);
-
         assertEquals(listRequest.size(), 2);
-
     }
 
     @Test
     public void testSaveRequest() {
-
         requestRepository.save(request);
         requestRepository.save(request1);
-
 
         List<Request> requests = requestRepository.findAll();
 
         assertNotNull(requests);
         assertEquals(2, requests.size());
         assertEquals(request, requests.get(0));
-
     }
 
     @Test
     public void testDeleteRequest() {
-
         assertNotNull(requestRepository.findAll());
         assertEquals(2, requestRepository.findAll().size());
 
         requestRepository.delete(request);
         assertEquals(1, requestRepository.findAll().size());
-
     }
 }

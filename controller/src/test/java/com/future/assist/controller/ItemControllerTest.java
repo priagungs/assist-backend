@@ -2,7 +2,6 @@ package com.future.assist.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.future.assist.Assist;
-import com.future.assist.ItemController;
 import com.future.assist.configuration.WebSecurityTestConfiguration;
 import com.future.assist.mapper.ItemMapper;
 import com.future.assist.model.entity_model.Item;
@@ -44,7 +43,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(WebSecurityTestConfiguration.class)
 @ContextConfiguration(classes = Assist.class)
 public class ItemControllerTest {
-
     @Autowired
     private MockMvc mvc;
 

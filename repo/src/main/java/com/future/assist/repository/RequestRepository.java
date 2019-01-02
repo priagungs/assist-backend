@@ -14,7 +14,6 @@ import java.util.Optional;
 
 @Repository
 public interface RequestRepository extends JpaRepository<Request, Long> {
-
     public Optional<Request> findRequestByIdRequest(Long idRequest);
 
     public Page<Request> findAllRequestsByRequestBy(User user, Pageable pageable);
@@ -24,5 +23,4 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
     public Page<Request> findAllByRequestByAndRequestStatus(User user, RequestStatus status, Pageable pageable);
 
     public List<Request> findAllRequestsByItem(Item item);
-
 }

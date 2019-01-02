@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
-
     @Autowired
     private UserAuthService userAuthService;
 

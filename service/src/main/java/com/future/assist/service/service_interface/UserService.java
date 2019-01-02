@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface UserService {
-
     User createUser(User user);
 
     User updateUser(User user);
@@ -24,5 +23,4 @@ public interface UserService {
     User readUserByUsername(String username);
 
     ResponseEntity deleteUser(Long id);
-
 }

@@ -1,4 +1,4 @@
-package com.future.assist;
+package com.future.assist.controller;
 
 import com.future.assist.service.service_impl.FileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api")
 public class FileController {
-
     @Autowired
     private FileStorageService storageService;
 
@@ -56,5 +55,4 @@ public class FileController {
                                 + resource.getFilename() + "\"")
                 .body(resource);
     }
-
 }

@@ -16,7 +16,6 @@ import java.util.List;
 
 @Component
 public class UserMapper {
-
     @Autowired
     private UserService userService;
 
@@ -88,5 +87,4 @@ public class UserMapper {
         pageResponse.setTotalPages(users.getTotalPages());
         return pageResponse;
     }
-
 }

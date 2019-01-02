@@ -25,7 +25,6 @@ import java.util.List;
 
 @Service
 public class ItemServiceImpl implements ItemService {
-
     @Autowired
     private ItemRepository itemRepository;
 
@@ -85,7 +84,6 @@ public class ItemServiceImpl implements ItemService {
     }
 
     public Page<Item> readAllItems(Pageable pageable) {
-
         return itemRepository.findAllByIsActive(true, pageable);
     }
 
@@ -148,5 +146,4 @@ public class ItemServiceImpl implements ItemService {
 
         return ResponseEntity.ok().build();
     }
-
 }

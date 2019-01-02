@@ -1,9 +1,7 @@
 package com.future.assist.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.future.assist.Assist;
-import com.future.assist.TransactionController;
 import com.future.assist.configuration.WebSecurityTestConfiguration;
 import com.future.assist.mapper.TransactionMapper;
 import com.future.assist.model.entity_model.Transaction;
@@ -16,14 +14,10 @@ import com.future.assist.model.response_model.TransactionResponse;
 import com.future.assist.model.response_model.UserResponse;
 import com.future.assist.printer.PrinterService;
 import com.future.assist.service.service_impl.LoggedinUserInfo;
-import com.future.assist.service.service_interface.ItemService;
 import com.future.assist.service.service_interface.TransactionService;
-import com.future.assist.service.service_interface.UserService;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -39,13 +33,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Arrays;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -55,7 +45,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(WebSecurityTestConfiguration.class)
 @ContextConfiguration(classes = Assist.class)
 public class TransactionControllerTest {
-
     @MockBean
     private TransactionService transactionService;
 

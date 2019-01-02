@@ -7,7 +7,6 @@ import java.util.Date;
 
 @Data
 public class ReqResponse {
-
     private Long idRequest;
     private UserResponse requestBy;
     private ItemResponse item;
@@ -22,5 +21,4 @@ public class ReqResponse {
     private Date handedOverDate;
     private Long returnedBy;
     private Date returnedDate;
-
 }

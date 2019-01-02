@@ -30,7 +30,6 @@ import java.util.List;
 
 @Service
 public class RequestServiceImpl implements RequestService {
-
     @Autowired
     private RequestRepository requestRepository;
 
@@ -78,8 +77,6 @@ public class RequestServiceImpl implements RequestService {
 
     @Transactional
     public Request updateRequest(ReqUpdateRequest reqUpdateRequest) {
-
-
         Request request = requestRepository.findRequestByIdRequest(reqUpdateRequest.getIdRequest())
                 .orElseThrow(() -> new NotFoundException("request not found"));
 
@@ -116,8 +113,6 @@ public class RequestServiceImpl implements RequestService {
             userHasItem.setItem(request.getItem());
             userHasItem.setHasQty(request.getReqQty());
             userHasItemService.createUserHasItemFromRequest(userHasItem);
-
-
         } else {
             throw new InvalidValueException("Invalid input");
         }
@@ -170,7 +165,6 @@ public class RequestServiceImpl implements RequestService {
     }
 
     public Page<Request> readRequestByUser(Pageable pageable, User user) {
-
         return requestRepository.findAllRequestsByRequestBy(user, pageable);
     }
 

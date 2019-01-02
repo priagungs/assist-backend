@@ -10,7 +10,6 @@ import java.util.List;
 @Data
 @Table(name = TableName.ITEM)
 public class Item {
-
     @Id
     @GeneratedValue
     private Long idItem;
@@ -38,5 +37,4 @@ public class Item {
     private List<ItemTransaction> itemTransactions;
 
     private Boolean isActive = true;
-
 }

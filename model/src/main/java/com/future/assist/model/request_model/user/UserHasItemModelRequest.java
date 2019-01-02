@@ -4,7 +4,5 @@ import lombok.Data;
 
 @Data
 public class UserHasItemModelRequest {
-
     private Long idUserHasItem;
-
 }

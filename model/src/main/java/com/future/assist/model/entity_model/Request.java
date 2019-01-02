@@ -45,5 +45,4 @@ public class Request {
     private Long returnedBy;
 
     private Date returnedDate;
-
 }

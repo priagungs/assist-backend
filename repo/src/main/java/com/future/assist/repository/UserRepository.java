@@ -11,7 +11,6 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-
     public Optional<User> findByUsernameAndIsActive(String username, Boolean isActive);
 
     public Page<User> findAllBySuperiorAndIsActive(User superior, Boolean isActive, Pageable page);
@@ -21,5 +20,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
     public Page<User> findAllByIsActive(Boolean isActive, Pageable pageable);
 
     public Page<User> findByNameIgnoreCaseContainingAndIsActive(String keyword, Boolean isActive, Pageable pageable);
-
 }

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface TransactionService {
-
     Integer MAX_ALLOWABLE_MILISECONDS_TO_UPDATE = 3600000;
 
     Transaction createTransaction(Transaction transaction);
@@ -18,5 +17,4 @@ public interface TransactionService {
     Transaction readTransactionByIdTransaction(Long id);
 
     ResponseEntity deleteTransaction(Long id);
-
 }

@@ -23,7 +23,6 @@ import java.util.List;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
-
     @Autowired
     private UserService userService;
 
@@ -35,7 +34,6 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Transactional
     public Transaction createTransaction(Transaction transaction) {
-
         User admin = userService.readUserByIdUser(transaction.getAdmin().getIdUser());
         if (!admin.getIsAdmin()) {
             throw new InvalidValueException("admin is not an admin");

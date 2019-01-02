@@ -4,7 +4,6 @@ import lombok.Data;
 
 @Data
 public class UserUpdateRequest {
-
     private Long idUser;
     private Boolean isAdmin;
     private String name;
@@ -14,5 +13,4 @@ public class UserUpdateRequest {
     private String division;
     private String role;
     private UserModelRequest superior;
-
 }

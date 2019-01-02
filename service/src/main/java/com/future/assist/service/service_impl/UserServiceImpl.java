@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserServiceImpl implements UserService {
-
     @Autowired
     private UserRepository userRepository;
 
@@ -78,7 +77,6 @@ public class UserServiceImpl implements UserService {
     }
 
     public Page<User> readAllUsers(Pageable pageable) {
-
         return userRepository.findAllByIsActive(true, pageable);
     }
 
@@ -125,6 +123,5 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
 
         return ResponseEntity.ok().build();
-
     }
 }
