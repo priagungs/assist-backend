@@ -3,6 +3,9 @@ package com.future.assist.service.service_impl;
 import com.future.assist.exception.ConflictException;
 import com.future.assist.exception.InvalidValueException;
 import com.future.assist.exception.NotFoundException;
+import com.future.assist.model.RequestStatus;
+import com.future.assist.model.entity_model.Item;
+import com.future.assist.model.entity_model.Request;
 import com.future.assist.model.entity_model.User;
 import com.future.assist.repository.UserRepository;
 import com.future.assist.service.service_interface.UserHasItemService;
@@ -12,17 +15,11 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 
@@ -44,10 +41,15 @@ public class UserServiceImplTest {
     private UserRepository userRepository;
 
     @MockBean
-    private UserHasItemService userHasItemService;
+    private UserHasItemServiceImpl userHasItemService;
+
+    @MockBean
+    private RequestServiceImpl requestService;
 
     private User user1;
     private User user2;
+
+    @MockBean
     private User user3;
 
     @Before
@@ -81,6 +83,7 @@ public class UserServiceImplTest {
         user3.setIsAdmin(true);
         user3.setIsActive(true);
         user3.setHasItems(new ArrayList<>());
+        user3.setSuperior(user1);
 
     }
 
@@ -146,28 +149,35 @@ public class UserServiceImplTest {
 
     @Test (expected = ConflictException.class)
     public void updateUserConflictExceptionTest() {
+        user1.setIdUser(1L);
+        user2.setIdUser(2L);
+        System.out.println("user1 :"+user1.getIdUser());
+        System.out.println("user2 :"+user2.getIdUser());
         Mockito.when(userRepository.findByIdUserAndIsActive(user2.getIdUser(), true))
-                .thenReturn(Optional.of(user2));
-        Mockito.when(userRepository.findByIdUserAndIsActive(user2.getSuperior().getIdUser(), true))
                 .thenReturn(Optional.of(user1));
+        Mockito.when(userRepository.findByIdUserAndIsActive(user3.getSuperior().getIdUser(), true)
+            ).thenReturn(Optional.of(user1));
         Mockito.when(userRepository.findByUsernameAndIsActive(user2.getUsername(), true))
                 .thenReturn(Optional.of(user2));
-
         userService.updateUser(user2);
     }
 
     @Test
     public void updateUserSuccessTest() {
+        user1.setIdUser(1L);
+        user2.setIdUser(2L);
+        System.out.println("user1 :"+user1.getIdUser());
+        System.out.println("user2 :"+user2.getIdUser());
         Mockito.when(userRepository.findByIdUserAndIsActive(user2.getIdUser(), true))
-                .thenReturn(Optional.of(user2));
-        Mockito.when(userRepository.findByIdUserAndIsActive(user2.getSuperior().getIdUser(), true))
                 .thenReturn(Optional.of(user1));
-        Mockito.when(userRepository.save(any())).thenReturn(user2);
+        Mockito.when(userRepository.findByIdUserAndIsActive(user3.getSuperior().getIdUser(), true)
+        ).thenReturn(Optional.of(user1));
         Mockito.when(userRepository.findByUsernameAndIsActive(user2.getUsername(), true))
                 .thenReturn(Optional.empty());
-
+        Mockito.when(userRepository.save(any()))
+                .thenReturn(user1);
         User result = userService.updateUser(user2);
-        assertEquals("Bambang Nugroho", result.getName());
+        assertEquals(user1.getName(), result.getName());
 
     }
 
@@ -223,8 +233,17 @@ public class UserServiceImplTest {
 
     @Test
     public void readAllUsersContaining() {
-        assertTrue(true);
+        List<User> users = new ArrayList<>();
+        users.add(user1);
+        users.add(user2);
+        Mockito.when(userRepository.findByNameIgnoreCaseContainingAndIsActive("mie",true, PageRequest.of(0,Integer.MAX_VALUE)))
+                .thenReturn(new PageImpl(users));
 
+        assertEquals(
+                users.size(),
+                userService.readAllUsersContaining("mie",PageRequest.of(0,Integer.MAX_VALUE)
+                ).getContent().size()
+        );
     }
 
     @Test(expected = NotFoundException.class)
@@ -256,6 +275,28 @@ public class UserServiceImplTest {
         Mockito.when(userRepository.findByIdUserAndIsActive(user1.getIdUser(), true))
                 .thenReturn(Optional.of(user1));
         Mockito.when(userHasItemService.deleteUserHasItem(any())).thenReturn(ResponseEntity.ok().build());
+
+        Item item1 = new Item();
+        item1.setIdItem(Long.valueOf(123456));
+        item1.setItemName("Buku");
+        item1.setTotalQty(10);
+        item1.setAvailableQty(5);
+
+        Request request = new Request();
+        request.setRequestBy(user1);
+        request.setItem(item1);
+        request.setReqQty(2);
+        request.setRequestStatus(RequestStatus.REQUESTED);
+
+        List<Request> requests = new ArrayList<>();
+        requests.add(request);
+
+        user1.setRequests(requests);
+
+        Mockito.when(requestService.deleteRequest(any()))
+                .thenReturn(ResponseEntity.ok().build());
+        Mockito.when(userRepository.save(any()))
+                .thenReturn(user1);
 
         assertEquals(ResponseEntity.ok().build(), userService.deleteUser(user1.getIdUser()));
     }
