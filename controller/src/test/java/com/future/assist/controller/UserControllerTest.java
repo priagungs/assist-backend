@@ -2,7 +2,7 @@ package com.future.assist.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.future.assist.Assist;
-import com.future.assist.UserController;
+import com.future.assist.controller.UserController;
 import com.future.assist.configuration.WebSecurityTestConfiguration;
 import com.future.assist.mapper.UserMapper;
 import com.future.assist.model.entity_model.User;
@@ -43,7 +43,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(WebSecurityTestConfiguration.class)
 @ContextConfiguration(classes = Assist.class)
 public class UserControllerTest {
-    
     @Autowired
     private MockMvc mvc;
     
@@ -71,11 +70,9 @@ public class UserControllerTest {
     private User admin;
     private User nonadmin;
     private Page<User> users;
-    
-    
+
     @Before
     public void setUp() {
-        
         superiorResponse = new SuperiorResponse();
         superiorResponse.setIdUser(0L);
         superiorResponse.setIsAdmin(true);
@@ -157,7 +154,6 @@ public class UserControllerTest {
         nonadmin.setIsAdmin(false);
     
         users = new PageImpl<>(Arrays.asList(user));
-        
     }
     
     @Test
@@ -188,7 +184,6 @@ public class UserControllerTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(1)))
             .andExpect(jsonPath("$[0].idUser", is(response.getIdUser().intValue())));
-            
     }
     
     @Test
@@ -196,7 +191,6 @@ public class UserControllerTest {
         when(userService.readAllUsersByIdSuperior(any(), any()))
             .thenReturn(users);
         when(userMapper.pageToPageResponse(users)).thenReturn(pageResponse);
-        
     }
     
     @Test
@@ -215,7 +209,6 @@ public class UserControllerTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.content[0].idUser", is(response.getIdUser().intValue())))
             .andExpect(jsonPath("$.totalPages", is(pageResponse.getTotalPages())));
-        
     }
     
     @Test
@@ -233,7 +226,6 @@ public class UserControllerTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.content[0].idUser", is(response.getIdUser().intValue())))
             .andExpect(jsonPath("$.totalPages", is(pageResponse.getTotalPages())));
-    
     }
     
     @Test
@@ -295,7 +287,6 @@ public class UserControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
             .andDo(print())
             .andExpect(status().isUnauthorized());
-        
     }
     
     @Test
@@ -320,6 +311,5 @@ public class UserControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
             .andDo(print())
             .andExpect(status().isOk());
-    
     }
 }
