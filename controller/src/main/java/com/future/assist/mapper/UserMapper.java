@@ -28,7 +28,9 @@ public class UserMapper {
         user.setPictureURL(userRequest.getPictureURL());
         user.setDivision(userRequest.getDivision());
         user.setRole(userRequest.getRole());
-        user.setSuperior(userService.readUserByIdUser(userRequest.getSuperior().getIdUser()));
+        if (userRequest.getSuperior() != null) {
+            user.setSuperior(userService.readUserByIdUser(userRequest.getSuperior().getIdUser()));
+        }
         return user;
     }
 
@@ -66,7 +68,9 @@ public class UserMapper {
         user.setPictureURL(userRequest.getPictureURL());
         user.setDivision(userRequest.getDivision());
         user.setRole(userRequest.getRole());
-        user.setSuperior(userService.readUserByIdUser(userRequest.getSuperior().getIdUser()));
+        if (userRequest.getSuperior() != null) {
+            user.setSuperior(userService.readUserByIdUser(userRequest.getSuperior().getIdUser()));
+        }
         user.setIdUser(userRequest.getIdUser());
         return user;
     }
