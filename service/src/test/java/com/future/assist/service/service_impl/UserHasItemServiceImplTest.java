@@ -33,7 +33,6 @@ import static org.junit.Assert.assertTrue;
 public class UserHasItemServiceImplTest {
 
     @Autowired
-    @MockBean
     private UserHasItemService userHasItemService;
 
     @MockBean
@@ -59,6 +58,7 @@ public class UserHasItemServiceImplTest {
         userHasItem.setItem(item);
         userHasItem.setUser(user);
         userHasItem.setIdUserHasItem(1L);
+        userHasItem.setHasQty(2);
     }
 
 
@@ -126,8 +126,8 @@ public class UserHasItemServiceImplTest {
         Mockito.when(userHasItemRepository.save(userHasItem))
                 .thenReturn(userHasItem);
 
-        Mockito.when(userHasItemService.updateUserHasItemFromRequest(userHasItem))
-                .thenReturn(userHasItem);
+        Mockito.when(userHasItemRepository.findById(userHasItem.getIdUserHasItem()))
+                .thenReturn(Optional.of(userHasItem));
 
         UserHasItem result = userHasItemService.createUserHasItemFromRequest(userHasItem);
 
@@ -165,7 +165,10 @@ public class UserHasItemServiceImplTest {
         Mockito.when(userHasItemRepository.findById(userHasItem.getIdUserHasItem()))
                 .thenReturn(Optional.of(userHasItem));
         Mockito.doNothing().when(userHasItemRepository).delete(userHasItem);
+        Mockito.when(itemService.updateItem(userHasItem.getItem())).thenReturn(userHasItem.getItem());
+        Mockito.when(userService.readUserByIdUser(userHasItem.getUser().getIdUser())).thenReturn(user);
 
+        userHasItem.getUser().setRequests(new ArrayList<>());
         userHasItem.setHasQty(1);
         item.setAvailableQty(1);
         assertEquals(ResponseEntity.ok().build(),
