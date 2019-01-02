@@ -12,10 +12,12 @@ import com.future.assist.service.service_interface.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +35,7 @@ import static org.junit.Assert.assertTrue;
 public class UserHasItemServiceImplTest {
 
     @Autowired
+    @MockBean
     UserHasItemService userHasItemService;
 
     @MockBean
@@ -60,10 +63,6 @@ public class UserHasItemServiceImplTest {
         userHasItem.setIdUserHasItem(1L);
     }
 
-    @Test
-    public void createUserHasItem() {
-        assertTrue(true);
-    }
 
     @Test(expected = InvalidValueException.class)
     public void createUserHasItemInvalidValueTest() {
@@ -118,19 +117,28 @@ public class UserHasItemServiceImplTest {
     }
 
     @Test
-    public void createUserHasItemFromRequest() {
-        assertTrue(true);
+    public void createUserHasItemFromRequestSuccessTest() {
+        List<UserHasItem> listUHI = new ArrayList<>();
+
+        listUHI.add(userHasItem);
+
+        Mockito.when(userHasItemRepository.findAllByUserAndItem(userHasItem.getUser(),userHasItem.getItem()))
+                .thenReturn(listUHI);
+
+        Mockito.when(userHasItemRepository.save(userHasItem))
+                .thenReturn(userHasItem);
+
+        Mockito.when(userHasItemService.updateUserHasItemFromRequest(userHasItem))
+                .thenReturn(userHasItem);
+
+        UserHasItem result = userHasItemService.createUserHasItemFromRequest(userHasItem);
+
+        System.out.println(userHasItem.getUser().getIdUser());
+        System.out.println(result.getUser().getIdUser());
+        assertEquals(userHasItem.getUser().getIdUser(),result.getUser().getIdUser());
     }
 
-    @Test
-    public void updateUserHasItemFromRequest() {
-        assertTrue(true);
-    }
 
-    @Test
-    public void readUserHasItemById() {
-        assertTrue(true);
-    }
 
     @Test(expected = NotFoundException.class)
     public void readUserHasItemByIdNotFoundTest() {
@@ -147,10 +155,6 @@ public class UserHasItemServiceImplTest {
                 userHasItemService.readUserHasItemById(userHasItem.getIdUserHasItem()));
     }
 
-    @Test
-    public void deleteUserHasItem() {
-        assertTrue(true);
-    }
 
     @Test(expected = NotFoundException.class)
     public void deleteUserHasItemNotFoundTest() {
@@ -171,10 +175,6 @@ public class UserHasItemServiceImplTest {
                 userHasItemService.deleteUserHasItem(userHasItem.getIdUserHasItem()));
     }
 
-    @Test
-    public void updateUserHasItem() {
-        assertTrue(true);
-    }
 
     @Test(expected = NotFoundException.class)
     public void updateUserHasItemNotFoundTest() {
@@ -249,11 +249,6 @@ public class UserHasItemServiceImplTest {
 
         assertEquals(userHasItemPage, userHasItemService.readAllUserHasItemsByIdUser(user.getIdUser(),
                 PageRequest.of(0, Integer.MAX_VALUE)));
-    }
-
-    @Test
-    public void readAllUserHasItemsByIdItem() {
-        assertTrue(true);
     }
 
     @Test
