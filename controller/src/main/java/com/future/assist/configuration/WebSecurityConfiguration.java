@@ -19,13 +19,13 @@ import javax.servlet.http.HttpServletResponse;
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    UserAuthService userAuthService;
+    private UserAuthService userAuthService;
 
     @Autowired
-    LoggedinUserInfo loggedinUserInfo;
+    private LoggedinUserInfo loggedinUserInfo;
 
     @Autowired
-    UserMapper userMapper;
+    private UserMapper userMapper;
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {

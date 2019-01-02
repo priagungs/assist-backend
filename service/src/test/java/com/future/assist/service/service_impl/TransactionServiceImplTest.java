@@ -36,20 +36,20 @@ import static org.mockito.ArgumentMatchers.any;
 public class TransactionServiceImplTest {
 
     @Autowired
-    TransactionService transactionService;
+    private TransactionService transactionService;
 
     @MockBean
-    ItemTransactionService itemTransactionService;
+    private ItemTransactionService itemTransactionService;
 
     @MockBean
-    UserService userService;
+    private UserService userService;
 
     @MockBean
-    TransactionRepository repository;
+    private TransactionRepository repository;
 
-    User user;
-    ItemTransaction itemTransaction;
-    Transaction transaction;
+    private User user;
+    private ItemTransaction itemTransaction;
+    private Transaction transaction;
 
 
     @Before

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class LoggedinUserInfo {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     public User getUser() {
         return userService.readUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());

@@ -19,7 +19,7 @@ import java.util.Map;
 public class FileController {
 
     @Autowired
-    FileStorageService storageService;
+    private FileStorageService storageService;
 
     @PostMapping("/upload")
     public Map<String, String> uploadFile(@RequestParam("file") MultipartFile file) {

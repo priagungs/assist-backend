@@ -33,27 +33,27 @@ import java.util.Optional;
 public class ItemTransactionServiceImplTest {
 
     @Autowired
-    ItemTransactionService itemTransactionService;
+    private ItemTransactionService itemTransactionService;
 
     @MockBean
-    ItemTransactionRepository itemTransactionRepository;
+    private ItemTransactionRepository itemTransactionRepository;
 
     @MockBean
-    ItemService itemService;
+    private ItemService itemService;
 
     @MockBean
-    TransactionService transactionService;
+    private TransactionService transactionService;
 
     @MockBean
-    ItemRepository itemRepository;
+    private ItemRepository itemRepository;
 
-    Transaction transaction;
-    Item item1;
-    Item item2;
-    Item item3;
-    ItemTransaction itemTransaction1;
-    ItemTransaction itemTransaction2;
-    ItemTransaction itemTransaction3;
+    private Transaction transaction;
+    private Item item1;
+    private Item item2;
+    private Item item3;
+    private ItemTransaction itemTransaction1;
+    private ItemTransaction itemTransaction2;
+    private ItemTransaction itemTransaction3;
 
     @Before
     public void setUp() {

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class UserAuthService implements UserDetailsService {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Override
     public UserDetails loadUserByUsername(String s) {

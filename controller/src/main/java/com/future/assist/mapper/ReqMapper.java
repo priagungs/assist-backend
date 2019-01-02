@@ -14,10 +14,10 @@ import java.util.List;
 public class ReqMapper {
 
     @Autowired
-    ItemMapper itemMapper;
+    private ItemMapper itemMapper;
 
     @Autowired
-    UserMapper userMapper;
+    private  UserMapper userMapper;
 
     public ReqResponse entityToResponse(Request request) {
         ReqResponse response = new ReqResponse();

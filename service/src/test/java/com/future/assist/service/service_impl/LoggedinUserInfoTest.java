@@ -27,10 +27,10 @@ import static org.mockito.Mockito.when;
 public class LoggedinUserInfoTest {
 
     @Autowired
-    LoggedinUserInfo loggedinUserInfo;
+    private LoggedinUserInfo loggedinUserInfo;
 
     @MockBean
-    UserService userService;
+    private UserService userService;
 
     private User user1;
 

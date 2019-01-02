@@ -23,25 +23,19 @@ import org.springframework.web.bind.annotation.*;
 public class TransactionController {
 
     @Autowired
-    TransactionService transactionService;
+    private TransactionService transactionService;
 
     @Autowired
-    UserService userService;
+    private LoggedinUserInfo loggedinUserInfo;
 
     @Autowired
-    ItemService itemService;
+    private PrinterService printerService;
 
     @Autowired
-    LoggedinUserInfo loggedinUserInfo;
-
-    @Autowired
-    PrinterService printerService;
-
-    @Autowired
-    TransactionMapper transactionMapper;
+    private TransactionMapper transactionMapper;
 
     @PostMapping("/transactions")
-    TransactionResponse createTransactions(@RequestBody TransactionCreateRequest transactionCreateRequest) {
+    public TransactionResponse createTransactions(@RequestBody TransactionCreateRequest transactionCreateRequest) {
         if (!loggedinUserInfo.getUser().getIsAdmin() &&
                 transactionCreateRequest.getAdmin().getIdUser() != loggedinUserInfo.getUser().getIdUser()) {
             throw new UnauthorizedException("you are not permitted to create transaction");
@@ -56,7 +50,7 @@ public class TransactionController {
     }
 
     @GetMapping("/transactions")
-    PageResponse<TransactionResponse> readAllTransactions(@RequestParam("page") Integer page,
+    public PageResponse<TransactionResponse> readAllTransactions(@RequestParam("page") Integer page,
                                                           @RequestParam("limit") Integer limit,
                                                           @RequestParam("sort") String sort) {
         if (!loggedinUserInfo.getUser().getIsAdmin()) {
@@ -72,7 +66,7 @@ public class TransactionController {
     }
 
     @GetMapping("/transactions/{id}")
-    TransactionResponse readTransactionById(@PathVariable("id") Long id) {
+    public TransactionResponse readTransactionById(@PathVariable("id") Long id) {
         if (!loggedinUserInfo.getUser().getIsAdmin()) {
             throw new UnauthorizedException("you are not permitted to read transaction");
         }
@@ -81,7 +75,7 @@ public class TransactionController {
     }
 
     @DeleteMapping("/transactions")
-    ResponseEntity deleteTransaction(@RequestBody TransactionModelRequest transaction) {
+    public ResponseEntity deleteTransaction(@RequestBody TransactionModelRequest transaction) {
         if (!loggedinUserInfo.getUser().getIsAdmin()) {
             throw new UnauthorizedException("you are not permitted to read transaction");
         }

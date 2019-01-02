@@ -20,19 +20,19 @@ import java.util.Date;
 public class BackupRestoreService {
 
     @Autowired
-    FileStorageService fileStorageService;
+    private FileStorageService fileStorageService;
 
     @Value("${spring.datasource.username}")
-    String dbusername;
+    private String dbusername;
 
     @Value("${spring.datasource.password}")
-    String dbpassword;
+    private String dbpassword;
 
     @Value("${postgres.host}")
-    String dbhost;
+    private String dbhost;
 
     @Value("${postgres.dbname}")
-    String dbname;
+    private String dbname;
 
     public ResponseEntity backup() {
         ProcessBuilder processBuilder = new ProcessBuilder();

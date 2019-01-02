@@ -6,8 +6,8 @@ import com.itextpdf.text.pdf.*;
 
 class HeaderFooter extends PdfPageEventHelper {
 
-    String header;
-    PdfTemplate total;
+    private String header;
+    private PdfTemplate total;
 
     public void setHeader(String header) {
 

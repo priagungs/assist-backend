@@ -11,16 +11,16 @@ import java.util.Optional;
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Long> {
 
-    Optional<Item> findByItemNameIgnoreCaseAndIsActive(String itemName, Boolean active);
+    public Optional<Item> findByItemNameIgnoreCaseAndIsActive(String itemName, Boolean active);
 
-    Page<Item> findAllByAvailableQtyGreaterThanAndIsActive(Integer min, Boolean active, Pageable pageable);
+    public Page<Item> findAllByAvailableQtyGreaterThanAndIsActive(Integer min, Boolean active, Pageable pageable);
 
-    Page<Item> findAllByIsActive(Boolean active, Pageable pageable);
+    public Page<Item> findAllByIsActive(Boolean active, Pageable pageable);
 
-    Optional<Item> findByIdItemAndIsActive(Long id, Boolean active);
+    public Optional<Item> findByIdItemAndIsActive(Long id, Boolean active);
 
-    Page<Item> findByItemNameIgnoreCaseContainingAndIsActive(String name, Boolean active, Pageable pageable);
+    public Page<Item> findByItemNameIgnoreCaseContainingAndIsActive(String name, Boolean active, Pageable pageable);
 
-    Page<Item> findByItemNameIgnoreCaseContainingAndAvailableQtyGreaterThanAndIsActive(
+    public Page<Item> findByItemNameIgnoreCaseContainingAndAvailableQtyGreaterThanAndIsActive(
             String keyword, Integer min, Boolean active, Pageable pageable);
 }

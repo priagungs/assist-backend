@@ -25,25 +25,25 @@ import javax.servlet.http.HttpSession;
 public class MiscController {
 
     @Autowired
-    FileStorageService storageService;
+    private FileStorageService storageService;
 
     @Autowired
-    LoggedinUserInfo loggedinUserInfo;
+    private LoggedinUserInfo loggedinUserInfo;
 
     @Autowired
-    TransactionService transactionService;
+    private TransactionService transactionService;
 
     @Autowired
-    PrinterService printerService;
+    private PrinterService printerService;
 
     @Autowired
-    ItemService itemService;
+    private ItemService itemService;
 
     @Autowired
-    UserMapper mapper;
+    private UserMapper mapper;
 
     @Autowired
-    BackupRestoreService backupRestoreService;
+    private BackupRestoreService backupRestoreService;
 
     @GetMapping("/login-detail")
     public UserResponse getLoginDetail() {
@@ -79,7 +79,7 @@ public class MiscController {
     }
 
     @GetMapping("/backup")
-    ResponseEntity backup() {
+    public ResponseEntity backup() {
         if (loggedinUserInfo.getUser().getIsAdmin()) {
             return backupRestoreService.backup();
         } else {
@@ -88,7 +88,7 @@ public class MiscController {
     }
 
     @PostMapping("/restore")
-    ResponseEntity restore(@RequestParam("file") MultipartFile file, HttpSession session) {
+    public ResponseEntity restore(@RequestParam("file") MultipartFile file, HttpSession session) {
         if (loggedinUserInfo.getUser().getIsAdmin()) {
             session.invalidate();
             return backupRestoreService.restore(file);

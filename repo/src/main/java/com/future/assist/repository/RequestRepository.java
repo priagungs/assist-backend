@@ -15,14 +15,14 @@ import java.util.Optional;
 @Repository
 public interface RequestRepository extends JpaRepository<Request, Long> {
 
-    Optional<Request> findRequestByIdRequest(Long idRequest);
+    public Optional<Request> findRequestByIdRequest(Long idRequest);
 
-    Page<Request> findAllRequestsByRequestBy(User user, Pageable pageable);
+    public Page<Request> findAllRequestsByRequestBy(User user, Pageable pageable);
 
-    Page<Request> findAllRequestsByRequestStatus(RequestStatus requestStatus, Pageable pageable);
+    public Page<Request> findAllRequestsByRequestStatus(RequestStatus requestStatus, Pageable pageable);
 
-    Page<Request> findAllByRequestByAndRequestStatus(User user, RequestStatus status, Pageable pageable);
+    public Page<Request> findAllByRequestByAndRequestStatus(User user, RequestStatus status, Pageable pageable);
 
-    List<Request> findAllRequestsByItem(Item item);
+    public List<Request> findAllRequestsByItem(Item item);
 
 }

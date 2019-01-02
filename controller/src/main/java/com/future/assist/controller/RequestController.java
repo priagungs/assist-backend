@@ -27,19 +27,19 @@ import java.util.List;
 public class RequestController {
 
     @Autowired
-    RequestService requestService;
+    private RequestService requestService;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    LoggedinUserInfo userInfo;
+    private LoggedinUserInfo userInfo;
 
     @Autowired
-    ReqMapper reqMapper;
+    private ReqMapper reqMapper;
 
     @PostMapping("/requests")
-    List<ReqResponse> createRequests(@RequestBody ReqCreateRequest requestBody) {
+    public List<ReqResponse> createRequests(@RequestBody ReqCreateRequest requestBody) {
         List<Request> requests = requestService.createRequest(requestBody);
         List<ReqResponse> reqResponses = new ArrayList<>();
         for (Request request : requests) {
@@ -49,7 +49,7 @@ public class RequestController {
     }
 
     @GetMapping("/requests")
-    PageResponse<ReqResponse> readRequests(@RequestParam("page") Integer page,
+    public PageResponse<ReqResponse> readRequests(@RequestParam("page") Integer page,
                                            @RequestParam("limit") Integer limit,
                                            @RequestParam(required = false, name = "idUser") Long idUser,
                                            @RequestParam(required = false, name = "idSuperior") Long idSuperior,
@@ -82,7 +82,7 @@ public class RequestController {
     }
 
     @PutMapping("/requests")
-    List<ReqResponse> updateRequest(@RequestBody List<ReqUpdateRequest> requestBodies) {
+    public List<ReqResponse> updateRequest(@RequestBody List<ReqUpdateRequest> requestBodies) {
         List<Request> result = new ArrayList<>();
         for (ReqUpdateRequest requestBody : requestBodies) {
             if (requestBody.getRequestStatus() == RequestStatus.APPROVED ||
@@ -110,7 +110,7 @@ public class RequestController {
     }
 
     @DeleteMapping("/requests")
-    ResponseEntity deleteRequest(@RequestBody ReqModelRequest request) {
+    public ResponseEntity deleteRequest(@RequestBody ReqModelRequest request) {
         Request req = requestService.readRequestByIdRequest(request.getIdRequest());
         if (userInfo.getUser().getIdUser() != req.getRequestBy().getIdUser()) {
             throw new UnauthorizedException("You can't delete this request");

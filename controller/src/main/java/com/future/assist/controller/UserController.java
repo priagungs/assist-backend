@@ -26,13 +26,13 @@ import java.util.List;
 public class UserController {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    LoggedinUserInfo loggedinUserInfo;
+    private LoggedinUserInfo loggedinUserInfo;
 
     @Autowired
-    UserMapper userMapper;
+    private UserMapper userMapper;
 
     @PostMapping("/users")
     public List<UserResponse> createUser(@RequestBody List<UserCreateRequest> userRequests) {
