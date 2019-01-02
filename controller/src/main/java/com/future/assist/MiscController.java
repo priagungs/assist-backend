@@ -1,4 +1,4 @@
-package com.future.assist.controller;
+package com.future.assist;
 
 import com.future.assist.exception.UnauthorizedException;
 import com.future.assist.mapper.UserMapper;

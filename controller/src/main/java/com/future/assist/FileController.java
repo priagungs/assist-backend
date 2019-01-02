@@ -1,4 +1,4 @@
-package com.future.assist.controller;
+package com.future.assist;
 
 import com.future.assist.service.service_impl.FileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;

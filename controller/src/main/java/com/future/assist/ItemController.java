@@ -1,4 +1,4 @@
-package com.future.assist.controller;
+package com.future.assist;
 
 import com.future.assist.exception.UnauthorizedException;
 import com.future.assist.mapper.ItemMapper;
@@ -23,13 +23,13 @@ import java.util.List;
 public class ItemController {
 
     @Autowired
-    ItemService itemService;
+    private ItemService itemService;
 
     @Autowired
-    ItemMapper itemMapper;
+    private ItemMapper itemMapper;
 
     @Autowired
-    LoggedinUserInfo loggedinUserInfo;
+    private LoggedinUserInfo loggedinUserInfo;
 
     @PostMapping("/items")
     public List<ItemResponse> createItem(@RequestBody List<ItemCreateUpdateRequest> itemRequests) {

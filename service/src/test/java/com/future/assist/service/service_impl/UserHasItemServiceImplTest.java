@@ -25,7 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -247,7 +248,7 @@ public class UserHasItemServiceImplTest {
                 .thenReturn(userHasItemPage);
 
         assertEquals(userHasItemPage, userHasItemService.readAllUserHasItemsByIdUser(user.getIdUser(),
-                PageRequest.of(0,  Integer.MAX_VALUE)));
+                PageRequest.of(0, Integer.MAX_VALUE)));
     }
 
     @Test
@@ -268,6 +269,6 @@ public class UserHasItemServiceImplTest {
                 .thenReturn(userHasItemPage);
 
         assertEquals(userHasItemPage, userHasItemService.readAllUserHasItemsByIdItem(item.getIdItem(),
-                PageRequest.of(0,  Integer.MAX_VALUE)));
+                PageRequest.of(0, Integer.MAX_VALUE)));
     }
 }

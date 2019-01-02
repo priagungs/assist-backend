@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Component
-@PropertySource("service.properties")
+@PropertySource("classpath:service.properties")
 public class BackupRestoreService {
 
     @Autowired

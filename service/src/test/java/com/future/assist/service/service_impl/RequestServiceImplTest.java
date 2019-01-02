@@ -11,15 +11,9 @@ import com.future.assist.model.request_model.request.ReqCreateRequest;
 import com.future.assist.model.request_model.request.ReqItemCreateRequest;
 import com.future.assist.model.request_model.request.ReqUpdateRequest;
 import com.future.assist.repository.RequestRepository;
-import com.future.assist.service.service_interface.ItemService;
-import com.future.assist.service.service_interface.RequestService;
-import com.future.assist.service.service_interface.UserHasItemService;
-import com.future.assist.service.service_interface.UserService;
-import javafx.beans.binding.When;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,11 +23,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 
 @RunWith(SpringRunner.class)
@@ -136,12 +130,13 @@ public class RequestServiceImplTest {
         userHasItem.setUser(user);
         userHasItem.setItem(item1);
     }
+
     @Test
     public void createRequest() {
 
     }
 
-    @Test (expected = InvalidValueException.class)
+    @Test(expected = InvalidValueException.class)
     public void createRequestInvalidValueTest() {
         requestBody.getItems().get(0).setRequestQty(100);
         Mockito.when(userService.readUserByIdUser(requestBody.getIdUser()))
@@ -167,7 +162,7 @@ public class RequestServiceImplTest {
         assertEquals(request, requestService.createRequest(requestBody).get(0));
     }
 
-    @Test (expected = NotFoundException.class)
+    @Test(expected = NotFoundException.class)
     public void updateRequestNotFoundTest() {
         Mockito.when(requestRepository.findRequestByIdRequest(request.getIdRequest()))
                 .thenReturn(Optional.empty());
@@ -189,10 +184,10 @@ public class RequestServiceImplTest {
 
         requestUpdate.setRequestStatus(RequestStatus.APPROVED);
 
-        assertEquals(user.getSuperior().getIdUser(),requestService.updateRequest(requestUpdate).getApprovedBy());
+        assertEquals(user.getSuperior().getIdUser(), requestService.updateRequest(requestUpdate).getApprovedBy());
     }
 
-    @Test (expected = NotFoundException.class)
+    @Test(expected = NotFoundException.class)
     public void updateRequestApprovedSuperiorNotFoundTest() {
         Mockito.when(requestRepository.findRequestByIdRequest(request.getIdRequest()))
                 .thenReturn(Optional.of(request));
@@ -224,15 +219,15 @@ public class RequestServiceImplTest {
 
         requestUpdate.setRequestStatus(RequestStatus.REJECTED);
 
-        assertEquals(user.getSuperior().getIdUser(),requestService.updateRequest(requestUpdate).getRejectedBy());
+        assertEquals(user.getSuperior().getIdUser(), requestService.updateRequest(requestUpdate).getRejectedBy());
 
 //        assertEquals(item1.getAvailableQty(),7);
-        if(item1.getAvailableQty() != 7) {
-           assertTrue(false);
+        if (item1.getAvailableQty() != 7) {
+            assertTrue(false);
         }
     }
 
-    @Test (expected = NotFoundException.class)
+    @Test(expected = NotFoundException.class)
     public void updateRequestRejectedNotFoundTest() {
         Mockito.when(requestRepository.findRequestByIdRequest(request.getIdRequest()))
                 .thenReturn(Optional.of(request));
@@ -276,10 +271,10 @@ public class RequestServiceImplTest {
         request.setRequestStatus(RequestStatus.APPROVED);
         requestUpdate.setRequestStatus(RequestStatus.SENT);
 
-        assertEquals(userAdmin.getIdUser(),requestService.updateRequest(requestUpdate).getHandedOverBy());
+        assertEquals(userAdmin.getIdUser(), requestService.updateRequest(requestUpdate).getHandedOverBy());
     }
 
-    @Test (expected = NotFoundException.class)
+    @Test(expected = NotFoundException.class)
     public void updateRequestSentNotFoundTest() {
         Mockito.when(requestRepository.findRequestByIdRequest(request.getIdRequest()))
                 .thenReturn(Optional.of(request));
@@ -293,7 +288,7 @@ public class RequestServiceImplTest {
         requestService.updateRequest(requestUpdate);
     }
 
-    @Test (expected = InvalidValueException.class)
+    @Test(expected = InvalidValueException.class)
     public void updateRequestInvalidValueTest() {
         User userAdmin = new User();
         userAdmin.setUsername("ricky");
@@ -318,10 +313,10 @@ public class RequestServiceImplTest {
 //        request.setRequestStatus(RequestStatus.APPROVED);
         requestUpdate.setRequestStatus(RequestStatus.SENT);
 
-        assertEquals(userAdmin.getIdUser(),requestService.updateRequest(requestUpdate).getHandedOverBy());
+        assertEquals(userAdmin.getIdUser(), requestService.updateRequest(requestUpdate).getHandedOverBy());
     }
 
-    @Test (expected = NotFoundException.class)
+    @Test(expected = NotFoundException.class)
     public void updateRequestByRequestObjectNotFoundTest() {
         Mockito.when(requestRepository.findById(request.getIdRequest()))
                 .thenReturn(Optional.empty());
@@ -349,16 +344,16 @@ public class RequestServiceImplTest {
                 .thenReturn(beforeRequest);
 
         Request result = requestService.updateRequestByRequestObject(request);
-        assertEquals(beforeRequest.getRejectedBy(),result.getRejectedBy());
-        assertEquals(beforeRequest.getRequestStatus(),result.getRequestStatus());
-        assertEquals(beforeRequest.getReturnedBy(),result.getReturnedBy());
+        assertEquals(beforeRequest.getRejectedBy(), result.getRejectedBy());
+        assertEquals(beforeRequest.getRequestStatus(), result.getRequestStatus());
+        assertEquals(beforeRequest.getReturnedBy(), result.getReturnedBy());
 
-        if(item1.getAvailableQty() != 7) {
+        if (item1.getAvailableQty() != 7) {
             assertTrue(false);
         }
     }
 
-    @Test (expected = NotFoundException.class)
+    @Test(expected = NotFoundException.class)
     public void updateRequestStatusToReturnedNotFound() {
         Mockito.when(requestRepository.findById(request.getIdRequest()))
                 .thenReturn(Optional.empty());
@@ -376,7 +371,7 @@ public class RequestServiceImplTest {
 
         Request result = requestService.updateRequestStatusToReturned(request);
 
-        assertEquals(result.getRequestStatus(),RequestStatus.RETURNED);
+        assertEquals(result.getRequestStatus(), RequestStatus.RETURNED);
     }
 
 
@@ -424,8 +419,8 @@ public class RequestServiceImplTest {
         users.add(user);
         Mockito.when(userService.readAllUsersByIdSuperior(
                 user2.getIdUser(),
-                PageRequest.of(0,Integer.MAX_VALUE)
-                ))
+                PageRequest.of(0, Integer.MAX_VALUE)
+        ))
                 .thenReturn(new PageImpl(users));
 
         List<Request> returnList = new ArrayList<>();
@@ -433,15 +428,15 @@ public class RequestServiceImplTest {
         returnList.add(request2);
 
         Mockito.when(requestRepository.findAllRequestsByRequestBy(
-                user,PageRequest.of(0,Integer.MAX_VALUE))
-                ).thenReturn(new PageImpl(returnList));
+                user, PageRequest.of(0, Integer.MAX_VALUE))
+        ).thenReturn(new PageImpl(returnList));
 
         assertEquals(
                 returnList.size(),
                 requestService.readAllRequestBySuperior(
-                    PageRequest.of(0,Integer.MAX_VALUE),
-                    user2).getContent().size()
-                );
+                        PageRequest.of(0, Integer.MAX_VALUE),
+                        user2).getContent().size()
+        );
 
     }
 
@@ -452,12 +447,12 @@ public class RequestServiceImplTest {
         returnList.add(request2);
 
         Mockito.when(requestRepository.findAllRequestsByRequestStatus(
-                RequestStatus.REQUESTED,PageRequest.of(0,Integer.MAX_VALUE))
+                RequestStatus.REQUESTED, PageRequest.of(0, Integer.MAX_VALUE))
         ).thenReturn(new PageImpl(returnList));
 
         assertEquals(returnList.size(), requestService.readAllRequestByRequestStatus(
-                    PageRequest.of(0,Integer.MAX_VALUE),
-                    RequestStatus.REQUESTED).getContent().size()
+                PageRequest.of(0, Integer.MAX_VALUE),
+                RequestStatus.REQUESTED).getContent().size()
         );
     }
 
@@ -471,16 +466,16 @@ public class RequestServiceImplTest {
         users.add(user);
         Mockito.when(userService.readAllUsersByIdSuperior(
                 user2.getIdUser(),
-                PageRequest.of(0,Integer.MAX_VALUE)
+                PageRequest.of(0, Integer.MAX_VALUE)
         ))
                 .thenReturn(new PageImpl(users));
 
         Mockito.when(requestRepository.findAllRequestsByRequestBy(
-                user,PageRequest.of(0,Integer.MAX_VALUE))
+                user, PageRequest.of(0, Integer.MAX_VALUE))
         ).thenReturn(new PageImpl(returnList));
 
-        assertEquals(returnList.size(),requestService.readAllRequestBySuperiorAndRequestStatus(
-                PageRequest.of(0,Integer.MAX_VALUE),
+        assertEquals(returnList.size(), requestService.readAllRequestBySuperiorAndRequestStatus(
+                PageRequest.of(0, Integer.MAX_VALUE),
                 user2,
                 RequestStatus.REQUESTED
                 ).getContent().size()
@@ -493,18 +488,18 @@ public class RequestServiceImplTest {
         returnList.add(request);
         returnList.add(request2);
 
-        Mockito.when(requestRepository.findAllByRequestByAndRequestStatus(user,RequestStatus.REQUESTED,PageRequest.of(0,Integer.MAX_VALUE)))
+        Mockito.when(requestRepository.findAllByRequestByAndRequestStatus(user, RequestStatus.REQUESTED, PageRequest.of(0, Integer.MAX_VALUE)))
                 .thenReturn(new PageImpl(returnList));
 
-        assertEquals(returnList.size(),requestService.readAllRequestByUserAndStatus(
-                PageRequest.of(0,Integer.MAX_VALUE),
+        assertEquals(returnList.size(), requestService.readAllRequestByUserAndStatus(
+                PageRequest.of(0, Integer.MAX_VALUE),
                 user,
                 RequestStatus.REQUESTED
                 ).getContent().size()
         );
     }
 
-    @Test (expected = NotFoundException.class)
+    @Test(expected = NotFoundException.class)
     public void deleteRequestNotFoundTest() {
         Mockito.when(requestRepository.findById(request.getIdRequest()))
                 .thenReturn(Optional.empty());
@@ -521,12 +516,12 @@ public class RequestServiceImplTest {
 
         requestService.deleteRequest(request);
 
-        if(item1.getAvailableQty() != 7) {
+        if (item1.getAvailableQty() != 7) {
             assertTrue(false);
         }
     }
 
-    @Test (expected = NotFoundException.class)
+    @Test(expected = NotFoundException.class)
     public void readRequestByIdRequestNotFoundTest() {
         Mockito.when(requestRepository.findById(request.getIdRequest()))
                 .thenReturn(Optional.empty());
@@ -541,6 +536,6 @@ public class RequestServiceImplTest {
 
         Request result = requestService.readRequestByIdRequest(request.getIdRequest());
 
-        assertEquals(request,result);
+        assertEquals(request, result);
     }
 }

@@ -34,121 +34,121 @@ import static org.mockito.ArgumentMatchers.any;
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class TransactionServiceImplTest {
-    
+
     @Autowired
     TransactionService transactionService;
-    
+
     @MockBean
     ItemTransactionService itemTransactionService;
-    
+
     @MockBean
     UserService userService;
-    
+
     @MockBean
     TransactionRepository repository;
-    
+
     User user;
     ItemTransaction itemTransaction;
     Transaction transaction;
-    
-    
+
+
     @Before
     public void setUp() {
         user = new User();
         user.setIdUser(1L);
-        
+
         itemTransaction = new ItemTransaction();
         itemTransaction.setIdItemTransaction(2L);
         List<ItemTransaction> itemTransactions = new ArrayList<>();
         itemTransactions.add(itemTransaction);
-        
+
         transaction = new Transaction();
         transaction.setAdmin(user);
         transaction.setItemTransactions(itemTransactions);
     }
-    
+
     @Test(expected = InvalidValueException.class)
     public void createTransactionInvalidValueTest() {
         Mockito.when(userService.readUserByIdUser(transaction.getAdmin().getIdUser()))
-            .thenReturn(user);
+                .thenReturn(user);
         user.setIsAdmin(false);
         transactionService.createTransaction(transaction);
     }
-    
+
     @Test
     public void createTransactionSuccessTest() {
         Mockito.when(userService.readUserByIdUser(transaction.getAdmin().getIdUser()))
-            .thenReturn(user);
+                .thenReturn(user);
         Mockito.when(itemTransactionService.createItemTransaction(itemTransaction))
-            .thenReturn(itemTransaction);
+                .thenReturn(itemTransaction);
         Transaction newTrx = new Transaction();
         newTrx.setSupplier(transaction.getSupplier());
         newTrx.setTransactionDate(new Date());
         newTrx.setIdTransaction(transaction.getIdTransaction());
-        
+
         Mockito.when(repository.save(any())).thenReturn(newTrx);
         user.setIsAdmin(true);
-        
+
         Transaction result = transactionService.createTransaction(transaction);
         Assert.assertEquals(transaction.getIdTransaction(), result.getIdTransaction());
         Assert.assertEquals(transaction.getItemTransactions(), transaction.getItemTransactions());
         Assert.assertEquals(transaction.getSupplier(), transaction.getSupplier());
     }
-    
+
     @Test
     public void readAllTransactionsTest() {
         List<Transaction> transactions = new ArrayList<>();
         transactions.add(transaction);
         Page<Transaction> transactionPage =
-            new PageImpl<>(transactions, PageRequest.of(0, Integer.MAX_VALUE), transactions.size());
+                new PageImpl<>(transactions, PageRequest.of(0, Integer.MAX_VALUE), transactions.size());
         Mockito.when(repository.findAll(PageRequest.of(0, Integer.MAX_VALUE)))
-            .thenReturn(transactionPage);
-        
+                .thenReturn(transactionPage);
+
         Assert.assertEquals(transactionPage,
-            transactionService.readAllTransactions(PageRequest.of(0, Integer.MAX_VALUE)));
+                transactionService.readAllTransactions(PageRequest.of(0, Integer.MAX_VALUE)));
     }
-    
+
     @Test(expected = NotFoundException.class)
     public void readTransactionByIdTransactionNotFoundTest() {
         Mockito.when(repository.findById(transaction.getIdTransaction()))
-            .thenReturn(Optional.empty());
+                .thenReturn(Optional.empty());
         transactionService.readTransactionByIdTransaction(transaction.getIdTransaction());
     }
-    
+
     @Test
     public void readTransactionByIdTransactionSuccessTest() {
         Mockito.when(repository.findById(transaction.getIdTransaction()))
-            .thenReturn(Optional.of(transaction));
-        
+                .thenReturn(Optional.of(transaction));
+
         Assert.assertEquals(transaction,
-            transactionService.readTransactionByIdTransaction(transaction.getIdTransaction()));
+                transactionService.readTransactionByIdTransaction(transaction.getIdTransaction()));
     }
-    
+
     @Test(expected = NotFoundException.class)
     public void deleteTransactionNotFoundTest() {
         Mockito.when(repository.findById(transaction.getIdTransaction()))
-            .thenReturn(Optional.empty());
+                .thenReturn(Optional.empty());
         transactionService.deleteTransaction(transaction.getIdTransaction());
     }
-    
+
     @Test(expected = ForbiddenException.class)
     public void deleteTransactionInvalidValueTest() {
         Mockito.when(repository.findById(transaction.getIdTransaction()))
-            .thenReturn(Optional.of(transaction));
+                .thenReturn(Optional.of(transaction));
         transaction.setTransactionDate(new Date(
-            new Date().getTime() - TransactionService.MAX_ALLOWABLE_MILISECONDS_TO_UPDATE - 1));
+                new Date().getTime() - TransactionService.MAX_ALLOWABLE_MILISECONDS_TO_UPDATE - 1));
         transactionService.deleteTransaction(transaction.getIdTransaction());
     }
-    
+
     @Test
     public void deleteTransactionSuccessTest() {
         Mockito.when(repository.findById(transaction.getIdTransaction()))
-            .thenReturn(Optional.of(transaction));
+                .thenReturn(Optional.of(transaction));
         Mockito.when(itemTransactionService.deleteItemTransaction(itemTransaction.getIdItemTransaction()))
-            .thenReturn(ResponseEntity.ok().build());
+                .thenReturn(ResponseEntity.ok().build());
         Mockito.doNothing().when(repository).delete(transaction);
         transaction.setTransactionDate(new Date());
         Assert.assertEquals(ResponseEntity.ok().build(),
-            transactionService.deleteTransaction(transaction.getIdTransaction()));
+                transactionService.deleteTransaction(transaction.getIdTransaction()));
     }
 }

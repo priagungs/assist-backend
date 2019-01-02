@@ -8,11 +8,9 @@ import com.future.assist.model.entity_model.Item;
 import com.future.assist.model.entity_model.Request;
 import com.future.assist.model.entity_model.User;
 import com.future.assist.repository.UserRepository;
-import com.future.assist.service.service_interface.UserHasItemService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,12 +20,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest
@@ -87,7 +84,7 @@ public class UserServiceImplTest {
 
     }
 
-    @Test (expected = NotFoundException.class)
+    @Test(expected = NotFoundException.class)
     public void createUserSuperiorNotFoundTest() {
         Mockito.when(userRepository.findByIdUserAndIsActive(user2.getSuperior().getIdUser(), true))
                 .thenReturn(Optional.empty());
@@ -95,7 +92,7 @@ public class UserServiceImplTest {
         userService.createUser(user2);
     }
 
-    @Test (expected = ConflictException.class)
+    @Test(expected = ConflictException.class)
     public void createUserUsernameConflictTest() {
         Mockito.when(userRepository.findByIdUserAndIsActive(user2.getSuperior().getIdUser(), true))
                 .thenReturn(Optional.of(user1));
@@ -115,18 +112,18 @@ public class UserServiceImplTest {
         Mockito.when(userRepository.findByUsernameAndIsActive(user2.getUsername(), true))
                 .thenReturn(Optional.empty());
 
-        assertEquals(user2,userService.createUser(user2));
+        assertEquals(user2, userService.createUser(user2));
     }
 
-    @Test (expected = NotFoundException.class)
+    @Test(expected = NotFoundException.class)
     public void updateUserNotFoundUserTest() {
-        Mockito.when(userRepository.findByIdUserAndIsActive(user1.getIdUser(),true))
+        Mockito.when(userRepository.findByIdUserAndIsActive(user1.getIdUser(), true))
                 .thenReturn(Optional.empty());
 
         userService.updateUser(user1);
     }
 
-    @Test (expected = InvalidValueException.class)
+    @Test(expected = InvalidValueException.class)
     public void updateUserCircularSuperiorTest() {
 
 
@@ -137,7 +134,7 @@ public class UserServiceImplTest {
     }
 
 
-    @Test (expected = NotFoundException.class)
+    @Test(expected = NotFoundException.class)
     public void updateUserSuperiorNotFoundTest() {
         Mockito.when(userRepository.findByIdUserAndIsActive(user2.getIdUser(), true))
                 .thenReturn(Optional.of(user2));
@@ -147,16 +144,16 @@ public class UserServiceImplTest {
         userService.updateUser(user2);
     }
 
-    @Test (expected = ConflictException.class)
+    @Test(expected = ConflictException.class)
     public void updateUserConflictExceptionTest() {
         user1.setIdUser(1L);
         user2.setIdUser(2L);
-        System.out.println("user1 :"+user1.getIdUser());
-        System.out.println("user2 :"+user2.getIdUser());
+        System.out.println("user1 :" + user1.getIdUser());
+        System.out.println("user2 :" + user2.getIdUser());
         Mockito.when(userRepository.findByIdUserAndIsActive(user2.getIdUser(), true))
                 .thenReturn(Optional.of(user1));
         Mockito.when(userRepository.findByIdUserAndIsActive(user3.getSuperior().getIdUser(), true)
-            ).thenReturn(Optional.of(user1));
+        ).thenReturn(Optional.of(user1));
         Mockito.when(userRepository.findByUsernameAndIsActive(user2.getUsername(), true))
                 .thenReturn(Optional.of(user2));
         userService.updateUser(user2);
@@ -166,8 +163,8 @@ public class UserServiceImplTest {
     public void updateUserSuccessTest() {
         user1.setIdUser(1L);
         user2.setIdUser(2L);
-        System.out.println("user1 :"+user1.getIdUser());
-        System.out.println("user2 :"+user2.getIdUser());
+        System.out.println("user1 :" + user1.getIdUser());
+        System.out.println("user2 :" + user2.getIdUser());
         Mockito.when(userRepository.findByIdUserAndIsActive(user2.getIdUser(), true))
                 .thenReturn(Optional.of(user1));
         Mockito.when(userRepository.findByIdUserAndIsActive(user3.getSuperior().getIdUser(), true)
@@ -236,12 +233,12 @@ public class UserServiceImplTest {
         List<User> users = new ArrayList<>();
         users.add(user1);
         users.add(user2);
-        Mockito.when(userRepository.findByNameIgnoreCaseContainingAndIsActive("mie",true, PageRequest.of(0,Integer.MAX_VALUE)))
+        Mockito.when(userRepository.findByNameIgnoreCaseContainingAndIsActive("mie", true, PageRequest.of(0, Integer.MAX_VALUE)))
                 .thenReturn(new PageImpl(users));
 
         assertEquals(
                 users.size(),
-                userService.readAllUsersContaining("mie",PageRequest.of(0,Integer.MAX_VALUE)
+                userService.readAllUsersContaining("mie", PageRequest.of(0, Integer.MAX_VALUE)
                 ).getContent().size()
         );
     }

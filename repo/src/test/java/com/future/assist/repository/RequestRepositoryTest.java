@@ -106,7 +106,7 @@ public class RequestRepositoryTest {
     public void findRequestByIdRequest() {
         Long idReq = new Long(request.getIdRequest());
 
-        Optional<Request> req =requestRepository.findById(Long.valueOf(111111));
+        Optional<Request> req = requestRepository.findById(Long.valueOf(111111));
         assertFalse(req.isPresent());
 
         assertTrue(requestRepository.findById(idReq).isPresent());
@@ -118,11 +118,11 @@ public class RequestRepositoryTest {
     public void findAllRequestsByRequestBy() {
 
         List<Request> listRequest = requestRepository
-            .findAllRequestsByRequestBy(user1, PageRequest.of(0, 3)).getContent();
+                .findAllRequestsByRequestBy(user1, PageRequest.of(0, 3)).getContent();
         assertEquals(0, listRequest.size());
 
         listRequest = requestRepository
-            .findAllRequestsByRequestBy(user3, PageRequest.of(0, 3)).getContent();
+                .findAllRequestsByRequestBy(user3, PageRequest.of(0, 3)).getContent();
         assertEquals(2, listRequest.size());
 
     }
@@ -130,39 +130,39 @@ public class RequestRepositoryTest {
     @Test
     public void findAllRequestsByRequestStatus() {
         List<Request> listRequest = requestRepository
-            .findAllRequestsByRequestStatus(RequestStatus.REQUESTED,PageRequest.of(0,2))
-            .getContent();
+                .findAllRequestsByRequestStatus(RequestStatus.REQUESTED, PageRequest.of(0, 2))
+                .getContent();
 
         assertEquals(1, listRequest.size());
         assertEquals(RequestStatus.REQUESTED, listRequest.get(0).getRequestStatus());
 
         listRequest = requestRepository
-            .findAllRequestsByRequestStatus(RequestStatus.APPROVED,PageRequest.of(0,2))
-            .getContent();
+                .findAllRequestsByRequestStatus(RequestStatus.APPROVED, PageRequest.of(0, 2))
+                .getContent();
 
-        assertEquals(0,listRequest.size());
+        assertEquals(0, listRequest.size());
 
     }
 
     @Test
     public void findAllByRequestByAndRequestStatus() {
         List<Request> listRequest = requestRepository
-            .findAllByRequestByAndRequestStatus(user3,RequestStatus.SENT,PageRequest.of(0,2))
-            .getContent();
-
-        assertEquals(1,listRequest.size());
-
-        listRequest = requestRepository
-                .findAllByRequestByAndRequestStatus(user3,RequestStatus.REQUESTED,PageRequest.of(0,2))
+                .findAllByRequestByAndRequestStatus(user3, RequestStatus.SENT, PageRequest.of(0, 2))
                 .getContent();
 
-        assertEquals(1,listRequest.size());
+        assertEquals(1, listRequest.size());
 
         listRequest = requestRepository
-                .findAllByRequestByAndRequestStatus(user1,RequestStatus.SENT,PageRequest.of(0,2))
+                .findAllByRequestByAndRequestStatus(user3, RequestStatus.REQUESTED, PageRequest.of(0, 2))
                 .getContent();
 
-        assertEquals(0,listRequest.size());
+        assertEquals(1, listRequest.size());
+
+        listRequest = requestRepository
+                .findAllByRequestByAndRequestStatus(user1, RequestStatus.SENT, PageRequest.of(0, 2))
+                .getContent();
+
+        assertEquals(0, listRequest.size());
 
     }
 
@@ -170,7 +170,7 @@ public class RequestRepositoryTest {
     public void findAllRequestsByItem() {
         List<Request> listRequest = requestRepository.findAllRequestsByItem(item);
 
-        assertEquals(listRequest.size(),2);
+        assertEquals(listRequest.size(), 2);
 
     }
 

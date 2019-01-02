@@ -19,15 +19,15 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class UserAuthServiceTest {
     @Autowired
     UserAuthService authService;
-    
+
     @Autowired
     LoggedinUserInfo loggedinUserInfo;
-    
+
     @MockBean
     UserService userService;
-    
+
     private User user;
-    
+
     @Before
     public void setUp() {
         user = new User();
@@ -38,15 +38,15 @@ public class UserAuthServiceTest {
         user.setUsername("dummy");
         user.setPassword("password");
     }
-    
+
     @Test
     public void loadUserByUsernameSuccessTest() {
         Mockito.when(userService
-            .readUserByUsername(user.getUsername())).thenReturn(user);
+                .readUserByUsername(user.getUsername())).thenReturn(user);
         UserDetails userDetails = new org.springframework.security.core.userdetails.User(
-            user.getUsername(),
-            user.getPassword(),
-            AuthorityUtils.NO_AUTHORITIES
+                user.getUsername(),
+                user.getPassword(),
+                AuthorityUtils.NO_AUTHORITIES
         );
         Assert.assertEquals(userDetails, authService.loadUserByUsername(user.getUsername()));
     }
