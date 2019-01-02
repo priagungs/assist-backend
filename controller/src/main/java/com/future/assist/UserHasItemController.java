@@ -18,16 +18,16 @@ import org.springframework.web.bind.annotation.*;
 public class UserHasItemController {
 
     @Autowired
-    UserHasItemService userHasItemService;
+    private UserHasItemService userHasItemService;
 
     @Autowired
-    LoggedinUserInfo loggedinUserInfo;
+    private LoggedinUserInfo loggedinUserInfo;
 
     @Autowired
-    UserHasItemMapper mapper;
+    private UserHasItemMapper mapper;
 
     @GetMapping("/user-items")
-    PageResponse<UserHasItemResponse> readUserHasItems(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit,
+    public PageResponse<UserHasItemResponse> readUserHasItems(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit,
                                                        @RequestParam(value = "idUser", required = false) Long idUser,
                                                        @RequestParam(value = "idItem", required = false) Long idItem,
                                                        @RequestParam("sort") String sort) {
@@ -44,12 +44,12 @@ public class UserHasItemController {
     }
 
     @GetMapping("/user-items/{id}")
-    UserHasItemResponse readUserHasItem(@PathVariable("id") Long id) {
+    public UserHasItemResponse readUserHasItem(@PathVariable("id") Long id) {
         return mapper.entityToResponse(userHasItemService.readUserHasItemById(id));
     }
 
     @DeleteMapping("/user-items")
-    ResponseEntity deleteUserHasItem(@RequestBody UserHasItemModelRequest userHasItem) {
+    public ResponseEntity deleteUserHasItem(@RequestBody UserHasItemModelRequest userHasItem) {
         Long idUser = userHasItemService.readUserHasItemById(userHasItem.getIdUserHasItem()).getUser().getIdUser();
         if (!loggedinUserInfo.getUser().getIsAdmin() && loggedinUserInfo.getUser().getIdUser() != idUser) {
             throw new UnauthorizedException("you are not permitted to create userhasitem");
