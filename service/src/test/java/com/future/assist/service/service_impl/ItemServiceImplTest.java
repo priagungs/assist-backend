@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
@@ -26,6 +27,7 @@ import java.util.Optional;
 @SpringBootTest
 public class ItemServiceImplTest {
 
+    @Autowired
     private ItemService itemService;
 
     @MockBean
@@ -36,8 +38,6 @@ public class ItemServiceImplTest {
 
     @Before
     public void setUp() {
-        itemService = new ItemServiceImpl();
-
         item1 = new Item();
         item1.setItemName("indomie");
         item1.setPictureURL("www.link.foto");
