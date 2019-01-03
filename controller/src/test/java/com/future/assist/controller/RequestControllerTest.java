@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.future.assist.Assist;
 import com.future.assist.configuration.WebSecurityTestConfiguration;
+import com.future.assist.exception.InvalidValueException;
 import com.future.assist.mapper.ReqMapper;
 import com.future.assist.model.RequestStatus;
 import com.future.assist.model.entity_model.Item;
@@ -42,9 +43,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -120,6 +119,7 @@ public class RequestControllerTest {
         user.setSuperior(superior);
 
         admin = new User();
+        admin.setIdUser(8L);
         admin.setIsAdmin(true);
 
         nonadmin = new User();
@@ -201,6 +201,12 @@ public class RequestControllerTest {
 
         deleteRequest = new ReqModelRequest();
         deleteRequest.setIdRequest(user.getIdUser());
+
+        updateRequest = new ReqUpdateRequest();
+        updateRequest.setIdAdmin(admin.getIdUser());
+        updateRequest.setIdSuperior(superior.getIdUser());
+        updateRequest.setIdRequest(request.getIdRequest());
+        updateRequest.setRequestStatus(RequestStatus.APPROVED);
     }
 
     @Test
@@ -347,8 +353,71 @@ public class RequestControllerTest {
     }
 
     @Test
-    public void updateRequest() {
+    public void updateRequestUnauthorized1Test() throws Exception{
+        when(userInfo.getUser())
+                .thenReturn(admin);
+        mvc
+                .perform(put("/api/requests")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(Arrays.asList(updateRequest)))
+                        .accept(MediaType.APPLICATION_JSON)).andDo(print())
+                .andExpect(status().isUnauthorized());
     }
+
+    @Test
+    public void updateRequestUnauthorized2Test() throws Exception{
+        when(userInfo.getUser())
+                .thenReturn(nonadmin);
+        updateRequest.setRequestStatus(RequestStatus.SENT);
+        mvc
+                .perform(put("/api/requests")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(Arrays.asList(updateRequest)))
+                        .accept(MediaType.APPLICATION_JSON)).andDo(print())
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void updateRequestInvalidValueTest() throws Exception{
+        updateRequest.setRequestStatus(RequestStatus.REQUESTED);
+        mvc
+                .perform(put("/api/requests")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(Arrays.asList(updateRequest)))
+                        .accept(MediaType.APPLICATION_JSON)).andDo(print())
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void updateRequestSuccessApprovedOrRejectedTest() throws Exception{
+        when(userInfo.getUser())
+                .thenReturn(superior);
+        when(reqMapper.entityToResponse(any()))
+                .thenReturn(response);
+        mvc
+                .perform(put("/api/requests")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(Arrays.asList(updateRequest)))
+                        .accept(MediaType.APPLICATION_JSON)).andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void updateRequestSuccessSentTest() throws Exception{
+        updateRequest.setRequestStatus(RequestStatus.SENT);
+        when(userInfo.getUser())
+                .thenReturn(admin);
+        when(reqMapper.entityToResponse(any()))
+                .thenReturn(response);
+        mvc
+                .perform(put("/api/requests")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(Arrays.asList(updateRequest)))
+                        .accept(MediaType.APPLICATION_JSON)).andDo(print())
+                .andExpect(status().isOk());
+    }
+
 
     @Test
     public void deleteRequestSuccess() throws Exception{
