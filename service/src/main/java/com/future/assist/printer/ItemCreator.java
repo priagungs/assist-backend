@@ -71,15 +71,6 @@ public class ItemCreator {
         table.addCell(new Phrase(data, InvoiceCreator.NORMAL_FONT));
     }
 
-    public static Paragraph getParagraph() {
-        Paragraph paragraph = new Paragraph();
-        paragraph.setFont(InvoiceCreator.NORMAL_FONT);
-
-        addEmptyLine(paragraph, 1);
-
-        return paragraph;
-    }
-
 }
 
 

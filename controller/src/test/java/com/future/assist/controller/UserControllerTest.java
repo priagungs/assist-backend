@@ -191,6 +191,17 @@ public class UserControllerTest {
         when(userService.readAllUsersByIdSuperior(any(), any()))
             .thenReturn(users);
         when(userMapper.pageToPageResponse(users)).thenReturn(pageResponse);
+        
+        mvc
+            .perform(get("/api/users")
+                .param("page", "0")
+                .param("limit", "1")
+                .param("sort", "idUser")
+                .param("idSuperior", "0"))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.content[0].idUser", is(response.getIdUser().intValue())))
+            .andExpect(jsonPath("$.totalPages", is(pageResponse.getTotalPages())));
     }
     
     @Test
