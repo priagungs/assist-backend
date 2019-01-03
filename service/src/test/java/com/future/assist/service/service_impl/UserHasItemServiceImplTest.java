@@ -2,7 +2,9 @@ package com.future.assist.service.service_impl;
 
 import com.future.assist.exception.InvalidValueException;
 import com.future.assist.exception.NotFoundException;
+import com.future.assist.model.RequestStatus;
 import com.future.assist.model.entity_model.Item;
+import com.future.assist.model.entity_model.Request;
 import com.future.assist.model.entity_model.User;
 import com.future.assist.model.entity_model.UserHasItem;
 import com.future.assist.repository.UserHasItemRepository;
@@ -22,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,21 +47,48 @@ public class UserHasItemServiceImplTest {
     @MockBean
     private UserService userService;
 
+    @MockBean
+    private LoggedinUserInfo loggedinUserInfo;
+
+    @MockBean
+    private RequestServiceImpl requestService;
+
     private User user;
     private Item item;
     private UserHasItem userHasItem;
+    private Request request;
+    private Request requestAfterUpdated;
 
     @Before
     public void setUp() {
         user = new User();
         user.setIdUser(1L);
+
         item = new Item();
         item.setIdItem(2L);
+        item.setAvailableQty(10);
+        item.setTotalQty(15);
+
         userHasItem = new UserHasItem();
         userHasItem.setItem(item);
         userHasItem.setUser(user);
         userHasItem.setIdUserHasItem(1L);
         userHasItem.setHasQty(2);
+
+        request = new Request();
+        request.setRequestBy(user);
+        request.setItem(item);
+        request.setReqQty(2);
+        request.setRequestStatus(RequestStatus.SENT);
+
+        requestAfterUpdated = new Request();
+        requestAfterUpdated.setRequestBy(user);
+        requestAfterUpdated.setItem(item);
+        requestAfterUpdated.setReqQty(2);
+        requestAfterUpdated.setRequestStatus(RequestStatus.RETURNED);
+
+        user.setRequests(Arrays.asList(request));
+
     }
 
 
@@ -136,6 +166,23 @@ public class UserHasItemServiceImplTest {
         assertEquals(userHasItem.getUser().getIdUser(), result.getUser().getIdUser());
     }
 
+    @Test
+    public void createUserHasItemFromRequestSuccess2Test() {
+        List<UserHasItem> listUHI = new ArrayList<>();
+
+        Mockito.when(userHasItemRepository.findAllByUserAndItem(userHasItem.getUser(), userHasItem.getItem()))
+                .thenReturn(listUHI);
+
+        Mockito.when(userHasItemRepository.save(userHasItem))
+                .thenReturn(userHasItem);
+
+        UserHasItem result = userHasItemService.createUserHasItemFromRequest(userHasItem);
+
+        System.out.println(userHasItem.getUser().getIdUser());
+        System.out.println(result.getUser().getIdUser());
+        assertEquals(userHasItem.getUser().getIdUser(), result.getUser().getIdUser());
+    }
+
 
     @Test(expected = NotFoundException.class)
     public void readUserHasItemByIdNotFoundTest() {
@@ -169,6 +216,29 @@ public class UserHasItemServiceImplTest {
         Mockito.when(userService.readUserByIdUser(userHasItem.getUser().getIdUser())).thenReturn(user);
 
         userHasItem.getUser().setRequests(new ArrayList<>());
+        userHasItem.setHasQty(1);
+        item.setAvailableQty(1);
+        assertEquals(ResponseEntity.ok().build(),
+                userHasItemService.deleteUserHasItem(userHasItem.getIdUserHasItem()));
+    }
+
+    @Test
+    public void deleteUserHasItemSuccess2Test() {
+        Mockito.when(userHasItemRepository.findById(userHasItem.getIdUserHasItem()))
+                .thenReturn(Optional.of(userHasItem));
+
+
+        Mockito.when(itemService.updateItem(userHasItem.getItem()))
+                .thenReturn(userHasItem.getItem());
+        Mockito.when(userService.readUserByIdUser(userHasItem.getUser().getIdUser()))
+                .thenReturn(user);
+        Mockito.when(loggedinUserInfo.getUser())
+                .thenReturn(user);
+        Mockito.when(requestService.updateRequestStatusToReturned(request))
+                .thenReturn(requestAfterUpdated);
+
+        Mockito.doNothing().when(userHasItemRepository).delete(userHasItem);
+
         userHasItem.setHasQty(1);
         item.setAvailableQty(1);
         assertEquals(ResponseEntity.ok().build(),
